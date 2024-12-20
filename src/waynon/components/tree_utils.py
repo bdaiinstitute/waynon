@@ -4,14 +4,22 @@ from .node import Node
 
 T = TypeVar("T")
 
-def find_child_with_component(entity_id, component_type):
+def find_child_with_component(entity_id, component_type) -> int | None:
     node = esper.component_for_entity(entity_id, Node)
     for child in node.descendants:
         if esper.has_component(child.entity_id, component_type):
             return child.entity_id
     return None
 
-def find_children_with_component(entity_id, component_type):
+def find_children_with_component(entity_id, component_type) -> list[int]:
+    node = esper.component_for_entity(entity_id, Node)
+    children = []
+    for child in node.children:
+        if esper.has_component(child.entity_id, component_type):
+            children.append(child.entity_id)
+    return children
+
+def find_descendants_with_component(entity_id, component_type) -> list[int]:
     node = esper.component_for_entity(entity_id, Node)
     children = []
     for child in node.descendants:
@@ -19,7 +27,7 @@ def find_children_with_component(entity_id, component_type):
             children.append(child.entity_id)
     return children
 
-def find_nearest_ancestor_with_component(entity_id, component_type):
+def find_nearest_ancestor_with_component(entity_id, component_type) -> int | None:
     node = esper.component_for_entity(entity_id, Node)
     for parent_node in node.ancestors:
         if esper.has_component(parent_node.entity_id, component_type):
@@ -43,5 +51,6 @@ def get_components(entity_ids: list[int], component_type: T):
 def create_entity(name:str, parent_id:int, *components): 
     id = esper.create_entity(*components)
     node = Node(name=name, parent_entity_id=parent_id, entity_id=id)
+    node.refresh()
     esper.add_component(id, node)
     return id, node

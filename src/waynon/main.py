@@ -4,12 +4,10 @@ from typing import Optional
 from pydantic import BaseModel
 import trio
 import warp as wp
-from imgui_bundle import imgui
 import esper
 import pyglet
 
 import marsoom
-from marsoom import guizmo
 
 from waynon.components.scene_utils import create_empty_scene, load_scene, save_scene, refresh_transforms
 from waynon.components.camera import Camera
@@ -51,10 +49,9 @@ class Window(marsoom.Window):
         self.viewer_3d_viewmodel = Viewer3DViewModel(self.nursery, self)
         self.viewer_2d_viewmodel = Viewer2DViewModel(self.nursery, self)
 
-        esper.set_handler("image_viewer", self.viewer_2d_viewmodel._on_image_viewer)
 
         create_empty_scene()
-        # load_scene()
+        load_scene()
     
     def _set_up_assets(self):
         work_path = Path(__file__).parent.parent.parent / "assets"
@@ -87,19 +84,20 @@ async def render_gui(window: marsoom.Window):
 
 # ENTRY POINT
 async def main_async():
+    wp.init()
     settings = Settings.try_load()
     CameraManager.instance().get_connected_serials()
     
     async with trio.open_nursery() as nursery:
         window = Window(nursery, settings=settings)
         nursery.start_soon(update_cameras, window)  
-        nursery.start_soon(render_gui, window)  
-
+        await render_gui(window)
+        nursery.cancel_scope.cancel()
     CameraManager.instance().stop_all_cameras()
+
     
     settings.save()
     save_scene(settings.path)
 
 if __name__ == '__main__':
-    wp.init()
     trio.run(main_async)

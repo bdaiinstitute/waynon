@@ -66,12 +66,10 @@ class Viewer3DViewModel:
                 self.guizmo_operation = guizmo.OPERATION.rotate
 
     def tick_robots(self):
-        pass
-        # for entity, robot in esper.get_component(RobotSettings):
-        #     robot.get_manager().tick()
+        for entity, robot in esper.get_component(RobotSettings):
+            robot.get_manager().tick()
 
 
     def _draw_robots(self):
-        pass
-        # for entity, robot in esper.get_component(RobotSettings):
-        #     draw_robot(robot.get_manager().q)
+        for entity, robot in esper.get_component(RobotSettings):
+            draw_robot(robot.get_manager().q)

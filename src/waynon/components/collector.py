@@ -8,17 +8,12 @@ from imgui_bundle import imgui
 from .tree_utils import *
 from .component import Component
 from .node import Node
-from .simple import PoseGroup
+from .pose_group import PoseGroup
 from .camera import Camera
+from .simple import Detectors
 
 class MeasurementGroup(Component):
     pass
-
-class RawMeasurement(Component):
-    joint_values: list[float]
-    camera_serial: str
-    image_path: str
-    enabled: bool = True
 
 class ArucoMeasurement(Component):
     marker_id: int
@@ -34,6 +29,16 @@ class CollectorData(Component):
     group_blacklist: list[int] = []
     camera_blacklist: list[int] = []    
 
+    def draw_context(self, nursery, entity_id):
+        from waynon.components.scene_utils import create_aruco_detector, create_entity
+        from waynon.components.tree_utils import find_child_with_component
+        imgui.separator()
+        if imgui.menu_item_simple("Add Aruco Detector"):
+            detector_id = find_child_with_component(entity_id, Detectors)
+            if detector_id is None:
+                detector_id, _ = create_entity("Detectors", entity_id, Detectors())
+            create_aruco_detector("Aruco Detector", detector_id)
+
     def property_order(self):
         return 100
 
@@ -46,7 +51,7 @@ def draw_collector(nursery: trio.Nursery, collector_id: int):
         robot_id = collector_data.robot_id
         robot_name = esper.component_for_entity(robot_id, Node).name
 
-        pose_group_ids = find_children_with_component(robot_id, PoseGroup)
+        pose_group_ids = find_descendants_with_component(robot_id, PoseGroup)
 
         imgui.text(f"Robot: {robot_name}")
 

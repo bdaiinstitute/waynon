@@ -79,4 +79,7 @@ class Camera(Component):
                     imgui.image(texture.id, image_size=(w, h))
             else:
                 imgui.text("Serial not connected")
+        
+    def on_selected(self, nursery, entity_id):
+        esper.dispatch_event("image_viewer", entity_id)
     

@@ -4,8 +4,7 @@
         "Node": {
             "name": "root",
             "parent_entity_id": null,
-            "entity_id": 1,
-            "deletable": true
+            "entity_id": 1
         }
     },
     "2": {
@@ -36,8 +35,7 @@
         "Node": {
             "name": "World",
             "parent_entity_id": 1,
-            "entity_id": 2,
-            "deletable": false
+            "entity_id": 2
         }
     },
     "3": {
@@ -71,10 +69,9 @@
             "password": "Password!"
         },
         "Node": {
-            "name": "robot",
+            "name": "Sheep (Panda)",
             "parent_entity_id": 2,
-            "entity_id": 3,
-            "deletable": true
+            "entity_id": 3
         }
     },
     "4": {
@@ -82,8 +79,7 @@
         "Node": {
             "name": "Poses",
             "parent_entity_id": 3,
-            "entity_id": 4,
-            "deletable": true
+            "entity_id": 4
         }
     },
     "5": {
@@ -97,116 +93,14 @@
         "Draggable": {
             "type": "posegroup"
         },
+        "Deletable": {},
         "Node": {
-            "name": "left",
+            "name": "Left",
             "parent_entity_id": 4,
-            "entity_id": 5,
-            "deletable": true
+            "entity_id": 5
         }
     },
     "6": {
-        "PoseGroup": {
-            "color": [
-                1.0,
-                1.0,
-                1.0
-            ]
-        },
-        "Draggable": {
-            "type": "posegroup"
-        },
-        "Node": {
-            "name": "right",
-            "parent_entity_id": 4,
-            "entity_id": 6,
-            "deletable": true
-        }
-    },
-    "7": {
-        "PoseGroup": {
-            "color": [
-                1.0,
-                1.0,
-                1.0
-            ]
-        },
-        "Draggable": {
-            "type": "posegroup"
-        },
-        "Node": {
-            "name": "top",
-            "parent_entity_id": 4,
-            "entity_id": 7,
-            "deletable": true
-        }
-    },
-    "8": {
-        "Pose": {
-            "q": [
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0
-            ]
-        },
-        "Draggable": {
-            "type": "pose"
-        },
-        "Node": {
-            "name": "q1",
-            "parent_entity_id": 7,
-            "entity_id": 8,
-            "deletable": true
-        }
-    },
-    "9": {
-        "Pose": {
-            "q": [
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0
-            ]
-        },
-        "Draggable": {
-            "type": "pose"
-        },
-        "Node": {
-            "name": "q2",
-            "parent_entity_id": 7,
-            "entity_id": 9,
-            "deletable": true
-        }
-    },
-    "10": {
-        "Pose": {
-            "q": [
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0
-            ]
-        },
-        "Draggable": {
-            "type": "pose"
-        },
-        "Node": {
-            "name": "q3",
-            "parent_entity_id": 7,
-            "entity_id": 10,
-            "deletable": true
-        }
-    },
-    "11": {
         "Transform": {
             "X_PT": [
                 1.0,
@@ -231,16 +125,16 @@
             "modifiable": true
         },
         "Camera": {
-            "serial": ""
+            "serial": "220422302296"
         },
+        "Deletable": {},
         "Node": {
-            "name": "camera",
+            "name": "Left Camera",
             "parent_entity_id": 2,
-            "entity_id": 11,
-            "deletable": true
+            "entity_id": 6
         }
     },
-    "12": {
+    "7": {
         "CollectorData": {
             "robot_id": 3,
             "path": "",
@@ -250,17 +144,131 @@
         "Node": {
             "name": "Collector",
             "parent_entity_id": 1,
-            "entity_id": 12,
-            "deletable": true
+            "entity_id": 7
         }
     },
-    "13": {
+    "8": {
         "DataNode": {},
         "Node": {
             "name": "Data",
-            "parent_entity_id": 12,
-            "entity_id": 13,
-            "deletable": true
+            "parent_entity_id": 7,
+            "entity_id": 8
+        }
+    },
+    "9": {
+        "Pose": {
+            "q": [
+                0.5271103069176115,
+                0.5578796255473076,
+                -0.5324770301620538,
+                -1.6953081929202423,
+                -0.19718032560996437,
+                2.2815975033832685,
+                1.6567864725230592
+            ]
+        },
+        "Draggable": {
+            "type": "pose"
+        },
+        "Deletable": {},
+        "Node": {
+            "name": "q",
+            "parent_entity_id": 5,
+            "entity_id": 9
+        }
+    },
+    "10": {
+        "Pose": {
+            "q": [
+                0.5749989010956925,
+                0.748653654861398,
+                -0.4507701091652991,
+                -1.489078606272525,
+                -0.17162731235873097,
+                2.2573803854708405,
+                1.7470772204189737
+            ]
+        },
+        "Draggable": {
+            "type": "pose"
+        },
+        "Deletable": {},
+        "Node": {
+            "name": "q",
+            "parent_entity_id": 5,
+            "entity_id": 10
+        }
+    },
+    "11": {
+        "MeasurementGroup": {},
+        "Node": {
+            "name": "Left",
+            "parent_entity_id": 8,
+            "entity_id": 11
+        }
+    },
+    "12": {
+        "RawMeasurement": {
+            "joint_values": [
+                0.5266045524819142,
+                0.5580052765682038,
+                -0.5328890411879361,
+                -1.6939617723308231,
+                -0.19498321656211393,
+                2.2790738833006765,
+                1.6646615440172827
+            ],
+            "camera_serial": "220422302296",
+            "image_path": "/home/jchakra/repos/waynon/data/Left/images/220422302296_9.png",
+            "enabled": true
+        },
+        "Deletable": {},
+        "Node": {
+            "name": "Left Camera 9",
+            "parent_entity_id": 11,
+            "entity_id": 12
+        }
+    },
+    "13": {
+        "RawMeasurement": {
+            "joint_values": [
+                0.57595679804382,
+                0.7498740300057143,
+                -0.45027210583694155,
+                -1.4902273449101973,
+                -0.1730895708276834,
+                2.2599165519586677,
+                1.7364671777365979
+            ],
+            "camera_serial": "220422302296",
+            "image_path": "/home/jchakra/repos/waynon/data/Left/images/220422302296_10.png",
+            "enabled": true
+        },
+        "Deletable": {},
+        "Node": {
+            "name": "Left Camera 10",
+            "parent_entity_id": 11,
+            "entity_id": 13
+        }
+    },
+    "14": {
+        "Detectors": {},
+        "Node": {
+            "name": "Detectors",
+            "parent_entity_id": 7,
+            "entity_id": 14
+        }
+    },
+    "15": {
+        "ArucoDetector": {
+            "enabled": true,
+            "marker_dict": 0
+        },
+        "Deletable": {},
+        "Node": {
+            "name": "Aruco Detector",
+            "parent_entity_id": 14,
+            "entity_id": 15
         }
     }
 }

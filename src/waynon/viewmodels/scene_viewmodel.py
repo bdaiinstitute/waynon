@@ -16,6 +16,7 @@ class SceneViewModel:
         self._space_from_end = 23
         self.selected_camera_ind = 0
         self.selected_entity_id = -1
+        self.previous_selected_entity_id = -1
 
     def render_node(self, entity_id):
         imgui.push_id(entity_id)
@@ -43,21 +44,18 @@ class SceneViewModel:
         
 
         if imgui.begin_popup_context_item(f"##{entity_id}"):
-            componenets: list[Component] = list(esper.components_for_entity(entity_id))
-            componenets.sort(key=lambda x: x.property_order())
-            for component in componenets:
+            for component in get_sorted_components(entity_id):
                 component.draw_context(self.nursery, entity_id)
             imgui.end_popup()
+        
+        selected_positive_edge = selected and self.previous_selected_entity_id != self.selected_entity_id
+        if selected_positive_edge:
+            for component in get_sorted_components(entity_id):
+                component.on_selected(self.nursery, entity_id)
 
-            # if node.deletable:
-            #     if imgui.menu_item_simple("Delete"):
-            #         delete_entity(entity_id)
-            # if imgui.menu_item_simple("Camera"):
-            #     create_camera("Camera", entity_id)
-            # imgui.end_popup()
+        self.previous_selected_entity_id = self.selected_entity_id
+        
 
-        # if selected and esper.has_component(entity_id, Camera):
-        #     esper.dispatch_event("image_viewer", entity_id)
 
         # if selected and esper.has_component(entity_id, PoseGroup):
         #     robot_id = find_nearest_ancestor_with_component(entity_id, RobotSettings)
@@ -70,14 +68,6 @@ class SceneViewModel:
         #             child_id = node.children[-1].entity_id
         #             delete_entity(child_id)
 
-        
-        # if imgui.begin_popup_context_item(f"##{entity_id}"):
-        #     if node.deletable:
-        #         if imgui.menu_item_simple("Delete"):
-        #             delete_entity(entity_id)
-        #     if imgui.menu_item_simple("Camera"):
-        #         create_camera("Camera", entity_id)
-        #     imgui.end_popup()
 
         imgui.pop_id()
     
@@ -112,4 +102,7 @@ class SceneViewModel:
         self.traverse_tree()
         imgui.end()
 
-        
+def get_sorted_components(entity_id):
+    components: list[Component] = list(esper.components_for_entity(entity_id))
+    components.sort(key=lambda x: x.property_order())
+    return components   

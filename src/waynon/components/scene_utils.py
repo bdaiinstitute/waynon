@@ -6,15 +6,19 @@ import esper
 
 
 from .node import Node
-from .simple import Root, World, Visiblity, OptimizedPose, PoseFolder, PoseGroup, Pose, Draggable
+from .simple import Root, World, Visiblity, OptimizedPose, PoseFolder, Pose, Draggable, Deletable, Detectors
+from .pose_group import PoseGroup
 from .robot import RobotSettings
-from .collector import CollectorData, DataNode, MeasurementGroup, RawMeasurement
+from .collector import CollectorData, DataNode, MeasurementGroup
+from .raw_measurement import RawMeasurement
 from .camera import Camera
+from .aruco_detector import ArucoDetector
 from .transform import Transform
+from .aruco_detector import ArucoDetector
 from .tree_utils import create_entity
 
 def create_camera(name:str, parent_id:int):
-    return create_entity(name, parent_id, Transform(), Camera())
+    return create_entity(name, parent_id, Transform(), Camera(), Deletable())
 
 def create_collector(parent_id: int, robot_id: int):
     id, node = create_entity("Collector", parent_id, CollectorData(robot_id=robot_id))
@@ -28,24 +32,32 @@ def refresh_transforms():
 def create_robot(name:str, parent_id:int=None):
     rid, node = create_entity(name, parent_id, Transform(modifiable=False), RobotSettings())
     id, _ = create_entity("Poses", rid, PoseFolder())
-    create_entity("left", id, PoseGroup(), Draggable(type="posegroup"))
-    create_entity("right", id, PoseGroup(), Draggable(type="posegroup"))
-    id, _ = create_entity("top", id, PoseGroup(), Draggable(type="posegroup"))
+    create_posegroup("left", id)
+    create_posegroup("right", id)
+    id, _ = create_posegroup("top", id)
     create_motion("q1", id, [0, 0, 0, 0, 0, 0, 0])
     create_motion("q2", id, [0, 0, 0, 0, 0, 0, 0])
     create_motion("q3", id, [0, 0, 0, 0, 0, 0, 0])
     return rid, node
 
+def create_posegroup(name:str, parent_id:int):
+    return create_entity(name, parent_id, PoseGroup(), Draggable(type="posegroup"), Deletable())
+
 def create_motion(name:str, parent_id:int, q):
-    return create_entity(name, parent_id, Pose(q=q), Draggable(type="pose"))
+    return create_entity(name, parent_id, Pose(q=q), Draggable(type="pose"), Deletable())
 
 def create_frame(name:str, parent_id:int, modifiable=True):
     return create_entity(name, parent_id, Transform(modifiable=modifiable))
 
+def create_raw_measurement(name:str, parent_id:int, measurement: RawMeasurement):
+    return create_entity(name, parent_id, measurement, Deletable())
+
+def create_aruco_detector(name:str, parent_id: int):
+    return create_entity(name, parent_id, ArucoDetector(), Deletable())
+
 def create_world():
     root_id = get_root_id()
     id, node= create_entity("World", root_id, World(), Transform(modifiable=False))
-    node.deletable = False
     return id, node
 
 def create_root():
@@ -80,25 +92,31 @@ def save_scene(path: Path = Path("default.json")):
         f.write(json.dumps(res, indent=4))
 
 def load_scene(path: Path = Path("default.json")):
-    try:
-        print(f"Loading from {path}")
-        with open(path, "r") as f:
-            res = json.load(f)
-        esper.clear_database()
-        esper.clear_cache()
-        for entity_id, components in res.items():
-            entity = esper.create_entity()
-            for class_name, component in components.items():
-                class_name = globals()[class_name]
-                component = class_name.model_validate(component)
-                esper.add_component(entity, component)
-        
-        for entity, component in esper.get_component(Node):
-            component.entity_id = entity
-        for entity, component in esper.get_component(Node):
-            component.refresh()
-    except Exception as e:
-        print(f"Error loading: {e}")
+    print(f"Loading from {path}")
+    with open(path, "r") as f:
+        res = json.load(f)
+    esper.clear_database()
+    esper.clear_cache()
+    old_id_to_new_id = {}
+    for entity_id, components in res.items():
+        entity_id = int(entity_id)  
+        entity = esper.create_entity()
+        old_id_to_new_id[entity_id] = entity
+        for class_name, component in components.items():
+            class_name = globals()[class_name]
+            component = class_name.model_validate(component)
+            if isinstance(component, Node):
+                component.entity_id = entity
+            esper.add_component(entity, component)
+
+    for entity, component in esper.get_component(Node):
+        old_parent_id = component.parent_entity_id
+        if old_parent_id is not None:
+            assert old_parent_id in old_id_to_new_id, f"Old parent id {old_parent_id} not found"
+            component.parent_entity_id = old_id_to_new_id[old_parent_id]
+
+    for entity, component in esper.get_component(Node):
+        component.refresh()
 
 
 def print_tree():

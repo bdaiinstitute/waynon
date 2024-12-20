@@ -10,3 +10,6 @@ class Component(BaseModel):
 
     def draw_context(self, nursery: trio.Nursery, entity_id: int):
         pass
+    
+    def on_selected(self, nursery: trio.Nursery, entity_id: int):
+        pass

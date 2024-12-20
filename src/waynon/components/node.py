@@ -10,10 +10,8 @@ class Node(Component, NodeMixin):
     name: str = ""
     parent_entity_id: Optional[int] = None
     entity_id: Optional[int] = None
-    deletable: bool = True
 
     def model_post_init(self, __context):
-        self.refresh()
         return super().model_post_init(__context)
 
     @property
