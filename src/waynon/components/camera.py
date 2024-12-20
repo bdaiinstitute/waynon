@@ -80,6 +80,7 @@ class Camera(Component):
             else:
                 imgui.text("Serial not connected")
         
-    def on_selected(self, nursery, entity_id):
-        esper.dispatch_event("image_viewer", entity_id)
+    def on_selected(self, nursery, entity_id, just_selected):
+        if just_selected:
+            esper.dispatch_event("image_viewer", entity_id)
     

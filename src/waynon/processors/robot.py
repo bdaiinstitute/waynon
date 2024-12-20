@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 import enum
 
 import numpy as np
+import esper
 import trio
 import panda_py
 import pinocchio as pin
@@ -10,7 +11,7 @@ from waynon.panda.desk import Desk
 from waynon.utils.utils import ASSET_PATH
 
 if TYPE_CHECKING:
-    from waynon.components.robot import RobotSettings
+    from waynon.components.robot import Franka
 
 class Robot:
     class ConnectionStatus(enum.Enum):
@@ -30,7 +31,7 @@ class Robot:
         EXECUTION = "execution"
         PROGRAMMING = "programming"
 
-    def __init__(self, settings: "RobotSettings"):
+    def __init__(self, settings: "Franka"):
         self.settings = settings
         self.desk = Desk()
         self.connect_status = Robot.ConnectionStatus.DISCONNECTED
@@ -42,9 +43,11 @@ class Robot:
         assert ASSET_PATH.exists(), f"ASSET_PATH {ASSET_PATH} does not exist"
         assert urdf_path.exists(), f"urdf_path {urdf_path} does not exist"
         self._full_model = pin.buildModelFromUrdf(str(urdf_path))
-        self._reduced_model = pin.buildReducedModel(
-            self._full_model, [8, 9], np.zeros(9))
+        # self._reduced_model = pin.buildReducedModel(
+        #     self._full_model, [8, 9], np.zeros(9))
         self._model_data = self._full_model.createData()
+
+        self.last_transforms = self.fk(self.q)
     
     async def connect_to_ip(self, nursery: trio.Nursery, ip: str, username: str, password: str, platform: str = "fr3"):
         try:
@@ -83,19 +86,26 @@ class Robot:
         q = np.append(q, [0.01, 0.01])
         pin.forwardKinematics(self._full_model, self._model_data, q)
         pin.updateFramePlacements(self._full_model, self._model_data)
-        res = [self._model_data.oMf[i].homogeneous for i in [
-            self._full_model.getFrameId("panda_link0"),
-            self._full_model.getFrameId("panda_link1"),
-            self._full_model.getFrameId("panda_link2"),
-            self._full_model.getFrameId("panda_link3"),
-            self._full_model.getFrameId("panda_link4"),
-            self._full_model.getFrameId("panda_link5"),
-            self._full_model.getFrameId("panda_link6"),
-            self._full_model.getFrameId("panda_link7"),
-            self._full_model.getFrameId("panda_hand"),
-            self._full_model.getFrameId("panda_leftfinger"),
-            self._full_model.getFrameId("panda_rightfinger")]]
-        return res
+
+        links = ["panda_link0", "panda_link1", "panda_link2", "panda_link3", "panda_link4", "panda_link5", "panda_link6", "panda_link7", "panda_hand", "panda_leftfinger", "panda_rightfinger"]
+        prev_links = [None] + links[:-1]
+
+        d = self._model_data
+        frame_ids = [self._full_model.getFrameId(link) for link in links]
+        oMi = {link: d.oMf[frame_id].homogeneous for link, frame_id in zip(links, frame_ids)}
+
+        liMi = {}
+
+        for link, prev_link in zip(links, prev_links):
+            if prev_link is None:
+                liMi[link] = oMi[link]
+            else:
+                X_WP1 = oMi[prev_link]
+                X_WP2 = oMi[link]
+                X_P1P2 = np.linalg.inv(X_WP1) @ X_WP2
+                liMi[link] = X_P1P2
+
+        return liMi
 
 
     async def _read_brake_status(self):
@@ -150,6 +160,7 @@ class Robot:
                         self.buttons_down[button]["down"] = e[button]
 
     def tick(self):
+        self.last_transforms = self.fk(self.q)
         for button in self.buttons_down:
             if self.buttons_down[button]["down"]:
                 self.buttons_down[button]["t"] += 1
@@ -203,5 +214,19 @@ class Robot:
                 "t": 0,
             }
         }
+
+class RobotProcessor(esper.Processor):
+    def process(self):
+        from waynon.components.robot import Franka, FrankaLink
+        from waynon.components.transform import Transform
+        from waynon.components.node import Node
+        for entity, franka in esper.get_component(Franka):
+            manager = franka.get_manager()  
+            manager.tick()
+
+        for entity, (node, franka, transform) in esper.get_components(Node, FrankaLink, Transform):
+            robot = esper.component_for_entity(franka.robot_id, Franka).get_manager()
+            X_PL = robot.last_transforms[franka.link_name]
+            transform.set_X_PT(X_PL)
 
 

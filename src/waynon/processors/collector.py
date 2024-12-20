@@ -7,10 +7,10 @@ from waynon.components.simple import Pose
 from waynon.components.pose_group import PoseGroup
 from waynon.components.tree_utils import *
 from waynon.components.node import Node
-from waynon.components.robot import RobotSettings
+from waynon.components.robot import Franka
 from waynon.components.camera import Camera
 from waynon.components.collector import CollectorData, MeasurementGroup, DataNode
-from waynon.components.raw_measurement import RawMeasurement
+from waynon.components.image_measurement import ImageMeasurement
 
 class Collector:
     _instance = None
@@ -20,37 +20,47 @@ class Collector:
         if cls._instance is None:
             cls._instance = Collector()
         return cls._instance    
+
     
     def can_run(self, data: CollectorData):
-        robot = esper.component_for_entity(data.robot_id, RobotSettings)
+        robot = esper.component_for_entity(data.robot_id, Franka)
         ready_to_move = robot.get_manager().ready_to_move()
         cameras = [(i,c) for (i,c) in esper.get_component(Camera) if i not in data.camera_blacklist]
         all_cameras_running = all([c.running() for i,c in cameras])
         return ready_to_move and all_cameras_running
     
-    # def detect_all_markers(img, marker_dict = aruco.DICT_4X4_50):
-    #     aruco_dict = aruco.getPredefinedDictionary(marker_dict)
-    #     parameters = aruco.DetectorParameters()
-    #     detector = aruco.ArucoDetector(aruco_dict, parameters)
-    #     marker_pixels, marker_ids, _ = detector.detectMarkers(img)
-    #     return detector, marker_pixels, marker_ids
 
-    # async def detect_arcuo_on_measurement(self, measurement_id: int):
-    #     import cv2.aruco as aruco
-    #     assert esper.entity_exists(measurement_id) and esper.has_component(measurement_id, RawMeasurement)
-    #     data = esper.component_for_entity(measurement_id, RawMeasurement)
+    async def run_detectors(self, collector_id: int):
+        from waynon.components.scene_utils import get_detectors
+        from waynon.components.simple import Detector
 
+        print("Running detectors")
 
+        detectors_ids = get_detectors(collector_id, predicate=lambda id, c: c.enabled)
+        print(detectors_ids)
 
+        # get data node
+        data_node_id = find_child_with_component(collector_id, DataNode)
+        measurement_group_ids = find_children_with_component(data_node_id, MeasurementGroup)
+
+        
+        for measurement_group_id in measurement_group_ids:
+            measurement_ids = find_children_with_component(measurement_group_id, ImageMeasurement)
+            for measurement_id in measurement_ids:
+                delete_children(measurement_id)
+                for detector_id in detectors_ids:
+                    detector = component_for_entity_with_instance(detector_id, Detector)
+                    await detector.get_processor().run(detector_id, measurement_id)
 
     async def collect(self, collector_id: int):
         from waynon.components.scene_utils import create_raw_measurement
+
         assert esper.entity_exists(collector_id) and esper.has_component(collector_id, CollectorData)
         data = esper.component_for_entity(collector_id, CollectorData)
         robot_id = data.robot_id
         assert esper.entity_exists(robot_id)
 
-        robot_component = esper.component_for_entity(robot_id, RobotSettings)
+        robot_component = esper.component_for_entity(robot_id, Franka)
 
         cameras: list[tuple[int, Camera]] =  []
         for entity, c in esper.get_component(Camera):
@@ -107,7 +117,7 @@ class Collector:
                     measurement_name = f"{cam_node.name} {pose_id}"
                     create_raw_measurement(measurement_name,
                                            measurement_group_id,
-                                           RawMeasurement(
+                                           ImageMeasurement(
                                                   joint_values=q,
                                                   camera_serial=cam.serial,
                                                   image_path=str(image_path)

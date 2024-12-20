@@ -32,6 +32,11 @@
             "visible": true,
             "modifiable": false
         },
+        "Nestable": {
+            "type": "transform",
+            "source": 0,
+            "target": 1
+        },
         "Node": {
             "name": "World",
             "parent_entity_id": 1,
@@ -39,6 +44,51 @@
         }
     },
     "3": {
+        "ArucoMarker": {
+            "id": 1,
+            "square_length": 0.09000000357627869,
+            "marker_length": 0.07000000029802322,
+            "marker_dict": 0
+        },
+        "Transform": {
+            "X_PT": [
+                0.9999997856793906,
+                2.3875885401396077e-07,
+                -1.4495385049854907e-08,
+                0.11928342538673353,
+                1.01467070033063e-06,
+                1.0000007316287012,
+                3.9479712105720274e-09,
+                1.4297368916560416e-07,
+                5.246363216545346e-08,
+                4.231249797143365e-09,
+                1.0000003069219272,
+                0.0808560138963269,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "locked": false,
+            "visible": true,
+            "modifiable": true
+        },
+        "Deletable": {},
+        "Draggable": {
+            "type": "transform"
+        },
+        "Nestable": {
+            "type": "transform",
+            "source": 1,
+            "target": 0
+        },
+        "Node": {
+            "name": "Marker",
+            "parent_entity_id": 2,
+            "entity_id": 3
+        }
+    },
+    "4": {
         "Transform": {
             "X_PT": [
                 1.0,
@@ -62,40 +112,31 @@
             "visible": true,
             "modifiable": false
         },
-        "RobotSettings": {
+        "Franka": {
             "name": "noname",
             "ip": "10.103.1.111",
             "username": "admin",
             "password": "Password!"
         },
+        "Deletable": {},
+        "Draggable": {
+            "type": "transform"
+        },
+        "Nestable": {
+            "type": "transform",
+            "source": 0,
+            "target": 1
+        },
         "Node": {
-            "name": "Sheep (Panda)",
+            "name": "Robot",
             "parent_entity_id": 2,
-            "entity_id": 3
-        }
-    },
-    "4": {
-        "PoseFolder": {},
-        "Node": {
-            "name": "Poses",
-            "parent_entity_id": 3,
             "entity_id": 4
         }
     },
     "5": {
-        "PoseGroup": {
-            "color": [
-                1.0,
-                1.0,
-                1.0
-            ]
-        },
-        "Draggable": {
-            "type": "posegroup"
-        },
-        "Deletable": {},
+        "PoseFolder": {},
         "Node": {
-            "name": "Left",
+            "name": "Poses",
             "parent_entity_id": 4,
             "entity_id": 5
         }
@@ -122,153 +163,318 @@
             ],
             "locked": false,
             "visible": true,
-            "modifiable": true
+            "modifiable": false
         },
-        "Camera": {
-            "serial": "220422302296"
+        "Nestable": {
+            "type": "transform",
+            "source": 0,
+            "target": 1
         },
-        "Deletable": {},
+        "Mesh": {
+            "mesh_path": "robots/panda/meshes/link0.stl"
+        },
+        "FrankaLink": {
+            "robot_id": 4,
+            "link_name": "panda_link0"
+        },
         "Node": {
-            "name": "Left Camera",
-            "parent_entity_id": 2,
+            "name": "L0",
+            "parent_entity_id": 4,
             "entity_id": 6
         }
     },
     "7": {
-        "CollectorData": {
-            "robot_id": 3,
-            "path": "",
-            "group_blacklist": [],
-            "camera_blacklist": []
+        "Transform": {
+            "X_PT": [
+                0.9984781725419232,
+                -0.05514833594353875,
+                0.0,
+                0.0,
+                0.05514833594353875,
+                0.9984781725419232,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.333,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "locked": false,
+            "visible": true,
+            "modifiable": false
+        },
+        "Nestable": {
+            "type": "transform",
+            "source": 0,
+            "target": 1
+        },
+        "Mesh": {
+            "mesh_path": "robots/panda/meshes/link1.stl"
+        },
+        "FrankaLink": {
+            "robot_id": 4,
+            "link_name": "panda_link1"
         },
         "Node": {
-            "name": "Collector",
-            "parent_entity_id": 1,
+            "name": "L1",
+            "parent_entity_id": 6,
             "entity_id": 7
         }
     },
     "8": {
-        "DataNode": {},
+        "Transform": {
+            "X_PT": [
+                0.978501971125293,
+                0.20623746629532844,
+                -3.630726538202522e-18,
+                0.0,
+                -1.0098778162100174e-12,
+                4.791370898862729e-12,
+                1.0,
+                0.0,
+                0.2062374662953284,
+                -0.9785019711252928,
+                4.896638650109253e-12,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "locked": false,
+            "visible": true,
+            "modifiable": false
+        },
+        "Nestable": {
+            "type": "transform",
+            "source": 0,
+            "target": 1
+        },
+        "Mesh": {
+            "mesh_path": "robots/panda/meshes/link2.stl"
+        },
+        "FrankaLink": {
+            "robot_id": 4,
+            "link_name": "panda_link2"
+        },
         "Node": {
-            "name": "Data",
+            "name": "L2",
             "parent_entity_id": 7,
             "entity_id": 8
         }
     },
     "9": {
-        "Pose": {
-            "q": [
-                0.5271103069176115,
-                0.5578796255473076,
-                -0.5324770301620538,
-                -1.6953081929202423,
-                -0.19718032560996437,
-                2.2815975033832685,
-                1.6567864725230592
-            ]
+        "Transform": {
+            "X_PT": [
+                0.9996798571903835,
+                0.02530184040369659,
+                -7.962125743135813e-19,
+                -1.3877787807814457e-17,
+                -1.239284558097649e-13,
+                4.89507035871628e-12,
+                -0.9999999999999999,
+                -0.31599999999999995,
+                -0.02530184040369659,
+                0.9996798571903838,
+                4.8966380621796385e-12,
+                1.8369302573917123e-19,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "locked": false,
+            "visible": true,
+            "modifiable": false
         },
-        "Draggable": {
-            "type": "pose"
+        "Nestable": {
+            "type": "transform",
+            "source": 0,
+            "target": 1
         },
-        "Deletable": {},
+        "Mesh": {
+            "mesh_path": "robots/panda/meshes/link3.stl"
+        },
+        "FrankaLink": {
+            "robot_id": 4,
+            "link_name": "panda_link3"
+        },
         "Node": {
-            "name": "q",
-            "parent_entity_id": 5,
+            "name": "L3",
+            "parent_entity_id": 8,
             "entity_id": 9
         }
     },
     "10": {
-        "Pose": {
-            "q": [
-                0.5749989010956925,
-                0.748653654861398,
-                -0.4507701091652991,
-                -1.489078606272525,
-                -0.17162731235873097,
-                2.2573803854708405,
-                1.7470772204189737
-            ]
+        "Transform": {
+            "X_PT": [
+                -0.4693109077104381,
+                0.8830329959316383,
+                4.13665153371516e-18,
+                0.0825,
+                -4.323892851569764e-12,
+                -2.2980526389878594e-12,
+                -1.0,
+                -2.168404344971009e-19,
+                -0.8830329959316382,
+                -0.46931090771043815,
+                4.89663909492838e-12,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "locked": false,
+            "visible": true,
+            "modifiable": false
         },
-        "Draggable": {
-            "type": "pose"
+        "Nestable": {
+            "type": "transform",
+            "source": 0,
+            "target": 1
         },
-        "Deletable": {},
+        "Mesh": {
+            "mesh_path": "robots/panda/meshes/link4.stl"
+        },
+        "FrankaLink": {
+            "robot_id": 4,
+            "link_name": "panda_link4"
+        },
         "Node": {
-            "name": "q",
-            "parent_entity_id": 5,
+            "name": "L4",
+            "parent_entity_id": 9,
             "entity_id": 10
         }
     },
     "11": {
-        "MeasurementGroup": {},
+        "Transform": {
+            "X_PT": [
+                0.9995666678012615,
+                0.02943597494024687,
+                4.728902228058447e-17,
+                -0.0824999999999999,
+                -1.4411928964405514e-13,
+                4.894526405782486e-12,
+                0.9999999999999998,
+                0.3839999999999999,
+                0.02943597494024687,
+                -0.9995666678012615,
+                4.896635287928207e-12,
+                -2.168404344971009e-18,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "locked": false,
+            "visible": true,
+            "modifiable": false
+        },
+        "Nestable": {
+            "type": "transform",
+            "source": 0,
+            "target": 1
+        },
+        "Mesh": {
+            "mesh_path": "robots/panda/meshes/link5.stl"
+        },
+        "FrankaLink": {
+            "robot_id": 4,
+            "link_name": "panda_link5"
+        },
         "Node": {
-            "name": "Left",
-            "parent_entity_id": 8,
+            "name": "L5",
+            "parent_entity_id": 10,
             "entity_id": 11
         }
     },
     "12": {
-        "RawMeasurement": {
-            "joint_values": [
-                0.5266045524819142,
-                0.5580052765682038,
-                -0.5328890411879361,
-                -1.6939617723308231,
-                -0.19498321656211393,
-                2.2790738833006765,
-                1.6646615440172827
+        "Transform": {
+            "X_PT": [
+                -0.2501208833867246,
+                -0.9682146165462718,
+                4.817408133149103e-18,
+                1.1102230246251565e-16,
+                4.7410007612849994e-12,
+                -1.224745360834851e-12,
+                -0.9999999999999999,
+                3.469446951953614e-18,
+                0.9682146165462719,
+                -0.2501208833867246,
+                4.89663736708712e-12,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
             ],
-            "camera_serial": "220422302296",
-            "image_path": "/home/jchakra/repos/waynon/data/Left/images/220422302296_9.png",
-            "enabled": true
+            "locked": false,
+            "visible": true,
+            "modifiable": false
         },
-        "Deletable": {},
+        "Nestable": {
+            "type": "transform",
+            "source": 0,
+            "target": 1
+        },
+        "Mesh": {
+            "mesh_path": "robots/panda/meshes/link6.stl"
+        },
+        "FrankaLink": {
+            "robot_id": 4,
+            "link_name": "panda_link6"
+        },
         "Node": {
-            "name": "Left Camera 9",
+            "name": "L6",
             "parent_entity_id": 11,
             "entity_id": 12
         }
     },
     "13": {
-        "RawMeasurement": {
-            "joint_values": [
-                0.57595679804382,
-                0.7498740300057143,
-                -0.45027210583694155,
-                -1.4902273449101973,
-                -0.1730895708276834,
-                2.2599165519586677,
-                1.7364671777365979
+        "Transform": {
+            "X_PT": [
+                0.6702122474305852,
+                -0.742169484278385,
+                7.908251859231206e-19,
+                0.08799999999999991,
+                3.634137826483516e-12,
+                3.2817871478598994e-12,
+                -1.0000000000000002,
+                1.1102230246251565e-16,
+                0.742169484278385,
+                0.6702122474305853,
+                4.89663945509141e-12,
+                3.469446951953614e-18,
+                0.0,
+                0.0,
+                0.0,
+                1.0
             ],
-            "camera_serial": "220422302296",
-            "image_path": "/home/jchakra/repos/waynon/data/Left/images/220422302296_10.png",
-            "enabled": true
+            "locked": false,
+            "visible": true,
+            "modifiable": false
         },
-        "Deletable": {},
+        "Nestable": {
+            "type": "transform",
+            "source": 0,
+            "target": 1
+        },
+        "Mesh": {
+            "mesh_path": "robots/panda/meshes/link7.stl"
+        },
+        "FrankaLink": {
+            "robot_id": 4,
+            "link_name": "panda_link7"
+        },
         "Node": {
-            "name": "Left Camera 10",
-            "parent_entity_id": 11,
+            "name": "L7",
+            "parent_entity_id": 12,
             "entity_id": 13
-        }
-    },
-    "14": {
-        "Detectors": {},
-        "Node": {
-            "name": "Detectors",
-            "parent_entity_id": 7,
-            "entity_id": 14
-        }
-    },
-    "15": {
-        "ArucoDetector": {
-            "enabled": true,
-            "marker_dict": 0
-        },
-        "Deletable": {},
-        "Node": {
-            "name": "Aruco Detector",
-            "parent_entity_id": 14,
-            "entity_id": 15
         }
     }
 }

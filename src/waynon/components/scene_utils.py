@@ -1,3 +1,4 @@
+from typing import Callable, Type
 from pathlib import Path
 import json
 
@@ -6,20 +7,37 @@ import esper
 
 
 from .node import Node
-from .simple import Root, World, Visiblity, OptimizedPose, PoseFolder, Pose, Draggable, Deletable, Detectors
+from .simple import Root, World, Visiblity, OptimizedPose, PoseFolder, Pose, Draggable, Deletable, Detectors, Detector, Nestable
+from .aruco_marker import ArucoMarker
 from .pose_group import PoseGroup
-from .robot import RobotSettings
+from .robot import Franka, FrankaLink
 from .collector import CollectorData, DataNode, MeasurementGroup
 from .raw_measurement import RawMeasurement
+from .image_measurement import ImageMeasurement
 from .camera import Camera
-from .aruco_detector import ArucoDetector
+from .aruco_detector import ArucoDetector, ArucoMeasurement
 from .transform import Transform
-from .aruco_detector import ArucoDetector
-from .tree_utils import create_entity
+from .tree_utils import *
+from .renderable import Mesh
 
 def create_camera(name:str, parent_id:int):
-    return create_entity(name, parent_id, Transform(), Camera(), Deletable())
+    return create_entity(name, parent_id, 
+                        Transform(), 
+                        Camera(), 
+                        Deletable(), 
+                        Draggable(type="transform"),
+                        Nestable(type="transform", target=False)
+                        )
 
+def create_aruco_marker(name:str, parent_id:int, marker: ArucoMarker = ArucoMarker()):
+    return create_entity(name, parent_id, 
+                        marker, 
+                        Transform(), 
+                        Deletable(), 
+                        Draggable(type="transform"),
+                        Nestable(type="transform", target=False)
+                        )
+    
 def create_collector(parent_id: int, robot_id: int):
     id, node = create_entity("Collector", parent_id, CollectorData(robot_id=robot_id))
     create_entity("Data", id, DataNode())
@@ -30,34 +48,81 @@ def refresh_transforms():
     Transform.refresh_transforms(get_world_id())
 
 def create_robot(name:str, parent_id:int=None):
-    rid, node = create_entity(name, parent_id, Transform(modifiable=False), RobotSettings())
-    id, _ = create_entity("Poses", rid, PoseFolder())
-    create_posegroup("left", id)
-    create_posegroup("right", id)
-    id, _ = create_posegroup("top", id)
-    create_motion("q1", id, [0, 0, 0, 0, 0, 0, 0])
-    create_motion("q2", id, [0, 0, 0, 0, 0, 0, 0])
-    create_motion("q3", id, [0, 0, 0, 0, 0, 0, 0])
-    return rid, node
+    rd, node = create_entity(name, parent_id, 
+                              Transform(modifiable=False), 
+                              Franka(), 
+                              Deletable(), 
+                              Draggable(type="transform"),
+                              Nestable(type="transform", target=True, source=False)
+                              )
+    id, _ = create_entity("Poses", rd, PoseFolder())
+
+    link_to_mesh_name = {
+        "panda_link0": "link0",
+        "panda_link1": "link1",
+        "panda_link2": "link2",
+        "panda_link3": "link3",
+        "panda_link4": "link4",
+        "panda_link5": "link5",
+        "panda_link6": "link6",
+        "panda_link7": "link7",
+        "panda_hand": "hand",
+        "panda_leftfinger": "finger",
+        "panda_rightfinger": "finger"
+    }
+
+    def link_components(name):
+        mesh_path = f"robots/panda/meshes/{link_to_mesh_name[name]}.stl"
+        return [Transform(modifiable=False), 
+                Nestable(type="transform", target=True, source=False), 
+                Mesh(mesh_path=mesh_path),
+                FrankaLink(robot_id=rd, link_name=name)]
+
+    l0, _ = create_entity("L0", rd, *link_components("panda_link0")) 
+    l1, _ = create_entity("L1", l0, *link_components("panda_link1")) 
+    l2, _ = create_entity("L2", l1, *link_components("panda_link2")) 
+    l3, _ = create_entity("L3", l2, *link_components("panda_link3")) 
+    l4, _ = create_entity("L4", l3, *link_components("panda_link4")) 
+    l5, _ = create_entity("L5", l4, *link_components("panda_link5")) 
+    l6, _ = create_entity("L6", l5, *link_components("panda_link6")) 
+    l7, _ = create_entity("L7", l6, *link_components("panda_link7")) 
+    l8, _ = create_entity("Hand", l7, *link_components("panda_hand")) 
+    return rd, node
 
 def create_posegroup(name:str, parent_id:int):
-    return create_entity(name, parent_id, PoseGroup(), Draggable(type="posegroup"), Deletable())
+    return create_entity(name, parent_id, 
+                         PoseGroup(), 
+                         Draggable(type="posegroup"), 
+                         Deletable())
 
 def create_motion(name:str, parent_id:int, q):
-    return create_entity(name, parent_id, Pose(q=q), Draggable(type="pose"), Deletable())
+    return create_entity(name, parent_id, 
+                         Pose(q=q), 
+                         Draggable(type="pose"), 
+                         Deletable())
+
 
 def create_frame(name:str, parent_id:int, modifiable=True):
-    return create_entity(name, parent_id, Transform(modifiable=modifiable))
+    return create_entity(name, parent_id, 
+                         Transform(modifiable=modifiable))
 
-def create_raw_measurement(name:str, parent_id:int, measurement: RawMeasurement):
-    return create_entity(name, parent_id, measurement, Deletable())
+def create_raw_measurement(name:str, parent_id:int, measurement: ImageMeasurement):
+    return create_entity(name, parent_id, 
+                        measurement, 
+                        Deletable())
 
 def create_aruco_detector(name:str, parent_id: int):
-    return create_entity(name, parent_id, ArucoDetector(), Deletable())
+    return create_entity(name, parent_id, 
+                        ArucoDetector(), 
+                        Deletable())
 
 def create_world():
     root_id = get_root_id()
-    id, node= create_entity("World", root_id, World(), Transform(modifiable=False))
+    id, node= create_entity("World", root_id, 
+                            World(), 
+                            Transform(modifiable=False),
+                            Nestable(type="transform", source=False)
+                            )
     return id, node
 
 def create_root():
@@ -66,9 +131,9 @@ def create_root():
 def create_empty_scene():
     root_id, _ = create_root()
     world_id, _ = create_world()
-    robot_id, _ = create_robot("robot", world_id)
-    create_camera("camera", world_id)
-    create_collector(root_id, robot_id)
+    # robot_id, _ = create_robot("robot", world_id)
+    # create_camera("camera", world_id)
+    # create_collector(root_id, robot_id)
 
 def get_root_node():
     return esper.get_components(Root, Node)[0][1][1]
@@ -93,6 +158,9 @@ def save_scene(path: Path = Path("default.json")):
 
 def load_scene(path: Path = Path("default.json")):
     print(f"Loading from {path}")
+    if not path.exists():
+        print(f"File {path} does not exist")
+        return
     with open(path, "r") as f:
         res = json.load(f)
     esper.clear_database()
@@ -109,14 +177,35 @@ def load_scene(path: Path = Path("default.json")):
                 component.entity_id = entity
             esper.add_component(entity, component)
 
-    for entity, component in esper.get_component(Node):
-        old_parent_id = component.parent_entity_id
-        if old_parent_id is not None:
-            assert old_parent_id in old_id_to_new_id, f"Old parent id {old_parent_id} not found"
-            component.parent_entity_id = old_id_to_new_id[old_parent_id]
+    # for entity, component in esper.get_component(Node):
+    #     old_parent_id = component.parent_entity_id
+    #     if old_parent_id is not None:
+    #         assert old_parent_id in old_id_to_new_id, f"Old parent id {old_parent_id} not found"
+    #         component.parent_entity_id = old_id_to_new_id[old_parent_id]
+    
+    for entity, component_dict in esper._entities.items():
+        for component_type, component in component_dict.items():
+            component._fix_on_load(old_id_to_new_id)
 
     for entity, component in esper.get_component(Node):
         component.refresh()
+
+def get_detectors(collector_id: int, predicate: Callable[[int, Detector], bool] | None = None):
+    from waynon.components.simple import Detectors, Detector
+    assert esper.has_component(collector_id, CollectorData)
+    entity_id = find_child_with_component(collector_id, Detectors)
+    if entity_id is None:
+        return []
+
+    node = get_node(entity_id)
+    children = []
+    for child in node.children:
+        child_id = child.entity_id
+        component= component_for_entity_with_instance(child_id, Detector)
+        if predicate is None or predicate(child_id, component):
+            children.append(child_id)
+    return children
+
 
 
 def print_tree():

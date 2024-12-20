@@ -10,7 +10,7 @@ from .component import Component
 from .node import Node
 from .pose_group import PoseGroup
 from .camera import Camera
-from .simple import Detectors
+from .simple import Detectors, Detector
 
 class MeasurementGroup(Component):
     pass
@@ -45,8 +45,12 @@ class CollectorData(Component):
     def draw_property(self, nursery, entity_id):
         draw_collector(nursery, entity_id)
 
+
 def draw_collector(nursery: trio.Nursery, collector_id: int):
         from waynon.processors.collector import Collector
+        from waynon.components.scene_utils import get_detectors
+
+
         collector_data = esper.component_for_entity(collector_id, CollectorData)
         robot_id = collector_data.robot_id
         robot_name = esper.component_for_entity(robot_id, Node).name
@@ -83,7 +87,21 @@ def draw_collector(nursery: trio.Nursery, collector_id: int):
         can_run = Collector.instance().can_run(collector_data)
         disabled = not can_run
 
+        detector_ids = get_detectors(collector_id)
+        if detector_ids:
+            imgui.separator_text("Detectors")
+            for detector_id in detector_ids:
+                detector = component_for_entity_with_instance(detector_id, Detector)
+                node = get_node(detector_id)
+                imgui.push_id(detector_id)
+                _, detector.enabled = imgui.checkbox(node.name, detector.enabled)
+                imgui.pop_id()  
+
+            
         imgui.begin_disabled(disabled)
         if imgui.button("Collect"):
             nursery.start_soon(Collector.instance().collect, collector_id)
         imgui.end_disabled()
+        imgui.same_line()
+        if imgui.button("Run Detectors"):
+            nursery.start_soon(Collector.instance().run_detectors, collector_id)

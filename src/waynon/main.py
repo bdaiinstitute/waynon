@@ -9,9 +9,11 @@ import pyglet
 
 import marsoom
 
-from waynon.components.scene_utils import create_empty_scene, load_scene, save_scene, refresh_transforms
+from waynon.components.scene_utils import create_empty_scene, load_scene, save_scene 
 from waynon.components.camera import Camera
 from waynon.processors.camera import CameraManager
+from waynon.processors.transforms import TransformProcessor
+from waynon.processors.robot import RobotProcessor
 
 from waynon.viewmodels.property_viewer import PropertyViewModel
 from waynon.viewmodels.scene_viewmodel import SceneViewModel
@@ -52,6 +54,9 @@ class Window(marsoom.Window):
 
         create_empty_scene()
         load_scene()
+
+        esper.add_processor(RobotProcessor(), priority=100)
+        esper.add_processor(TransformProcessor())
     
     def _set_up_assets(self):
         work_path = Path(__file__).parent.parent.parent / "assets"
@@ -60,14 +65,10 @@ class Window(marsoom.Window):
     
 
     def draw(self):
-        refresh_transforms()
-
         self.property_viewmodel.draw()
         self.scene_viewmodel.draw()
         self.viewer_3d_viewmodel.draw()
         self.viewer_2d_viewmodel.draw()
-
-        esper.clear_dead_entities()
 
 
 async def update_cameras(window: marsoom.Window):
@@ -78,6 +79,7 @@ async def update_cameras(window: marsoom.Window):
 
 async def render_gui(window: marsoom.Window):
     while not window.should_exit():
+        esper.process()
         window.step()
         await trio.sleep(1/60.0)
 

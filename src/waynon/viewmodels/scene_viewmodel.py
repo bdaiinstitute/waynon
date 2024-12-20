@@ -3,10 +3,11 @@ import esper
 
 from imgui_bundle import imgui
 
+from waynon.components.tree_utils import *
 from waynon.components.scene_utils import get_root_id
 from waynon.components.component import Component
 from waynon.components.node import Node
-from waynon.components.simple import Draggable
+from waynon.components.simple import Draggable, Nestable
 
 class SceneViewModel:
     def __init__(self, nursery: trio.Nursery):
@@ -22,8 +23,10 @@ class SceneViewModel:
         imgui.push_id(entity_id)
         node = esper.component_for_entity(entity_id, Node)
         draggable = esper.has_component(entity_id, Draggable)
+        nestable = esper.has_component(entity_id, Nestable)
         selected = self.selected_entity_id == entity_id
-        if draggable:
+        ctrl = imgui.get_io().key_ctrl
+        if draggable and not ctrl:
             drag_component = esper.component_for_entity(entity_id, Draggable)
             if imgui.begin_drag_drop_source():
                 imgui.set_drag_drop_payload_py_id(drag_component.type, entity_id)
@@ -31,17 +34,21 @@ class SceneViewModel:
             if imgui.begin_drag_drop_target():
                 payload = imgui.accept_drag_drop_payload_py_id(drag_component.type)
                 if payload and esper.entity_exists(payload.data_id):
-                    source_node = esper.component_for_entity(payload.data_id, Node)
-                    parent_node = esper.component_for_entity(node.parent_entity_id, Node)
-                    source_idx = parent_node.children.index(source_node)
-                    dest_idx = parent_node.children.index(node)
-                    old_children = parent_node.children
-                    new_children = list(old_children)
-                    new_children[source_idx] = node
-                    new_children[dest_idx] = source_node
-                    parent_node.children = tuple(new_children)
+                    move_entity_over(payload.data_id, target_entity_id=entity_id) # move payload to dest
                 imgui.end_drag_drop_target()
         
+        if nestable and ctrl:
+            nest_component = esper.component_for_entity(entity_id, Nestable)
+            if nest_component.source:
+                if imgui.begin_drag_drop_source():
+                    imgui.set_drag_drop_payload_py_id(nest_component.type, entity_id)
+                    imgui.end_drag_drop_source()
+            if nest_component.target:
+                if imgui.begin_drag_drop_target():
+                    payload = imgui.accept_drag_drop_payload_py_id(nest_component.type)
+                    if payload and esper.entity_exists(payload.data_id):
+                        parent_entity_to(payload.data_id, entity_id) # move payload to dest
+                    imgui.end_drag_drop_target()
 
         if imgui.begin_popup_context_item(f"##{entity_id}"):
             for component in get_sorted_components(entity_id):
@@ -49,26 +56,11 @@ class SceneViewModel:
             imgui.end_popup()
         
         selected_positive_edge = selected and self.previous_selected_entity_id != self.selected_entity_id
-        if selected_positive_edge:
-            for component in get_sorted_components(entity_id):
-                component.on_selected(self.nursery, entity_id)
+        for component in get_sorted_components(entity_id):
+            component.on_selected(self.nursery, entity_id, just_selected=selected_positive_edge)
 
         self.previous_selected_entity_id = self.selected_entity_id
         
-
-
-        # if selected and esper.has_component(entity_id, PoseGroup):
-        #     robot_id = find_nearest_ancestor_with_component(entity_id, RobotSettings)
-        #     robot = esper.component_for_entity(robot_id, RobotSettings).get_manager()
-        #     if robot.is_button_pressed("cross"):
-        #         create_motion("q", entity_id, robot.q)
-        #     if robot.is_button_pressed("circle"):
-        #         print("deleting")
-        #         if node.children:
-        #             child_id = node.children[-1].entity_id
-        #             delete_entity(child_id)
-
-
         imgui.pop_id()
     
     def traverse_tree(self, entity_id = None):
@@ -76,7 +68,7 @@ class SceneViewModel:
             entity_id = get_root_id()
         node = esper.component_for_entity(entity_id, Node)
         is_leaf = not node.children
-        flags = imgui.TreeNodeFlags_.open_on_arrow
+        flags = imgui.TreeNodeFlags_.open_on_arrow | imgui.TreeNodeFlags_.default_open
         if is_leaf:
             flags |= imgui.TreeNodeFlags_.leaf
         selected = self.selected_entity_id == entity_id
@@ -100,6 +92,11 @@ class SceneViewModel:
     def draw(self):
         imgui.begin("Scene")
         self.traverse_tree()
+        # if clicked on empty space
+        if imgui.is_window_hovered() and imgui.is_mouse_clicked(0):
+            self.selected_entity_id = -1
+            esper.dispatch_event("property", -1)
+            esper.dispatch_event("modify_transform", -1)
         imgui.end()
 
 def get_sorted_components(entity_id):

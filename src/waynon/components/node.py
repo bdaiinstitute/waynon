@@ -33,4 +33,8 @@ class Node(Component, NodeMixin):
     
     def property_order(self):
         return 0
+    
+    def _fix_on_load(self, old_to_new):
+        if self.parent_entity_id in old_to_new:
+            self.parent_entity_id = old_to_new[self.parent_entity_id]
 

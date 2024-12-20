@@ -6,18 +6,18 @@ from imgui_bundle import imgui
 from waynon.components.tree_utils import find_nearest_ancestor_with_component, delete_entity
 from waynon.components.component import Component
 from waynon.components.node import Node
-from waynon.components.robot import RobotSettings
+from waynon.components.robot import Franka
 
 class PoseGroup(Component):
     color: list[float] = [1.0, 1.0, 1.0]
 
 
     def get_robot(self, entity_id):
-        robot_id = find_nearest_ancestor_with_component(entity_id, RobotSettings)
+        robot_id = find_nearest_ancestor_with_component(entity_id, Franka)
         if robot_id is None:
             print("No robot found")
             return
-        return esper.component_for_entity(robot_id, RobotSettings).get_manager()
+        return esper.component_for_entity(robot_id, Franka).get_manager()
 
     def draw_property(self, nursery, e):
         if esper.has_component(e, PoseGroup):
@@ -34,14 +34,14 @@ class PoseGroup(Component):
             if robot:
                 create_motion("q", entity_id, robot.q)
         
-    def on_selected(self, nursery, entity_id):
+    def on_selected(self, nursery, entity_id, just_selected):
         from waynon.components.scene_utils import create_motion
         node = esper.component_for_entity(entity_id, Node)
-        robot_id = find_nearest_ancestor_with_component(entity_id, RobotSettings)
+        robot_id = find_nearest_ancestor_with_component(entity_id, Franka)
         if robot_id is None:
             print("No robot found")
             return
-        robot = esper.component_for_entity(robot_id, RobotSettings).get_manager()
+        robot = esper.component_for_entity(robot_id, Franka).get_manager()
         if robot.is_button_pressed("circle"):
             create_motion("q", entity_id, robot.q)
         if robot.is_button_pressed("cross"):

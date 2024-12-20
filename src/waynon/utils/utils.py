@@ -54,6 +54,7 @@ def one_at_a_time(static):
         return wrapper
     return decorator
 
+
 COLORS = {
     "BLUE": [0.0, 0.5843, 1.0, 1.0],
     "YELLOW": [1.0, 0.8, 0.0, 1.0],

@@ -5,6 +5,7 @@ from imgui_bundle import imgui
 
 from waynon.components.component import Component
 from waynon.components.tree_utils import find_nearest_ancestor_with_component
+from waynon.detectors.measurement_processor import MeasurementProcessor
 
 
 class Root(Component):
@@ -12,9 +13,13 @@ class Root(Component):
 
 class World(Component):
     def draw_context(self, nursery, entity_id):
-        from waynon.components.scene_utils import create_camera
+        from waynon.components.scene_utils import create_camera, create_aruco_marker, create_robot
+        if imgui.menu_item_simple("Add Robot"):
+            create_robot("Robot", entity_id)
         if imgui.menu_item_simple("Add Camera"):
             create_camera("Camera", entity_id)
+        if imgui.menu_item_simple("Add Marker"):
+            create_aruco_marker("Marker", entity_id)
 
 class Visiblity(Component):
     enabled: bool = True
@@ -42,12 +47,12 @@ class Pose(Component):
 
 
     def get_robot(self, entity_id):
-        from waynon.components.robot import RobotSettings
-        robot_id = find_nearest_ancestor_with_component(entity_id, RobotSettings)
+        from waynon.components.robot import Franka
+        robot_id = find_nearest_ancestor_with_component(entity_id, Franka)
         if robot_id is None:
             print("No robot found")
             return None
-        return esper.component_for_entity(robot_id, RobotSettings).get_manager()
+        return esper.component_for_entity(robot_id, Franka).get_manager()
 
     def draw_context(self, nursery, entity_id):
         robot = self.get_robot(entity_id)
@@ -70,5 +75,23 @@ class Pose(Component):
 class Draggable(Component):
     type: str
 
+class Nestable(Component):
+    type: str
+    source: int = True
+    target: int = True
+
 class Detectors(Component):
     pass
+
+class Detector(Component):
+    enabled: bool = True
+
+    def get_processor(self) -> MeasurementProcessor:
+        raise NotImplementedError("get_processor must be implemented by subclass")
+
+    def property_order(self):
+        return 100
+
+    def draw_property(self, nursery, entity_id):
+        imgui.separator()
+        _, self.enabled = imgui.checkbox("Enabled", self.enabled)

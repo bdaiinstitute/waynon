@@ -1,3 +1,4 @@
+from typing import Literal
 import trio
 import numpy as np
 import pinocchio as pin
@@ -11,11 +12,16 @@ from waynon.components.component import Component
 from waynon.processors.robot import Robot
 
 
-class RobotSettings(Component):
+class Franka(Component):
     name: str = "noname"
     ip: str = "10.103.1.111"
     username: str = "admin"
     password: str = "Password!"
+
+
+    @staticmethod
+    def get_robot_links(robot_id):
+        pass
 
     def model_post_init(self, __context):
         super().model_post_init(__context)
@@ -30,12 +36,29 @@ class RobotSettings(Component):
     def property_order(self):
         return 200
 
+class FrankaLink(Component):
+    robot_id: int
+    link_name: Literal[
+        "panda_link0",
+        "panda_link1",
+        "panda_link2",
+        "panda_link3",
+        "panda_link4",
+        "panda_link5",
+        "panda_link6",
+        "panda_link7",
+        "panda_hand"
+        ] 
+    
+    def _fix_on_load(self, new_to_old_entity_ids):
+        self.robot_id = new_to_old_entity_ids[self.robot_id]
+
 
 @static(busy = False, 
         cancel_scope = trio.CancelScope())
 def draw_property(nursery: trio.Nursery, robot: Robot):
     static = draw_property
-    settings: RobotSettings = robot.settings   
+    settings: Franka = robot.settings   
 
     imgui.separator()
 
@@ -98,11 +121,9 @@ def draw_property(nursery: trio.Nursery, robot: Robot):
             imgui.same_line()
             if imgui.button("Mode"):
                 nursery.start_soon(switch_mode)
-        elif robot.brake_status == Robot.BrakeStatus.CLOSED:   
+        else:
             if imgui.button("Unlock"):
                 nursery.start_soon(unlock_brakes)
-        else:
-            imgui.text("Brakes are moving")
         
         imgui.same_line()
         if imgui.button("Home"):
