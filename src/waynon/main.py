@@ -1,0 +1,105 @@
+from pathlib import Path
+from typing import Optional
+
+from pydantic import BaseModel
+import trio
+import warp as wp
+from imgui_bundle import imgui
+import esper
+import pyglet
+
+import marsoom
+from marsoom import guizmo
+
+from waynon.components.scene_utils import create_empty_scene, load_scene, save_scene, refresh_transforms
+from waynon.components.camera import Camera
+from waynon.processors.camera import CameraManager
+
+from waynon.viewmodels.property_viewer import PropertyViewModel
+from waynon.viewmodels.scene_viewmodel import SceneViewModel
+from waynon.viewmodels.viewer_2d_viewmodel import Viewer2DViewModel
+from waynon.viewmodels.viewer_3d_viewmodel import Viewer3DViewModel
+
+
+class Settings(BaseModel):
+    path: Optional[Path] = "default.json"   
+
+    @staticmethod
+    def try_load(path = Path("settings.json")):
+        if path.exists():
+            with open("settings.json", "r") as f:
+                settings = Settings.model_validate_json(f.read())
+        else:
+            settings = Settings()
+        return settings
+    
+    def save(self, path: Path = Path("settings.json")):
+        with open(path, "w") as f:
+            f.write(self.model_dump_json(indent=4))
+
+
+class Window(marsoom.Window):
+    def __init__(self, nursery: trio.Nursery, settings: Settings):
+        super().__init__(docking=True)
+        self._set_up_assets()
+
+        self.nursery = nursery  
+        self.settings = settings
+
+        self.property_viewmodel = PropertyViewModel(self.nursery)
+        self.scene_viewmodel = SceneViewModel(self.nursery)
+        self.viewer_3d_viewmodel = Viewer3DViewModel(self.nursery, self)
+        self.viewer_2d_viewmodel = Viewer2DViewModel(self.nursery, self)
+
+        esper.set_handler("image_viewer", self.viewer_2d_viewmodel._on_image_viewer)
+
+        create_empty_scene()
+        # load_scene()
+    
+    def _set_up_assets(self):
+        work_path = Path(__file__).parent.parent.parent / "assets"
+        pyglet.resource.path.append(str(work_path.absolute()))
+        pyglet.resource.reindex()
+    
+
+    def draw(self):
+        refresh_transforms()
+
+        self.property_viewmodel.draw()
+        self.scene_viewmodel.draw()
+        self.viewer_3d_viewmodel.draw()
+        self.viewer_2d_viewmodel.draw()
+
+        esper.clear_dead_entities()
+
+
+async def update_cameras(window: marsoom.Window):
+    while not window.should_exit():
+        for _, camera in esper.get_component(Camera):
+            camera.update()
+        await trio.sleep(1/30.0)
+
+async def render_gui(window: marsoom.Window):
+    while not window.should_exit():
+        window.step()
+        await trio.sleep(1/60.0)
+
+
+# ENTRY POINT
+async def main_async():
+    settings = Settings.try_load()
+    CameraManager.instance().get_connected_serials()
+    
+    async with trio.open_nursery() as nursery:
+        window = Window(nursery, settings=settings)
+        nursery.start_soon(update_cameras, window)  
+        nursery.start_soon(render_gui, window)  
+
+    CameraManager.instance().stop_all_cameras()
+    
+    settings.save()
+    save_scene(settings.path)
+
+if __name__ == '__main__':
+    wp.init()
+    trio.run(main_async)

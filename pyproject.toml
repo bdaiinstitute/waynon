@@ -1,0 +1,55 @@
+[project]
+name = "waynon"
+version = "1.0.0"
+readme = "README.md"
+requires-python = ">=3.10, <3.13"
+authors =[
+    { name="Jad Abou-Chakra", email = "jchakra@theaiinstitute.com"}
+]
+
+dependencies = [
+    "marsoom @ git+https://github.com/jc211/marsoom", 
+    "zarr", 
+    "numpy", 
+    "scipy", 
+    "torch", 
+    "warp-lang", 
+    "trio", 
+    "trio-websocket@git+https://github.com/jc211/trio-websocket",
+    "trio_util",
+    "tyro",
+    "httpx",
+    "esper",
+    "opencv-python",
+    "pydantic",
+    "panda-python@git+https://github.com/jc211/panda-py#07f4dc816f3af6b5bad7e446b26902ed894060b9",
+    "threadpoolctl",
+    "atomics",
+    "anytree",
+    "pillow",
+    "polars"
+    ]
+
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.pixi.project]
+channels = ["jc211", "conda-forge"]
+platforms = ["linux-64"]
+
+[tool.pixi.pypi-dependencies]
+waynon = { path = ".", editable = true }
+
+[tool.pixi.tasks]
+start = { cmd = "python src/waynon/main.py" }
+
+[tool.pixi.dependencies]
+eigen = "*"
+libfranka = "*"
+pinocchio = "*"
+pyrealsense2 = "*"
+pip = "*"

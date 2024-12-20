@@ -1,0 +1,266 @@
+{
+    "1": {
+        "Root": {},
+        "Node": {
+            "name": "root",
+            "parent_entity_id": null,
+            "entity_id": 1,
+            "deletable": true
+        }
+    },
+    "2": {
+        "World": {},
+        "Transform": {
+            "X_PT": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "locked": false,
+            "visible": true,
+            "modifiable": false
+        },
+        "Node": {
+            "name": "World",
+            "parent_entity_id": 1,
+            "entity_id": 2,
+            "deletable": false
+        }
+    },
+    "3": {
+        "Transform": {
+            "X_PT": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "locked": false,
+            "visible": true,
+            "modifiable": false
+        },
+        "RobotSettings": {
+            "name": "noname",
+            "ip": "10.103.1.111",
+            "username": "admin",
+            "password": "Password!"
+        },
+        "Node": {
+            "name": "robot",
+            "parent_entity_id": 2,
+            "entity_id": 3,
+            "deletable": true
+        }
+    },
+    "4": {
+        "PoseFolder": {},
+        "Node": {
+            "name": "Poses",
+            "parent_entity_id": 3,
+            "entity_id": 4,
+            "deletable": true
+        }
+    },
+    "5": {
+        "PoseGroup": {
+            "color": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        "Draggable": {
+            "type": "posegroup"
+        },
+        "Node": {
+            "name": "left",
+            "parent_entity_id": 4,
+            "entity_id": 5,
+            "deletable": true
+        }
+    },
+    "6": {
+        "PoseGroup": {
+            "color": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        "Draggable": {
+            "type": "posegroup"
+        },
+        "Node": {
+            "name": "right",
+            "parent_entity_id": 4,
+            "entity_id": 6,
+            "deletable": true
+        }
+    },
+    "7": {
+        "PoseGroup": {
+            "color": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        "Draggable": {
+            "type": "posegroup"
+        },
+        "Node": {
+            "name": "top",
+            "parent_entity_id": 4,
+            "entity_id": 7,
+            "deletable": true
+        }
+    },
+    "8": {
+        "Pose": {
+            "q": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        "Draggable": {
+            "type": "pose"
+        },
+        "Node": {
+            "name": "q1",
+            "parent_entity_id": 7,
+            "entity_id": 8,
+            "deletable": true
+        }
+    },
+    "9": {
+        "Pose": {
+            "q": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        "Draggable": {
+            "type": "pose"
+        },
+        "Node": {
+            "name": "q2",
+            "parent_entity_id": 7,
+            "entity_id": 9,
+            "deletable": true
+        }
+    },
+    "10": {
+        "Pose": {
+            "q": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        "Draggable": {
+            "type": "pose"
+        },
+        "Node": {
+            "name": "q3",
+            "parent_entity_id": 7,
+            "entity_id": 10,
+            "deletable": true
+        }
+    },
+    "11": {
+        "Transform": {
+            "X_PT": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "locked": false,
+            "visible": true,
+            "modifiable": true
+        },
+        "Camera": {
+            "serial": ""
+        },
+        "Node": {
+            "name": "camera",
+            "parent_entity_id": 2,
+            "entity_id": 11,
+            "deletable": true
+        }
+    },
+    "12": {
+        "CollectorData": {
+            "robot_id": 3,
+            "path": "",
+            "group_blacklist": [],
+            "camera_blacklist": []
+        },
+        "Node": {
+            "name": "Collector",
+            "parent_entity_id": 1,
+            "entity_id": 12,
+            "deletable": true
+        }
+    },
+    "13": {
+        "DataNode": {},
+        "Node": {
+            "name": "Data",
+            "parent_entity_id": 12,
+            "entity_id": 13,
+            "deletable": true
+        }
+    }
+}
