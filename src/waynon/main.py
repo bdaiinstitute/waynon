@@ -14,6 +14,7 @@ from waynon.components.camera import Camera
 from waynon.processors.camera import CameraManager
 from waynon.processors.transforms import TransformProcessor
 from waynon.processors.robot import RobotProcessor
+from waynon.processors.render import RenderProcessor
 
 from waynon.viewmodels.property_viewer import PropertyViewModel
 from waynon.viewmodels.scene_viewmodel import SceneViewModel
@@ -55,8 +56,9 @@ class Window(marsoom.Window):
         create_empty_scene()
         load_scene()
 
-        esper.add_processor(RobotProcessor(), priority=100)
+        esper.add_processor(RobotProcessor())
         esper.add_processor(TransformProcessor())
+        esper.add_processor(RenderProcessor())
     
     def _set_up_assets(self):
         work_path = Path(__file__).parent.parent.parent / "assets"

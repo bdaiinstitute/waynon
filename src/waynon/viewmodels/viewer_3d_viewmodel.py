@@ -9,7 +9,8 @@ from marsoom import guizmo
 
 from waynon.components.robot import Franka
 from waynon.components.transform import Transform
-from waynon.components.renderable import Mesh
+from waynon.components.renderable import Mesh, ImageQuad
+from waynon.components.aruco_marker import ArucoMarker
 from waynon.utils.draw_utils import draw_axis, draw_robot
 
 class Viewer3DViewModel:
@@ -24,26 +25,19 @@ class Viewer3DViewModel:
 
         esper.set_handler("modify_transform", self._handle_transform_selected)
 
-    
     def draw(self):
         self._handle_keys()
         imgui.begin("3D Viewer")
         with self.viewer_3d.draw(in_imgui_window=True) as ctx:
             self._draw_transforms()
             self._draw_meshes()
+            self._draw_quads()
         self._draw_guizmo()
 
         if imgui.is_window_focused() and not guizmo.is_using_any():
             self.viewer_3d.process_nav()
         imgui.end()
 
-    # def _draw_modifiable_transforms(self):
-    #     for entity, transform in esper.get_component(Transform):
-    #         if entity == self.scene_view_model.selected_entity_id and transform.modifiable:
-    #             guizmo.set_id(entity)
-    #             X_WT = transform.get_X_WT()
-    #             X_WT = self.viewer_3d.manipulate(X_WT, self.guizmo_operation, self.guizmo_frame)
-    #             transform.set_X_WT(X_WT)
     def toggle_guizmo_frame(self):
         if self.guizmo_frame == guizmo.MODE.local:
             self.guizmo_frame = guizmo.MODE.world
@@ -67,9 +61,12 @@ class Viewer3DViewModel:
 
     def _draw_meshes(self):
         for entity, (transform, mesh) in esper.get_components(Transform, Mesh):
-            mesh._batch.draw()
+            mesh.draw()
 
-
+    def _draw_quads(self):
+        for entity, (transform, quad) in esper.get_components(Transform, ImageQuad):
+            quad.draw()
+    
     def _draw_transforms(self):
         for entity, transform in esper.get_component(Transform):
             if transform.visible:

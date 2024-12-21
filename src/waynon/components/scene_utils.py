@@ -18,7 +18,7 @@ from .camera import Camera
 from .aruco_detector import ArucoDetector, ArucoMeasurement
 from .transform import Transform
 from .tree_utils import *
-from .renderable import Mesh
+from .renderable import Mesh, ImageQuad
 
 def create_camera(name:str, parent_id:int):
     return create_entity(name, parent_id, 
@@ -35,17 +35,14 @@ def create_aruco_marker(name:str, parent_id:int, marker: ArucoMarker = ArucoMark
                         Transform(), 
                         Deletable(), 
                         Draggable(type="transform"),
-                        Nestable(type="transform", target=False)
+                        Nestable(type="transform", target=False),
+                        ImageQuad.create_aruco_quad(marker.marker_length)
                         )
     
 def create_collector(parent_id: int, robot_id: int):
     id, node = create_entity("Collector", parent_id, CollectorData(robot_id=robot_id))
     create_entity("Data", id, DataNode())
     return id, node
-
-
-def refresh_transforms():
-    Transform.refresh_transforms(get_world_id())
 
 def create_robot(name:str, parent_id:int=None):
     rd, node = create_entity(name, parent_id, 
@@ -131,8 +128,6 @@ def create_root():
 def create_empty_scene():
     root_id, _ = create_root()
     world_id, _ = create_world()
-    # robot_id, _ = create_robot("robot", world_id)
-    # create_camera("camera", world_id)
     # create_collector(root_id, robot_id)
 
 def get_root_node():
@@ -177,12 +172,6 @@ def load_scene(path: Path = Path("default.json")):
                 component.entity_id = entity
             esper.add_component(entity, component)
 
-    # for entity, component in esper.get_component(Node):
-    #     old_parent_id = component.parent_entity_id
-    #     if old_parent_id is not None:
-    #         assert old_parent_id in old_id_to_new_id, f"Old parent id {old_parent_id} not found"
-    #         component.parent_entity_id = old_id_to_new_id[old_parent_id]
-    
     for entity, component_dict in esper._entities.items():
         for component_type, component in component_dict.items():
             component._fix_on_load(old_id_to_new_id)

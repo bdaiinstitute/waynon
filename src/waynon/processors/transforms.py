@@ -3,9 +3,7 @@ import esper
 
 from waynon.components.node import Node
 from waynon.components.transform import Transform
-from waynon.components.renderable import Mesh
 from waynon.components.scene_utils import get_world_id
-import pyglet
 
 class TransformProcessor(esper.Processor):
 
@@ -30,7 +28,3 @@ class TransformProcessor(esper.Processor):
 
     def process(self):        
         TransformProcessor.refresh_transforms(get_world_id())
-        for entity, (transform, mesh) in esper.get_components(Transform, Mesh):
-            matrix = transform.get_X_WT()
-            mesh._model.matrix = pyglet.math.Mat4(matrix.T.flatten().tolist())
-
