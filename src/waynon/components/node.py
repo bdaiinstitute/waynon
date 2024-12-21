@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import Optional 
 import esper
 from anytree import NodeMixin
@@ -5,6 +6,10 @@ from anytree import NodeMixin
 from imgui_bundle import imgui
 
 from waynon.components.component import Component   
+
+
+    
+
 
 class Node(Component, NodeMixin):
     name: str = ""
@@ -33,6 +38,7 @@ class Node(Component, NodeMixin):
     
     def property_order(self):
         return 0
+    
     
     def _fix_on_load(self, old_to_new):
         if self.parent_entity_id in old_to_new:

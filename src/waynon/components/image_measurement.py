@@ -11,14 +11,12 @@ from .component import Component
 from .node import Node
 from .pose_group import PoseGroup
 from .camera import Camera
-from .raw_measurement import RawMeasurement
+from .measurement import Measurement
 
 
-class ImageMeasurement(RawMeasurement):
-    joint_values: list[float]
-    camera_serial: str
+class ImageMeasurement(Component):
+    camera_id: int
     image_path: str
-    enabled: bool = True
 
     def get_image_u(self):
         return np.array(Image.open(self.image_path))
@@ -29,11 +27,23 @@ class ImageMeasurement(RawMeasurement):
 
     def property_order(self):
         return 100
-
+    
+    def get_camera(self):
+        if not esper.entity_exists(self.camera_id):
+            return None
+        return esper.component_for_entity(self.camera_id, Camera)
+    
     def draw_property(self, nursery, entity_id):
         imgui.separator()
-        imgui.text(f"Joint Values: {self.joint_values}")
-        imgui.text(f"Camera Serial: {self.camera_serial}")
-        imgui.text(f"Image Path: {self.image_path}")
-        _, self.enabled = imgui.checkbox("Enabled", self.enabled)
+        camera = self.get_camera()
+        if camera is not None:
+            node = get_node(self.camera_id)
+            imgui.text(f"Camera: {node.name}")
 
+        imgui.text(f"Image Path: {self.image_path}")
+    
+    def default_name(self):
+        return "Image"
+
+    def _fix_on_load(self, new_to_old_entity_ids):
+        self.camera_id = new_to_old_entity_ids.get(self.camera_id, self.camera_id)

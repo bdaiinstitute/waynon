@@ -1,6 +1,26 @@
 from typing import Dict
+from dataclasses import dataclass
 from pydantic import BaseModel
 import trio
+
+@dataclass
+class ValidityResult:
+    _valid: bool = True
+    _message: str = ""
+
+    def __bool__(self):
+        return self._valid
+    
+    def __str__(self):
+        return self._message
+    
+    @staticmethod
+    def invalid(message: str = ""):
+        return ValidityResult(False, message)
+    
+    @staticmethod
+    def valid():
+        return ValidityResult()
 
 class Component(BaseModel):
     def property_order(self):
@@ -15,6 +35,11 @@ class Component(BaseModel):
     def on_selected(self, nursery: trio.Nursery, entity_id: int, just_selected: bool):
         pass
     
+    def default_name(self):
+        return "Node"
+    
+    def valid(self):
+        return ValidityResult.valid()
     
     def _fix_on_load(self, new_to_old_entity_ids: Dict[int, int]):
         """This is called when the system is loaded. We don't have a guarantee that the entity ids are the same. 

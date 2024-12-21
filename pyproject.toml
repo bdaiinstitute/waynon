@@ -2,7 +2,7 @@
 name = "waynon"
 version = "1.0.0"
 readme = "README.md"
-requires-python = ">=3.10, <3.13"
+requires-python = ">=3.10, <3.11"
 authors =[
     { name="Jad Abou-Chakra", email = "jchakra@theaiinstitute.com"}
 ]
@@ -27,7 +27,7 @@ dependencies = [
     "atomics",
     "anytree",
     "pillow",
-    "polars"
+    "symforce"
     ]
 
 [build-system]

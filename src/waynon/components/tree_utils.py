@@ -10,9 +10,9 @@ T = TypeVar("T")
 def get_node(entity_id: int) -> Node:
     return esper.component_for_entity(entity_id, Node)
 
-def find_child_with_component(entity_id, component_type, predicate: Callable[[int, T], bool] | None = None) -> int | None:
+def find_child_with_component(entity_id, component_type: T, predicate: Callable[[int, T], bool] | None = None) -> int | None:
     node = get_node(entity_id)
-    for child in node.descendants:
+    for child in node.children:
         if esper.has_component(child.entity_id, component_type):
             component = esper.component_for_entity(child.entity_id, component_type)
             if predicate is None or predicate(child.entity_id, component):
@@ -57,21 +57,22 @@ def find_nearest_ancestor_with_component(entity_id, component_type, predicate: C
                 return parent_node.entity_id
     return None
 
-def delete_entity(entity_id):
+def delete_entity(entity_id, predicate: Callable[[int, Node], bool] = None):
     node = get_node(entity_id)
     node.parent = None
     for child_node in node.children:
-        delete_entity(child_node.entity_id)
+        if predicate is None or predicate(child_node.entity_id, child_node):
+            delete_entity(child_node.entity_id)
     esper.delete_entity(entity_id)
 
-def delete_children(entity_id):
+def delete_children(entity_id, predicate: Callable[[int, Node], bool] = None):
     node = get_node(entity_id)
     for child_node in node.children:
-        delete_entity(child_node.entity_id)
+        delete_entity(child_node.entity_id, predicate)
 
 def parent_entity_to(entity_id:int, parent_id:int):
     node = get_node(entity_id)
-    node.parent = get_node(parent_id)
+    node.parent_id = parent_id
     # make first child
     move_entity_over(entity_id, node.parent.children[0].entity_id)
 
@@ -83,7 +84,7 @@ def move_entity_over(moving_entity_id, target_entity_id):
     # children are immutable, so we need to create a new list
     # if parents are different, we need to update both
     if moving_node.parent != target_node.parent:
-        moving_node.parent = target_node.parent
+        moving_node.parent_id = target_node.parent_id
 
     source_position_in_parent = moving_node.parent.children.index(moving_node)
     new_children = list(moving_node.parent.children)
@@ -114,3 +115,12 @@ def component_for_entity_with_instance(entity_id: int, component_type: T)-> T | 
         if isinstance(component, component_type):
             return component
     return None
+
+def try_component(entity_id: int, component_type: T) -> T | None:
+    if not esper.entity_exists(entity_id):
+        print(f"Warning: entity {entity_id} does not exist")
+        return None
+    if esper.has_component(entity_id, component_type):
+        return esper.component_for_entity(entity_id, component_type)
+    else:
+        print(f"Warning: entity {entity_id} does not have component {component_type}")

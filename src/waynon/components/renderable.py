@@ -16,7 +16,7 @@ from .component import Component
 from .node import Node
 from .pose_group import PoseGroup
 from .camera import Camera
-from .raw_measurement import RawMeasurement
+from .measurement import Measurement
 
 
 class Drawable:

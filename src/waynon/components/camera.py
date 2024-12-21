@@ -65,7 +65,10 @@ class Camera(Component):
             camera = manager.get_camera(c.serial)
             if camera:
                 alive = manager.camera_started(c.serial)
-                imgui.text(f"Status: {"active" if alive else "inactive"}")
+                if alive:
+                    imgui.text(f"Status: active")
+                else:
+                    imgui.text(f"Status: inactive")
                 if not alive:
                     if imgui.button("Start"):
                         manager.start_camera(c.serial)

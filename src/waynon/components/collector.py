@@ -24,8 +24,6 @@ class DataNode(Component):
     pass
 
 class CollectorData(Component):
-    robot_id: int
-    path: str = ""
     group_blacklist: list[int] = []
     camera_blacklist: list[int] = []    
 
@@ -49,15 +47,12 @@ class CollectorData(Component):
 def draw_collector(nursery: trio.Nursery, collector_id: int):
         from waynon.processors.collector import Collector
         from waynon.components.scene_utils import get_detectors
-
+        from .scene_utils import get_world_id
 
         collector_data = esper.component_for_entity(collector_id, CollectorData)
-        robot_id = collector_data.robot_id
-        robot_name = esper.component_for_entity(robot_id, Node).name
 
-        pose_group_ids = find_descendants_with_component(robot_id, PoseGroup)
+        pose_group_ids = find_descendants_with_component(get_world_id(), PoseGroup)
 
-        imgui.text(f"Robot: {robot_name}")
 
         imgui.separator_text("Pose Groups")
         for group_id in pose_group_ids:

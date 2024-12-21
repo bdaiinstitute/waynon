@@ -12,13 +12,16 @@ from .aruco_marker import ArucoMarker
 from .pose_group import PoseGroup
 from .robot import Franka, FrankaLink
 from .collector import CollectorData, DataNode, MeasurementGroup
-from .raw_measurement import RawMeasurement
+from .measurement import Measurement
 from .image_measurement import ImageMeasurement
 from .camera import Camera
 from .aruco_detector import ArucoDetector, ArucoMeasurement
+from .measurement import Measurement
+from .joint_measurement import JointMeasurement
 from .transform import Transform
 from .tree_utils import *
 from .renderable import Mesh, ImageQuad
+from .component import Component
 
 def create_camera(name:str, parent_id:int):
     return create_entity(name, parent_id, 
@@ -39,8 +42,8 @@ def create_aruco_marker(name:str, parent_id:int, marker: ArucoMarker = ArucoMark
                         ImageQuad.create_aruco_quad(marker.marker_length)
                         )
     
-def create_collector(parent_id: int, robot_id: int):
-    id, node = create_entity("Collector", parent_id, CollectorData(robot_id=robot_id))
+def create_collector(parent_id: int):
+    id, node = create_entity("Collector", parent_id, CollectorData())
     create_entity("Data", id, DataNode())
     return id, node
 
@@ -103,10 +106,16 @@ def create_frame(name:str, parent_id:int, modifiable=True):
     return create_entity(name, parent_id, 
                          Transform(modifiable=modifiable))
 
-def create_raw_measurement(name:str, parent_id:int, measurement: ImageMeasurement):
-    return create_entity(name, parent_id, 
-                        measurement, 
+def create_measurement(name:str, parent_id:int, *measurements: Component):
+    id, node = create_entity(name, parent_id, 
+                        Measurement(), 
                         Deletable())
+    for measurement in measurements:
+        create_entity(measurement.default_name(), id, measurement)
+    return id, node
+    
+
+        
 
 def create_aruco_detector(name:str, parent_id: int):
     return create_entity(name, parent_id, 
@@ -128,7 +137,7 @@ def create_root():
 def create_empty_scene():
     root_id, _ = create_root()
     world_id, _ = create_world()
-    # create_collector(root_id, robot_id)
+    create_collector(root_id)
 
 def get_root_node():
     return esper.get_components(Root, Node)[0][1][1]
@@ -178,6 +187,9 @@ def load_scene(path: Path = Path("default.json")):
 
     for entity, component in esper.get_component(Node):
         component.refresh()
+    
+    if not esper.get_component(CollectorData):
+        create_collector(get_root_id())
 
 def get_detectors(collector_id: int, predicate: Callable[[int, Detector], bool] | None = None):
     from waynon.components.simple import Detectors, Detector
@@ -195,11 +207,18 @@ def get_detectors(collector_id: int, predicate: Callable[[int, Detector], bool] 
             children.append(child_id)
     return children
 
+def is_dynamic(entity_id: int):
+    id = find_nearest_ancestor_with_component(entity_id, Franka)
+    if id is None:
+        return False
+    return True
 
 
-def print_tree():
-    root_node = get_root_node()
-    for pre, _, node in RenderTree(root_node):
+
+def print_tree(node = None):
+    if node is None:
+        node = get_root_node()
+    for pre, _, node in RenderTree(node):
         id = node.entity_id
         components = esper.components_for_entity(id)
         print("%s%s" % (pre, components))
