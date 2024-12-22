@@ -11,16 +11,18 @@ from .simple import Root, World, Visiblity, OptimizedPose, PoseFolder, Pose, Dra
 from .aruco_marker import ArucoMarker
 from .pose_group import PoseGroup
 from .robot import Franka, FrankaLink
-from .collector import CollectorData, DataNode, MeasurementGroup
+from .collector import CollectorData, DataNode, MeasurementGroup, Solvers
 from .measurement import Measurement
 from .image_measurement import ImageMeasurement
 from .camera import Camera
-from .aruco_detector import ArucoDetector, ArucoMeasurement
+from .aruco_detector import ArucoDetector
+from .aruco_measurement import ArucoMeasurement
 from .measurement import Measurement
 from .joint_measurement import JointMeasurement
 from .transform import Transform
 from .tree_utils import *
 from .renderable import Mesh, ImageQuad
+from .factor_graph import FactorGraph
 from .component import Component
 
 def create_camera(name:str, parent_id:int):
@@ -45,6 +47,7 @@ def create_aruco_marker(name:str, parent_id:int, marker: ArucoMarker = ArucoMark
 def create_collector(parent_id: int):
     id, node = create_entity("Collector", parent_id, CollectorData())
     create_entity("Data", id, DataNode())
+    create_entity("Solvers", id, Solvers())
     return id, node
 
 def create_robot(name:str, parent_id:int=None):
@@ -185,11 +188,19 @@ def load_scene(path: Path = Path("default.json")):
         for component_type, component in component_dict.items():
             component._fix_on_load(old_id_to_new_id)
 
+    # copy entities dict to allow looping
+    entitiy_keys = list(esper._entities.keys())
+    for entity in entitiy_keys:
+        component_dict = esper._entities[entity]
+        for component_type, component in component_dict.items():
+            component.on_load(entity)
+
     for entity, component in esper.get_component(Node):
         component.refresh()
     
     if not esper.get_component(CollectorData):
         create_collector(get_root_id())
+    
 
 def get_detectors(collector_id: int, predicate: Callable[[int, Detector], bool] | None = None):
     from waynon.components.simple import Detectors, Detector

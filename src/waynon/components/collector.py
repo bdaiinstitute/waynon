@@ -11,17 +11,20 @@ from .node import Node
 from .pose_group import PoseGroup
 from .camera import Camera
 from .simple import Detectors, Detector
+from .factor_graph import FactorGraph
 
 class MeasurementGroup(Component):
     pass
 
-class ArucoMeasurement(Component):
-    marker_id: int
-    marker_family: int
-    pixels: list[float]
-
 class DataNode(Component):
     pass
+
+class Solvers(Component):
+
+    def draw_context(self, nursery, entity_id):
+        imgui.separator()
+        if imgui.menu_item_simple("Add Factor Graph Solver"):
+            create_entity("Factor Graph", entity_id, FactorGraph())
 
 class CollectorData(Component):
     group_blacklist: list[int] = []
@@ -42,6 +45,7 @@ class CollectorData(Component):
 
     def draw_property(self, nursery, entity_id):
         draw_collector(nursery, entity_id)
+
 
 
 def draw_collector(nursery: trio.Nursery, collector_id: int):

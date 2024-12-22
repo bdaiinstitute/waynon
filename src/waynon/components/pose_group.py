@@ -43,6 +43,7 @@ class PoseGroup(Component):
             return
         robot = esper.component_for_entity(robot_id, Franka).get_manager()
         if robot.is_button_pressed("circle"):
+            print("here")
             create_motion("q", entity_id, robot.q)
         if robot.is_button_pressed("cross"):
             print("deleting")

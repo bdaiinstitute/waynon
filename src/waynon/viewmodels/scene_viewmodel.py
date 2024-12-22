@@ -55,9 +55,10 @@ class SceneViewModel:
                 component.draw_context(self.nursery, entity_id)
             imgui.end_popup()
         
-        selected_positive_edge = selected and self.previous_selected_entity_id != self.selected_entity_id
-        for component in get_sorted_components(entity_id):
-            component.on_selected(self.nursery, entity_id, just_selected=selected_positive_edge)
+        if selected:
+            selected_positive_edge = selected and self.previous_selected_entity_id != self.selected_entity_id
+            for component in get_sorted_components(entity_id):
+                component.on_selected(self.nursery, entity_id, just_selected=selected_positive_edge)
 
         self.previous_selected_entity_id = self.selected_entity_id
         

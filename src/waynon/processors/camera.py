@@ -17,9 +17,13 @@ class CameraManager:
         self.cameras: Dict[str, SingleRealsense] = {}
         self.serials = []
         self.resolution = (1280, 720)
-
+    
+    def get_intrinsics(self, serial: str):
+        return self.get_camera(serial).get_intrinsics()    
+    
     def get_connected_serials(self):
         self.serials =  SingleRealsense.get_connected_devices_serial()
+
     
     def start_camera(self, serial: str):
         assert serial in self.serials

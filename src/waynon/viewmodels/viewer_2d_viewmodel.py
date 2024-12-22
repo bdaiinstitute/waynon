@@ -14,7 +14,7 @@ import marsoom.texture
 from waynon.components.tree_utils import *
 from waynon.components.camera import Camera
 from waynon.components.image_measurement import ImageMeasurement
-from waynon.components.aruco_detector import ArucoMeasurement
+from waynon.components.aruco_measurement import ArucoMeasurement
 
 class Viewer2DViewModel:
     def __init__(self, nursery: trio.Nursery, window: marsoom.Window):

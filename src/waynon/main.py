@@ -1,6 +1,9 @@
 from pathlib import Path
 from typing import Optional
 
+import symforce
+symforce.set_epsilon_to_symbol()
+
 from pydantic import BaseModel
 import trio
 import warp as wp

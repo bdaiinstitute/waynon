@@ -1,3 +1,4 @@
+import numpy as np
 import cv2.aruco as aruco
 
 from imgui_bundle import imgui
@@ -22,4 +23,13 @@ class ArucoMarker(Component):
         t = ARUCO_TEXTURES.get_texture(self.id, self.marker_dict)
         width = min(100, t.width)
         imgui.image(t.id, (width, width))
+    
+    def get_P_MC(self) -> np.ndarray:
+        """Get the marker points in the marker coordinate system"""
+        marker_size = self.marker_length
+        marker_points = np.array([[-marker_size / 2, marker_size / 2, 0],
+                                [marker_size / 2, marker_size / 2, 0],
+                                [marker_size / 2, -marker_size / 2, 0],
+                                [-marker_size / 2, -marker_size / 2, 0]], dtype=np.float64)
+        return marker_points
 

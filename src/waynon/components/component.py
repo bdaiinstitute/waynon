@@ -16,11 +16,14 @@ class ValidityResult:
     
     @staticmethod
     def invalid(message: str = ""):
-        return ValidityResult(False, message)
+        return ValidityResult(_valid=False, _message=message)
     
     @staticmethod
     def valid():
-        return ValidityResult()
+        return ValidityResult(True)
+    
+    def __repr__(self):
+        return f"ValidityResult({self._valid}, {self._message})"
 
 class Component(BaseModel):
     def property_order(self):
@@ -44,4 +47,8 @@ class Component(BaseModel):
     def _fix_on_load(self, new_to_old_entity_ids: Dict[int, int]):
         """This is called when the system is loaded. We don't have a guarantee that the entity ids are the same. 
         So if we have references to other entities, we need to fix them here."""
+        pass
+    
+    def on_load(self, entity_id: int):
+        """This is called when the component is initialized. Can be used to make sure everything is in order."""
         pass

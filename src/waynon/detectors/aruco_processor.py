@@ -10,7 +10,8 @@ from .measurement_processor import MeasurementProcessor
 
 class ArucoProcessor(MeasurementProcessor):
     async def run(self, detector_id: int, measurement_id: int):
-        from waynon.components.aruco_detector import ArucoDetector, ArucoMeasurement
+        from waynon.components.aruco_detector import ArucoDetector
+        from waynon.components.aruco_measurement import ArucoMeasurement
         from waynon.components.measurement import Measurement
         from waynon.components.image_measurement import ImageMeasurement
         from waynon.components.joint_measurement import JointMeasurement
@@ -39,25 +40,26 @@ class ArucoProcessor(MeasurementProcessor):
 
         if res:
             pixels, ids_found = res
-            for i, marker_id in enumerate(ids_found):
-                marker_id = int(marker_id) # comes in as np.ndarray
-                if marker_id not in markers_in_system:
-                    print(f"Warning: Marker {marker_id} detected but not in system")
-                    continue
-                marker_entity_id = markers_in_system[marker_id]
-                num_repeats = len(pixels[i])    
-                if num_repeats != 1:
-                    print(f"Warning: Found {num_repeats} markers with id {marker_id}")
-                for j in range(num_repeats):
-                    aruco_measurement = ArucoMeasurement(
-                        camera_entity_id=image_measurement.camera_id,
-                        marker_entity_id=marker_entity_id,
-                        detector_entity_id=detector_id,
-                        marker_id=marker_id,
-                        marker_dict=detector.marker_dict,
-                        pixels=pixels[i][j].tolist(),
-                    )
-                    create_entity(f"Aruco {marker_id}", iid, aruco_measurement, Deletable())
+            if ids_found is not None:
+                for i, marker_id in enumerate(ids_found):
+                    marker_id = int(marker_id) # comes in as np.ndarray
+                    if marker_id not in markers_in_system:
+                        print(f"Warning: Marker {marker_id} detected but not in system")
+                        continue
+                    marker_entity_id = markers_in_system[marker_id]
+                    num_repeats = len(pixels[i])    
+                    if num_repeats != 1:
+                        print(f"Warning: Found {num_repeats} markers with id {marker_id}")
+                    for j in range(num_repeats):
+                        aruco_measurement = ArucoMeasurement(
+                            camera_entity_id=image_measurement.camera_id,
+                            marker_entity_id=marker_entity_id,
+                            detector_entity_id=detector_id,
+                            marker_id=marker_id,
+                            marker_dict=detector.marker_dict,
+                            pixels=pixels[i][j].tolist(),
+                        )
+                        create_entity(f"Aruco {marker_id}", iid, aruco_measurement, Deletable())
 
 
 def detect_all_markers_in_image(img: np.ndarray, marker_dict = aruco.DICT_4X4_50) -> Tuple[np.ndarray, np.ndarray]:   
