@@ -5,7 +5,7 @@ import esper
 from imgui_bundle import imgui
 
 from waynon.components.component import Component, ValidityResult
-from waynon.components.camera import Camera
+from waynon.components.camera import PinholeCamera
 from waynon.components.tree_utils import try_component
 from waynon.components.aruco_marker import ArucoMarker
 
@@ -20,7 +20,7 @@ class ArucoMeasurement(Component):
     pixels: list[list[float]]
 
     def get_camera(self):
-        return try_component(self.camera_entity_id, Camera)
+        return try_component(self.camera_entity_id, PinholeCamera)
     
     def get_marker(self):
         return try_component(self.marker_entity_id, ArucoMarker)
@@ -48,8 +48,8 @@ class ArucoMeasurement(Component):
 
 
     def _fix_on_load(self, new_to_old_entity_ids):
-        self.detector_entity_id = new_to_old_entity_ids[self.detector_entity_id]
-        self.camera_entity_id = new_to_old_entity_ids[self.camera_entity_id]
-        self.marker_entity_id = new_to_old_entity_ids[self.marker_entity_id]
+        self.detector_entity_id = new_to_old_entity_ids.get(self.detector_entity_id, -1)
+        self.camera_entity_id = new_to_old_entity_ids.get(self.camera_entity_id, -1)
+        self.marker_entity_id = new_to_old_entity_ids.get(self.marker_entity_id, -1)
 
 

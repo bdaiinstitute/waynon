@@ -15,7 +15,7 @@ from .tree_utils import *
 from .component import Component
 from .node import Node
 from .pose_group import PoseGroup
-from .camera import Camera
+from .camera import PinholeCamera
 from .measurement import Measurement
 
 

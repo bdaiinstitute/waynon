@@ -38,7 +38,8 @@ class Component(BaseModel):
     def on_selected(self, nursery: trio.Nursery, entity_id: int, just_selected: bool):
         pass
     
-    def default_name(self):
+    @staticmethod
+    def default_name():
         return "Node"
     
     def valid(self):

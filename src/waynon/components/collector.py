@@ -9,7 +9,7 @@ from .tree_utils import *
 from .component import Component
 from .node import Node
 from .pose_group import PoseGroup
-from .camera import Camera
+from .camera import PinholeCamera
 from .simple import Detectors, Detector
 from .factor_graph import FactorGraph
 
@@ -17,7 +17,11 @@ class MeasurementGroup(Component):
     pass
 
 class DataNode(Component):
-    pass
+    def draw_context(self, nursery, entity_id):
+        imgui.separator()
+        if imgui.menu_item_simple("Clear Data"):
+            delete_children(entity_id)
+
 
 class Solvers(Component):
 
@@ -72,7 +76,7 @@ def draw_collector(nursery: trio.Nursery, collector_id: int):
             imgui.pop_id()
         
         imgui.separator_text("Cameras")
-        for entity, (node, camera) in esper.get_components(Node, Camera):
+        for entity, (node, camera) in esper.get_components(Node, PinholeCamera):
             imgui.push_id(entity)
             enabled = entity not in collector_data.camera_blacklist
             res, _ = imgui.checkbox(f"{node.name} ({camera.serial})", enabled)

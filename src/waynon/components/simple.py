@@ -13,13 +13,13 @@ class Root(Component):
 
 class World(Component):
     def draw_context(self, nursery, entity_id):
-        from waynon.components.scene_utils import create_camera, create_aruco_marker, create_robot
+        from waynon.components.scene_utils import create_realsense_camera, create_aruco_marker, create_robot
         if imgui.menu_item_simple("Add Robot"):
             create_robot("Robot", entity_id)
-        if imgui.menu_item_simple("Add Camera"):
-            create_camera("Camera", entity_id)
+        if imgui.menu_item_simple("Add Realsense Camera"):
+            create_realsense_camera(entity_id)
         if imgui.menu_item_simple("Add Marker"):
-            create_aruco_marker("Marker", entity_id)
+            create_aruco_marker(entity_id)
 
 class Visiblity(Component):
     enabled: bool = True

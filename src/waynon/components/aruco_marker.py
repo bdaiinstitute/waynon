@@ -32,4 +32,9 @@ class ArucoMarker(Component):
                                 [marker_size / 2, -marker_size / 2, 0],
                                 [-marker_size / 2, -marker_size / 2, 0]], dtype=np.float64)
         return marker_points
+    
+    @staticmethod
+    def default_name():
+        return "Aruco"
+
 

@@ -12,7 +12,7 @@ from waynon.components.tree_utils import *
 from waynon.components.scene_utils import get_world_id, is_dynamic
 from waynon.components.node import Node
 from waynon.components.robot import Franka
-from waynon.components.camera import Camera
+from waynon.components.camera import PinholeCamera
 from waynon.components.collector import CollectorData, MeasurementGroup, DataNode
 from waynon.components.measurement import Measurement
 from waynon.components.image_measurement import ImageMeasurement
@@ -20,17 +20,6 @@ from waynon.components.joint_measurement import JointMeasurement
 from waynon.components.aruco_measurement import ArucoMeasurement
 from waynon.components.transform import Transform
 from waynon.solvers.factor_graph import *
-
-import symforce
-symforce.set_epsilon_to_symbol()
-from symforce.values import Values
-import symforce.symbolic as sf
-from symforce.opt.factor import Factor
-from symforce.opt.optimizer import Optimizer
-from symforce.opt.noise_models import DiagonalNoiseModel
-import sym
-
-
 
 class Collector:
     _instance = None
@@ -45,7 +34,7 @@ class Collector:
     def can_run(self, data: CollectorData):
         # robot = esper.component_for_entity(data.robot_id, Franka)
         # ready_to_move = robot.get_manager().ready_to_move()
-        cameras = [(i,c) for (i,c) in esper.get_component(Camera) if i not in data.camera_blacklist]
+        cameras = [(i,c) for (i,c) in esper.get_component(PinholeCamera) if i not in data.camera_blacklist]
         all_cameras_running = all([c.running() for i,c in cameras])
         return all_cameras_running
     
@@ -78,8 +67,8 @@ class Collector:
         data = esper.component_for_entity(collector_id, CollectorData)
 
 
-        cameras: list[tuple[int, Camera]] =  []
-        for entity, c in esper.get_component(Camera):
+        cameras: list[tuple[int, PinholeCamera]] =  []
+        for entity, c in esper.get_component(PinholeCamera):
             if entity in data.camera_blacklist:
                 continue
             cameras.append((entity, c))

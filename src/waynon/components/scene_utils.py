@@ -8,13 +8,15 @@ import esper
 
 from .node import Node
 from .simple import Root, World, Visiblity, OptimizedPose, PoseFolder, Pose, Draggable, Deletable, Detectors, Detector, Nestable
+from .optimizable import Optimizable
 from .aruco_marker import ArucoMarker
 from .pose_group import PoseGroup
 from .robot import Franka, FrankaLink
 from .collector import CollectorData, DataNode, MeasurementGroup, Solvers
 from .measurement import Measurement
 from .image_measurement import ImageMeasurement
-from .camera import Camera
+from .camera import PinholeCamera
+from .realsense_camera import RealsenseCamera
 from .aruco_detector import ArucoDetector
 from .aruco_measurement import ArucoMeasurement
 from .measurement import Measurement
@@ -25,23 +27,39 @@ from .renderable import Mesh, ImageQuad
 from .factor_graph import FactorGraph
 from .component import Component
 
-def create_camera(name:str, parent_id:int):
+
+def count(component: Type[Component]):
+    return len(esper.get_component(component))
+
+def default_name(component: Type[Component]):
+    return f"{component.default_name()}_{count(component)}"
+
+def create_realsense_camera(parent_id:int, name:str=None):
+    if name is None:
+        name = default_name(RealsenseCamera)
+
     return create_entity(name, parent_id, 
                         Transform(), 
-                        Camera(), 
+                        PinholeCamera(), 
+                        RealsenseCamera(),
                         Deletable(), 
                         Draggable(type="transform"),
-                        Nestable(type="transform", target=False)
+                        Nestable(type="transform", target=False),
+                        Optimizable()
                         )
 
-def create_aruco_marker(name:str, parent_id:int, marker: ArucoMarker = ArucoMarker()):
+def create_aruco_marker(parent_id:int, marker: ArucoMarker = ArucoMarker(), name:str=None):
+    if name is None:
+        name = default_name(ArucoMarker)
+
     return create_entity(name, parent_id, 
                         marker, 
                         Transform(), 
                         Deletable(), 
                         Draggable(type="transform"),
                         Nestable(type="transform", target=False),
-                        ImageQuad.create_aruco_quad(marker.marker_length)
+                        ImageQuad.create_aruco_quad(marker.marker_length),
+                        Optimizable()
                         )
     
 def create_collector(parent_id: int):

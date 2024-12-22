@@ -107,53 +107,11 @@
         },
         "Node": {
             "name": "Marker 3",
-            "parent_entity_id": 17,
+            "parent_entity_id": 16,
             "entity_id": 3
         }
     },
     "4": {
-        "Transform": {
-            "X_PT": [
-                0.6145200092912101,
-                -0.5042628223274627,
-                0.6066994018449937,
-                0.9512692093849182,
-                0.7730176840608503,
-                0.5384339148703837,
-                -0.33545875968075717,
-                0.0018989311065524817,
-                -0.15750815315383154,
-                0.6751354866511569,
-                0.7206824934424139,
-                0.38223791122436523,
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "locked": false,
-            "visible": true,
-            "modifiable": true
-        },
-        "Camera": {
-            "serial": "220422302296"
-        },
-        "Deletable": {},
-        "Draggable": {
-            "type": "transform"
-        },
-        "Nestable": {
-            "type": "transform",
-            "source": 1,
-            "target": 0
-        },
-        "Node": {
-            "name": "Left Camera",
-            "parent_entity_id": 2,
-            "entity_id": 4
-        }
-    },
-    "5": {
         "CollectorData": {
             "group_blacklist": [
                 39
@@ -165,18 +123,18 @@
         "Node": {
             "name": "Collector",
             "parent_entity_id": 1,
+            "entity_id": 4
+        }
+    },
+    "5": {
+        "DataNode": {},
+        "Node": {
+            "name": "Data",
+            "parent_entity_id": 4,
             "entity_id": 5
         }
     },
     "6": {
-        "DataNode": {},
-        "Node": {
-            "name": "Data",
-            "parent_entity_id": 5,
-            "entity_id": 6
-        }
-    },
-    "7": {
         "Transform": {
             "X_PT": [
                 1.0,
@@ -218,18 +176,18 @@
         "Node": {
             "name": "Sheep",
             "parent_entity_id": 2,
+            "entity_id": 6
+        }
+    },
+    "7": {
+        "PoseFolder": {},
+        "Node": {
+            "name": "Poses",
+            "parent_entity_id": 6,
             "entity_id": 7
         }
     },
     "8": {
-        "PoseFolder": {},
-        "Node": {
-            "name": "Poses",
-            "parent_entity_id": 7,
-            "entity_id": 8
-        }
-    },
-    "9": {
         "Transform": {
             "X_PT": [
                 1.0,
@@ -262,16 +220,16 @@
             "mesh_path": "robots/panda/meshes/link0.stl"
         },
         "FrankaLink": {
-            "robot_id": 7,
+            "robot_id": 6,
             "link_name": "panda_link0"
         },
         "Node": {
             "name": "L0",
-            "parent_entity_id": 7,
-            "entity_id": 9
+            "parent_entity_id": 6,
+            "entity_id": 8
         }
     },
-    "10": {
+    "9": {
         "Transform": {
             "X_PT": [
                 1.0,
@@ -304,16 +262,16 @@
             "mesh_path": "robots/panda/meshes/link1.stl"
         },
         "FrankaLink": {
-            "robot_id": 7,
+            "robot_id": 6,
             "link_name": "panda_link1"
         },
         "Node": {
             "name": "L1",
-            "parent_entity_id": 9,
-            "entity_id": 10
+            "parent_entity_id": 8,
+            "entity_id": 9
         }
     },
-    "11": {
+    "10": {
         "Transform": {
             "X_PT": [
                 0.7073882506299715,
@@ -346,16 +304,16 @@
             "mesh_path": "robots/panda/meshes/link2.stl"
         },
         "FrankaLink": {
-            "robot_id": 7,
+            "robot_id": 6,
             "link_name": "panda_link2"
         },
         "Node": {
             "name": "L2",
-            "parent_entity_id": 10,
-            "entity_id": 11
+            "parent_entity_id": 9,
+            "entity_id": 10
         }
     },
-    "12": {
+    "11": {
         "Transform": {
             "X_PT": [
                 1.0,
@@ -388,16 +346,16 @@
             "mesh_path": "robots/panda/meshes/link3.stl"
         },
         "FrankaLink": {
-            "robot_id": 7,
+            "robot_id": 6,
             "link_name": "panda_link3"
         },
         "Node": {
             "name": "L3",
-            "parent_entity_id": 11,
-            "entity_id": 12
+            "parent_entity_id": 10,
+            "entity_id": 11
         }
     },
-    "13": {
+    "12": {
         "Transform": {
             "X_PT": [
                 -0.7069692047089476,
@@ -430,16 +388,16 @@
             "mesh_path": "robots/panda/meshes/link4.stl"
         },
         "FrankaLink": {
-            "robot_id": 7,
+            "robot_id": 6,
             "link_name": "panda_link4"
         },
         "Node": {
             "name": "L4",
-            "parent_entity_id": 12,
-            "entity_id": 13
+            "parent_entity_id": 11,
+            "entity_id": 12
         }
     },
-    "14": {
+    "13": {
         "Transform": {
             "X_PT": [
                 0.9999999999999999,
@@ -472,16 +430,16 @@
             "mesh_path": "robots/panda/meshes/link5.stl"
         },
         "FrankaLink": {
-            "robot_id": 7,
+            "robot_id": 6,
             "link_name": "panda_link5"
         },
         "Node": {
             "name": "L5",
-            "parent_entity_id": 13,
-            "entity_id": 14
+            "parent_entity_id": 12,
+            "entity_id": 13
         }
     },
-    "15": {
+    "14": {
         "Transform": {
             "X_PT": [
                 -0.00020365317653499665,
@@ -514,16 +472,16 @@
             "mesh_path": "robots/panda/meshes/link6.stl"
         },
         "FrankaLink": {
-            "robot_id": 7,
+            "robot_id": 6,
             "link_name": "panda_link6"
         },
         "Node": {
             "name": "L6",
-            "parent_entity_id": 14,
-            "entity_id": 15
+            "parent_entity_id": 13,
+            "entity_id": 14
         }
     },
-    "16": {
+    "15": {
         "Transform": {
             "X_PT": [
                 0.7073882506299716,
@@ -556,16 +514,16 @@
             "mesh_path": "robots/panda/meshes/link7.stl"
         },
         "FrankaLink": {
-            "robot_id": 7,
+            "robot_id": 6,
             "link_name": "panda_link7"
         },
         "Node": {
             "name": "L7",
-            "parent_entity_id": 15,
-            "entity_id": 16
+            "parent_entity_id": 14,
+            "entity_id": 15
         }
     },
-    "17": {
+    "16": {
         "Transform": {
             "X_PT": [
                 0.7071067811868645,
@@ -598,24 +556,24 @@
             "mesh_path": "robots/panda/meshes/hand.stl"
         },
         "FrankaLink": {
-            "robot_id": 7,
+            "robot_id": 6,
             "link_name": "panda_hand"
         },
         "Node": {
             "name": "Hand",
-            "parent_entity_id": 16,
+            "parent_entity_id": 15,
+            "entity_id": 16
+        }
+    },
+    "17": {
+        "Detectors": {},
+        "Node": {
+            "name": "Detectors",
+            "parent_entity_id": 4,
             "entity_id": 17
         }
     },
     "18": {
-        "Detectors": {},
-        "Node": {
-            "name": "Detectors",
-            "parent_entity_id": 5,
-            "entity_id": 18
-        }
-    },
-    "19": {
         "ArucoDetector": {
             "enabled": true,
             "marker_dict": 0
@@ -623,11 +581,11 @@
         "Deletable": {},
         "Node": {
             "name": "Aruco Detector",
-            "parent_entity_id": 18,
-            "entity_id": 19
+            "parent_entity_id": 17,
+            "entity_id": 18
         }
     },
-    "20": {
+    "19": {
         "PoseGroup": {
             "color": [
                 1.0,
@@ -641,11 +599,11 @@
         "Deletable": {},
         "Node": {
             "name": "Left",
-            "parent_entity_id": 8,
-            "entity_id": 20
+            "parent_entity_id": 7,
+            "entity_id": 19
         }
     },
-    "21": {
+    "20": {
         "Pose": {
             "q": [
                 0.4171421667043967,
@@ -663,11 +621,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 20,
-            "entity_id": 21
+            "parent_entity_id": 19,
+            "entity_id": 20
         }
     },
-    "22": {
+    "21": {
         "Pose": {
             "q": [
                 0.5015433649210216,
@@ -685,19 +643,19 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 20,
+            "parent_entity_id": 19,
+            "entity_id": 21
+        }
+    },
+    "22": {
+        "Solvers": {},
+        "Node": {
+            "name": "Solvers",
+            "parent_entity_id": 4,
             "entity_id": 22
         }
     },
     "23": {
-        "Solvers": {},
-        "Node": {
-            "name": "Solvers",
-            "parent_entity_id": 5,
-            "entity_id": 23
-        }
-    },
-    "24": {
         "FactorGraph": {
             "iterations": 250,
             "enable_bold_updates": false,
@@ -705,11 +663,11 @@
         },
         "Node": {
             "name": "Factor Graph",
-            "parent_entity_id": 23,
-            "entity_id": 24
+            "parent_entity_id": 22,
+            "entity_id": 23
         }
     },
-    "25": {
+    "24": {
         "Pose": {
             "q": [
                 0.7121632622027335,
@@ -727,11 +685,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 20,
-            "entity_id": 25
+            "parent_entity_id": 19,
+            "entity_id": 24
         }
     },
-    "26": {
+    "25": {
         "Pose": {
             "q": [
                 0.7258316870888385,
@@ -749,11 +707,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 20,
-            "entity_id": 26
+            "parent_entity_id": 19,
+            "entity_id": 25
         }
     },
-    "27": {
+    "26": {
         "Pose": {
             "q": [
                 0.7530299048348692,
@@ -771,11 +729,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 20,
-            "entity_id": 27
+            "parent_entity_id": 19,
+            "entity_id": 26
         }
     },
-    "28": {
+    "27": {
         "Pose": {
             "q": [
                 0.7524956224977861,
@@ -793,11 +751,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 20,
-            "entity_id": 28
+            "parent_entity_id": 19,
+            "entity_id": 27
         }
     },
-    "29": {
+    "28": {
         "Pose": {
             "q": [
                 0.7664037762683582,
@@ -815,11 +773,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 20,
-            "entity_id": 29
+            "parent_entity_id": 19,
+            "entity_id": 28
         }
     },
-    "30": {
+    "29": {
         "Pose": {
             "q": [
                 0.9832222901296298,
@@ -837,11 +795,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 20,
-            "entity_id": 30
+            "parent_entity_id": 19,
+            "entity_id": 29
         }
     },
-    "31": {
+    "30": {
         "Pose": {
             "q": [
                 0.9840433204983943,
@@ -859,11 +817,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 20,
-            "entity_id": 31
+            "parent_entity_id": 19,
+            "entity_id": 30
         }
     },
-    "32": {
+    "31": {
         "Pose": {
             "q": [
                 0.9062739450887436,
@@ -881,11 +839,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 20,
-            "entity_id": 32
+            "parent_entity_id": 19,
+            "entity_id": 31
         }
     },
-    "33": {
+    "32": {
         "Pose": {
             "q": [
                 0.6854962178232342,
@@ -903,11 +861,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 20,
-            "entity_id": 33
+            "parent_entity_id": 19,
+            "entity_id": 32
         }
     },
-    "34": {
+    "33": {
         "Pose": {
             "q": [
                 0.598808054152881,
@@ -925,11 +883,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 20,
-            "entity_id": 34
+            "parent_entity_id": 19,
+            "entity_id": 33
         }
     },
-    "35": {
+    "34": {
         "Pose": {
             "q": [
                 0.5878670451822854,
@@ -947,11 +905,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 20,
-            "entity_id": 35
+            "parent_entity_id": 19,
+            "entity_id": 34
         }
     },
-    "36": {
+    "35": {
         "Pose": {
             "q": [
                 0.7363336433908594,
@@ -969,11 +927,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 20,
-            "entity_id": 36
+            "parent_entity_id": 19,
+            "entity_id": 35
         }
     },
-    "37": {
+    "36": {
         "Pose": {
             "q": [
                 0.7805229263278242,
@@ -991,53 +949,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 20,
-            "entity_id": 37
+            "parent_entity_id": 19,
+            "entity_id": 36
         }
     },
-    "38": {
-        "Transform": {
-            "X_PT": [
-                -0.5581944584846497,
-                -0.5686374306678772,
-                0.6042105555534363,
-                0.9466158747673035,
-                0.8092517256736755,
-                -0.2124079465866089,
-                0.5477175712585449,
-                0.37911611795425415,
-                -0.18311358988285065,
-                0.7946913242340088,
-                0.5787357687950134,
-                0.7322729825973511,
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "locked": false,
-            "visible": true,
-            "modifiable": true
-        },
-        "Camera": {
-            "serial": "234222302164"
-        },
-        "Deletable": {},
-        "Draggable": {
-            "type": "transform"
-        },
-        "Nestable": {
-            "type": "transform",
-            "source": 1,
-            "target": 0
-        },
-        "Node": {
-            "name": "Right Camera",
-            "parent_entity_id": 2,
-            "entity_id": 38
-        }
-    },
-    "39": {
+    "37": {
         "PoseGroup": {
             "color": [
                 1.0,
@@ -1051,11 +967,11 @@
         "Deletable": {},
         "Node": {
             "name": "Right",
-            "parent_entity_id": 8,
-            "entity_id": 39
+            "parent_entity_id": 7,
+            "entity_id": 37
         }
     },
-    "40": {
+    "38": {
         "Pose": {
             "q": [
                 0.22405740015649758,
@@ -1073,11 +989,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 39,
-            "entity_id": 40
+            "parent_entity_id": 37,
+            "entity_id": 38
         }
     },
-    "41": {
+    "39": {
         "Pose": {
             "q": [
                 0.2916977047839101,
@@ -1095,11 +1011,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 39,
-            "entity_id": 41
+            "parent_entity_id": 37,
+            "entity_id": 39
         }
     },
-    "42": {
+    "40": {
         "Pose": {
             "q": [
                 0.3675207872197115,
@@ -1117,11 +1033,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 39,
-            "entity_id": 42
+            "parent_entity_id": 37,
+            "entity_id": 40
         }
     },
-    "43": {
+    "41": {
         "Pose": {
             "q": [
                 0.44480434752966985,
@@ -1139,11 +1055,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 39,
-            "entity_id": 43
+            "parent_entity_id": 37,
+            "entity_id": 41
         }
     },
-    "44": {
+    "42": {
         "Pose": {
             "q": [
                 0.5162220369197187,
@@ -1161,11 +1077,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 39,
-            "entity_id": 44
+            "parent_entity_id": 37,
+            "entity_id": 42
         }
     },
-    "45": {
+    "43": {
         "Pose": {
             "q": [
                 0.6039673806863851,
@@ -1183,11 +1099,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 39,
-            "entity_id": 45
+            "parent_entity_id": 37,
+            "entity_id": 43
         }
     },
-    "46": {
+    "44": {
         "Pose": {
             "q": [
                 0.6009832452350843,
@@ -1205,11 +1121,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 39,
-            "entity_id": 46
+            "parent_entity_id": 37,
+            "entity_id": 44
         }
     },
-    "47": {
+    "45": {
         "Pose": {
             "q": [
                 0.5944278238284328,
@@ -1227,11 +1143,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 39,
-            "entity_id": 47
+            "parent_entity_id": 37,
+            "entity_id": 45
         }
     },
-    "48": {
+    "46": {
         "Pose": {
             "q": [
                 0.5286140621290651,
@@ -1249,11 +1165,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 39,
-            "entity_id": 48
+            "parent_entity_id": 37,
+            "entity_id": 46
         }
     },
-    "49": {
+    "47": {
         "Pose": {
             "q": [
                 0.5265343049971002,
@@ -1271,11 +1187,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 39,
-            "entity_id": 49
+            "parent_entity_id": 37,
+            "entity_id": 47
         }
     },
-    "50": {
+    "48": {
         "Pose": {
             "q": [
                 0.5261828768243231,
@@ -1293,11 +1209,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 39,
-            "entity_id": 50
+            "parent_entity_id": 37,
+            "entity_id": 48
         }
     },
-    "51": {
+    "49": {
         "Pose": {
             "q": [
                 0.480423444266842,
@@ -1315,11 +1231,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 39,
-            "entity_id": 51
+            "parent_entity_id": 37,
+            "entity_id": 49
         }
     },
-    "52": {
+    "50": {
         "Pose": {
             "q": [
                 0.594021056102899,
@@ -1337,11 +1253,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 39,
-            "entity_id": 52
+            "parent_entity_id": 37,
+            "entity_id": 50
         }
     },
-    "53": {
+    "51": {
         "Pose": {
             "q": [
                 0.5924856741812186,
@@ -1359,11 +1275,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 39,
-            "entity_id": 53
+            "parent_entity_id": 37,
+            "entity_id": 51
         }
     },
-    "54": {
+    "52": {
         "Pose": {
             "q": [
                 0.5920075531462586,
@@ -1381,11 +1297,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 39,
-            "entity_id": 54
+            "parent_entity_id": 37,
+            "entity_id": 52
         }
     },
-    "55": {
+    "53": {
         "Pose": {
             "q": [
                 0.5848677841507594,
@@ -1403,11 +1319,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 39,
-            "entity_id": 55
+            "parent_entity_id": 37,
+            "entity_id": 53
         }
     },
-    "56": {
+    "54": {
         "Pose": {
             "q": [
                 0.5966803073248129,
@@ -1425,2628 +1341,61 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 39,
-            "entity_id": 56
-        }
-    },
-    "57": {
-        "MeasurementGroup": {},
-        "Node": {
-            "name": "Right",
-            "parent_entity_id": 6,
-            "entity_id": 57
-        }
-    },
-    "58": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Right Camera 101",
-            "parent_entity_id": 57,
-            "entity_id": 58
-        }
-    },
-    "59": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.225394910329714,
-                0.5161683084794778,
-                0.2678658522917488,
-                -1.9527204598358685,
-                0.18235141039165975,
-                3.18724098335034,
-                0.06644668515821908
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 58,
-            "entity_id": 59
-        }
-    },
-    "60": {
-        "ImageMeasurement": {
-            "camera_id": 38,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/234222302164_101.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 58,
-            "entity_id": 60
-        }
-    },
-    "61": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 101",
-            "parent_entity_id": 57,
-            "entity_id": 61
-        }
-    },
-    "62": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.225394910329714,
-                0.5161683084794778,
-                0.2678658522917488,
-                -1.9527204598358685,
-                0.18235141039165975,
-                3.18724098335034,
-                0.06644668515821908
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 61,
-            "entity_id": 62
-        }
-    },
-    "63": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/220422302296_101.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 61,
-            "entity_id": 63
-        }
-    },
-    "64": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Right Camera 102",
-            "parent_entity_id": 57,
-            "entity_id": 64
-        }
-    },
-    "65": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.292445622886723,
-                0.5091785834284753,
-                0.2890715675272042,
-                -1.9506185323401652,
-                0.18371487243462598,
-                3.1906015128962135,
-                0.10982814682585999
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 64,
-            "entity_id": 65
-        }
-    },
-    "66": {
-        "ImageMeasurement": {
-            "camera_id": 38,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/234222302164_102.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 64,
-            "entity_id": 66
-        }
-    },
-    "67": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 102",
-            "parent_entity_id": 57,
-            "entity_id": 67
-        }
-    },
-    "68": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.292445622886723,
-                0.5091785834284753,
-                0.2890715675272042,
-                -1.9506185323401652,
-                0.18371487243462598,
-                3.1906015128962135,
-                0.10982814682585999
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 67,
-            "entity_id": 68
-        }
-    },
-    "69": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/220422302296_102.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 67,
-            "entity_id": 69
-        }
-    },
-    "70": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Right Camera 103",
-            "parent_entity_id": 57,
-            "entity_id": 70
-        }
-    },
-    "71": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.3684720176584249,
-                0.5044087464955068,
-                0.311872732179621,
-                -1.9506113564356793,
-                0.18939306868233216,
-                3.1909977106774257,
-                0.284984015649219
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 70,
-            "entity_id": 71
-        }
-    },
-    "72": {
-        "ImageMeasurement": {
-            "camera_id": 38,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/234222302164_103.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 70,
-            "entity_id": 72
-        }
-    },
-    "73": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 103",
-            "parent_entity_id": 57,
-            "entity_id": 73
-        }
-    },
-    "74": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.3684720176584249,
-                0.5044087464955068,
-                0.311872732179621,
-                -1.9506113564356793,
-                0.18939306868233216,
-                3.1909977106774257,
-                0.284984015649219
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 73,
-            "entity_id": 74
-        }
-    },
-    "75": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/220422302296_103.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 73,
-            "entity_id": 75
-        }
-    },
-    "76": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Right Camera 104",
-            "parent_entity_id": 57,
-            "entity_id": 76
-        }
-    },
-    "77": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.4454626650264562,
-                0.47390413082970095,
-                0.35299789627502853,
-                -1.9479054184362035,
-                0.18996460541019555,
-                3.1909196061731127,
-                0.4432893905518757
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 76,
-            "entity_id": 77
-        }
-    },
-    "78": {
-        "ImageMeasurement": {
-            "camera_id": 38,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/234222302164_104.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 76,
-            "entity_id": 78
-        }
-    },
-    "79": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 104",
-            "parent_entity_id": 57,
-            "entity_id": 79
-        }
-    },
-    "80": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.4454626650264562,
-                0.47390413082970095,
-                0.35299789627502853,
-                -1.9479054184362035,
-                0.18996460541019555,
-                3.1909196061731127,
-                0.4432893905518757
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 79,
-            "entity_id": 80
-        }
-    },
-    "81": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/220422302296_104.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 79,
-            "entity_id": 81
-        }
-    },
-    "82": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Right Camera 105",
-            "parent_entity_id": 57,
-            "entity_id": 82
-        }
-    },
-    "83": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.5168837864333199,
-                0.4728967865659936,
-                0.3950769837874642,
-                -1.9479088764394918,
-                0.19011549451354862,
-                3.190888869711082,
-                0.6641446155479546
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 82,
-            "entity_id": 83
-        }
-    },
-    "84": {
-        "ImageMeasurement": {
-            "camera_id": 38,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/234222302164_105.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 82,
-            "entity_id": 84
-        }
-    },
-    "85": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 105",
-            "parent_entity_id": 57,
-            "entity_id": 85
-        }
-    },
-    "86": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.5168837864333199,
-                0.4728967865659936,
-                0.3950769837874642,
-                -1.9479088764394918,
-                0.19011549451354862,
-                3.190888869711082,
-                0.6641446155479546
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 85,
-            "entity_id": 86
-        }
-    },
-    "87": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/220422302296_105.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 85,
-            "entity_id": 87
-        }
-    },
-    "88": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Right Camera 106",
-            "parent_entity_id": 57,
-            "entity_id": 88
-        }
-    },
-    "89": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.6044732779230773,
-                0.4732545825383099,
-                0.40939098997027634,
-                -1.947115934028858,
-                0.1904413056260448,
-                3.1367842719827244,
-                0.7814417774117387
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 88,
-            "entity_id": 89
-        }
-    },
-    "90": {
-        "ImageMeasurement": {
-            "camera_id": 38,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/234222302164_106.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 88,
-            "entity_id": 90
-        }
-    },
-    "91": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 106",
-            "parent_entity_id": 57,
-            "entity_id": 91
-        }
-    },
-    "92": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.6044732779230773,
-                0.4732545825383099,
-                0.40939098997027634,
-                -1.947115934028858,
-                0.1904413056260448,
-                3.1367842719827244,
-                0.7814417774117387
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 91,
-            "entity_id": 92
-        }
-    },
-    "93": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/220422302296_106.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 91,
-            "entity_id": 93
-        }
-    },
-    "94": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Right Camera 107",
-            "parent_entity_id": 57,
-            "entity_id": 94
-        }
-    },
-    "95": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.6003033150653607,
-                0.737359555071803,
-                0.23639202396517436,
-                -1.5879952991779578,
-                0.18383250126316775,
-                3.183149821450294,
-                0.617623524392411
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 94,
-            "entity_id": 95
-        }
-    },
-    "96": {
-        "ImageMeasurement": {
-            "camera_id": 38,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/234222302164_107.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 94,
-            "entity_id": 96
-        }
-    },
-    "97": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 107",
-            "parent_entity_id": 57,
-            "entity_id": 97
-        }
-    },
-    "98": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.6003033150653607,
-                0.737359555071803,
-                0.23639202396517436,
-                -1.5879952991779578,
-                0.18383250126316775,
-                3.183149821450294,
-                0.617623524392411
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 97,
-            "entity_id": 98
-        }
-    },
-    "99": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/220422302296_107.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 97,
-            "entity_id": 99
-        }
-    },
-    "100": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Right Camera 108",
-            "parent_entity_id": 57,
-            "entity_id": 100
-        }
-    },
-    "101": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.5938379873388125,
-                0.7618260626402704,
-                0.09320078937294349,
-                -1.5871615395383785,
-                0.18342773315762664,
-                3.1831027769252778,
-                0.6166089543156704
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 100,
-            "entity_id": 101
-        }
-    },
-    "102": {
-        "ImageMeasurement": {
-            "camera_id": 38,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/234222302164_108.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 100,
-            "entity_id": 102
-        }
-    },
-    "103": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 108",
-            "parent_entity_id": 57,
-            "entity_id": 103
-        }
-    },
-    "104": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.5938379873388125,
-                0.7618260626402704,
-                0.09320078937294349,
-                -1.5871615395383785,
-                0.18342773315762664,
-                3.1831027769252778,
-                0.6166089543156704
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 103,
-            "entity_id": 104
-        }
-    },
-    "105": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/220422302296_108.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 103,
-            "entity_id": 105
-        }
-    },
-    "106": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Right Camera 109",
-            "parent_entity_id": 57,
-            "entity_id": 106
-        }
-    },
-    "107": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.5285657802096455,
-                0.7201067260628333,
-                -0.003843226963070037,
-                -1.6835529570021972,
-                0.15114922328762953,
-                3.327268494336797,
-                0.6162378356286178
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 106,
-            "entity_id": 107
-        }
-    },
-    "108": {
-        "ImageMeasurement": {
-            "camera_id": 38,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/234222302164_109.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 106,
-            "entity_id": 108
-        }
-    },
-    "109": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 109",
-            "parent_entity_id": 57,
-            "entity_id": 109
-        }
-    },
-    "110": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.5285657802096455,
-                0.7201067260628333,
-                -0.003843226963070037,
-                -1.6835529570021972,
-                0.15114922328762953,
-                3.327268494336797,
-                0.6162378356286178
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 109,
-            "entity_id": 110
-        }
-    },
-    "111": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/220422302296_109.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 109,
-            "entity_id": 111
-        }
-    },
-    "112": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Right Camera 110",
-            "parent_entity_id": 57,
-            "entity_id": 112
-        }
-    },
-    "113": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.5276869727459927,
-                0.317704527161001,
-                -0.01753879268907437,
-                -2.597630111082046,
-                0.06057695616021219,
-                3.7023815565000784,
-                0.6162477896042943
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 112,
-            "entity_id": 113
-        }
-    },
-    "114": {
-        "ImageMeasurement": {
-            "camera_id": 38,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/234222302164_110.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 112,
-            "entity_id": 114
-        }
-    },
-    "115": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 110",
-            "parent_entity_id": 57,
-            "entity_id": 115
-        }
-    },
-    "116": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.5276869727459927,
-                0.317704527161001,
-                -0.01753879268907437,
-                -2.597630111082046,
-                0.06057695616021219,
-                3.7023815565000784,
-                0.6162477896042943
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 115,
-            "entity_id": 116
-        }
-    },
-    "117": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/220422302296_110.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 115,
-            "entity_id": 117
-        }
-    },
-    "118": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Right Camera 111",
-            "parent_entity_id": 57,
-            "entity_id": 118
-        }
-    },
-    "119": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.5253367815904542,
-                0.45293736882872276,
-                -0.23218533235003308,
-                -2.506473261411119,
-                -0.0066109553396638,
-                3.7307419284364527,
-                0.616256988895314
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 118,
-            "entity_id": 119
-        }
-    },
-    "120": {
-        "ImageMeasurement": {
-            "camera_id": 38,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/234222302164_111.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 118,
-            "entity_id": 120
-        }
-    },
-    "121": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 111",
-            "parent_entity_id": 57,
-            "entity_id": 121
-        }
-    },
-    "122": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.5253367815904542,
-                0.45293736882872276,
-                -0.23218533235003308,
-                -2.506473261411119,
-                -0.0066109553396638,
-                3.7307419284364527,
-                0.616256988895314
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 121,
-            "entity_id": 122
-        }
-    },
-    "123": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/220422302296_111.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 121,
-            "entity_id": 123
-        }
-    },
-    "124": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Right Camera 112",
-            "parent_entity_id": 57,
-            "entity_id": 124
-        }
-    },
-    "125": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.4801450366981335,
-                0.5618407127940973,
-                -0.28672118198529717,
-                -2.3094263643236546,
-                -0.021717702996098435,
-                3.644099006929173,
-                0.6162613626300941
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 124,
-            "entity_id": 125
-        }
-    },
-    "126": {
-        "ImageMeasurement": {
-            "camera_id": 38,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/234222302164_112.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 124,
-            "entity_id": 126
-        }
-    },
-    "127": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 112",
-            "parent_entity_id": 57,
-            "entity_id": 127
-        }
-    },
-    "128": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.4801450366981335,
-                0.5618407127940973,
-                -0.28672118198529717,
-                -2.3094263643236546,
-                -0.021717702996098435,
-                3.644099006929173,
-                0.6162613626300941
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 127,
-            "entity_id": 128
-        }
-    },
-    "129": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/220422302296_112.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 127,
-            "entity_id": 129
-        }
-    },
-    "130": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Right Camera 113",
-            "parent_entity_id": 57,
-            "entity_id": 130
-        }
-    },
-    "131": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.5945554434087793,
-                0.42034881111815403,
-                0.35544627444349536,
-                -2.5440103380442385,
-                -0.023365861414060753,
-                3.6799776800657833,
-                0.6278472642177219
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 130,
-            "entity_id": 131
-        }
-    },
-    "132": {
-        "ImageMeasurement": {
-            "camera_id": 38,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/234222302164_113.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 130,
-            "entity_id": 132
-        }
-    },
-    "133": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 113",
-            "parent_entity_id": 57,
-            "entity_id": 133
-        }
-    },
-    "134": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.5945554434087793,
-                0.42034881111815403,
-                0.35544627444349536,
-                -2.5440103380442385,
-                -0.023365861414060753,
-                3.6799776800657833,
-                0.6278472642177219
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 133,
-            "entity_id": 134
-        }
-    },
-    "135": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/220422302296_113.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 133,
-            "entity_id": 135
-        }
-    },
-    "136": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Right Camera 114",
-            "parent_entity_id": 57,
-            "entity_id": 136
-        }
-    },
-    "137": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.5919100415920965,
-                0.6308486776996932,
-                0.251107959690555,
-                -2.174791781927044,
-                0.3088454791323628,
-                3.6888063247011953,
-                0.7265556151246182
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 136,
-            "entity_id": 137
-        }
-    },
-    "138": {
-        "ImageMeasurement": {
-            "camera_id": 38,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/234222302164_114.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 136,
-            "entity_id": 138
-        }
-    },
-    "139": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 114",
-            "parent_entity_id": 57,
-            "entity_id": 139
-        }
-    },
-    "140": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.5919100415920965,
-                0.6308486776996932,
-                0.251107959690555,
-                -2.174791781927044,
-                0.3088454791323628,
-                3.6888063247011953,
-                0.7265556151246182
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 139,
-            "entity_id": 140
-        }
-    },
-    "141": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/220422302296_114.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 139,
-            "entity_id": 141
-        }
-    },
-    "142": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Right Camera 115",
-            "parent_entity_id": 57,
-            "entity_id": 142
-        }
-    },
-    "143": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.5916910249301407,
-                0.79676937670774,
-                0.20568341403276574,
-                -1.8863627114557218,
-                0.27129359190553226,
-                3.6102883311182397,
-                0.7265635163884121
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 142,
-            "entity_id": 143
-        }
-    },
-    "144": {
-        "ImageMeasurement": {
-            "camera_id": 38,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/234222302164_115.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 142,
-            "entity_id": 144
-        }
-    },
-    "145": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 115",
-            "parent_entity_id": 57,
-            "entity_id": 145
-        }
-    },
-    "146": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.5916910249301407,
-                0.79676937670774,
-                0.20568341403276574,
-                -1.8863627114557218,
-                0.27129359190553226,
-                3.6102883311182397,
-                0.7265635163884121
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 145,
-            "entity_id": 146
-        }
-    },
-    "147": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/220422302296_115.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 145,
-            "entity_id": 147
-        }
-    },
-    "148": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Right Camera 116",
-            "parent_entity_id": 57,
-            "entity_id": 148
-        }
-    },
-    "149": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.5843433346819392,
-                0.9574661373526683,
-                0.005576690476264419,
-                -1.5208386249635313,
-                0.20948084124709443,
-                3.419101917954882,
-                0.7265551395896711
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 148,
-            "entity_id": 149
-        }
-    },
-    "150": {
-        "ImageMeasurement": {
-            "camera_id": 38,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/234222302164_116.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 148,
-            "entity_id": 150
-        }
-    },
-    "151": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 116",
-            "parent_entity_id": 57,
-            "entity_id": 151
-        }
-    },
-    "152": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.5843433346819392,
-                0.9574661373526683,
-                0.005576690476264419,
-                -1.5208386249635313,
-                0.20948084124709443,
-                3.419101917954882,
-                0.7265551395896711
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 151,
-            "entity_id": 152
-        }
-    },
-    "153": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/220422302296_116.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 151,
-            "entity_id": 153
-        }
-    },
-    "154": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Right Camera 117",
-            "parent_entity_id": 57,
-            "entity_id": 154
-        }
-    },
-    "155": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.595496349776483,
-                0.319450642563289,
-                0.05051065279052132,
-                -2.5532085932859205,
-                -0.021821740030468877,
-                3.5257576278807674,
-                0.7485011512612455
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 154,
-            "entity_id": 155
-        }
-    },
-    "156": {
-        "ImageMeasurement": {
-            "camera_id": 38,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/234222302164_117.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 154,
-            "entity_id": 156
-        }
-    },
-    "157": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 117",
-            "parent_entity_id": 57,
-            "entity_id": 157
-        }
-    },
-    "158": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.595496349776483,
-                0.319450642563289,
-                0.05051065279052132,
-                -2.5532085932859205,
-                -0.021821740030468877,
-                3.5257576278807674,
-                0.7485011512612455
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 157,
-            "entity_id": 158
-        }
-    },
-    "159": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Right/images/220422302296_117.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 157,
-            "entity_id": 159
-        }
-    },
-    "160": {
-        "ArucoMeasurement": {
-            "detector_entity_id": 19,
-            "camera_entity_id": 38,
-            "marker_entity_id": 3,
-            "marker_id": 3,
-            "marker_dict": 0,
-            "pixels": [
-                [
-                    30.127111434936523,
-                    298.522216796875
-                ],
-                [
-                    246.90171813964844,
-                    279.64385986328125
-                ],
-                [
-                    285.1390380859375,
-                    429.6532897949219
-                ],
-                [
-                    96.14412689208984,
-                    461.52838134765625
-                ]
-            ]
-        },
-        "Deletable": {},
-        "Node": {
-            "name": "Aruco 3",
-            "parent_entity_id": 60,
-            "entity_id": 160
-        }
-    },
-    "161": {
-        "ArucoMeasurement": {
-            "detector_entity_id": 19,
-            "camera_entity_id": 38,
-            "marker_entity_id": 3,
-            "marker_id": 3,
-            "marker_dict": 0,
-            "pixels": [
-                [
-                    178.32138061523438,
-                    312.8202819824219
-                ],
-                [
-                    383.32989501953125,
-                    281.5877380371094
-                ],
-                [
-                    418.0351257324219,
-                    437.3888244628906
-                ],
-                [
-                    238.54293823242188,
-                    479.7320861816406
-                ]
-            ]
-        },
-        "Deletable": {},
-        "Node": {
-            "name": "Aruco 3",
-            "parent_entity_id": 66,
-            "entity_id": 161
-        }
-    },
-    "162": {
-        "ArucoMeasurement": {
-            "detector_entity_id": 19,
-            "camera_entity_id": 38,
-            "marker_entity_id": 3,
-            "marker_id": 3,
-            "marker_dict": 0,
-            "pixels": [
-                [
-                    357.3105163574219,
-                    313.5067443847656
-                ],
-                [
-                    546.6776123046875,
-                    275.20404052734375
-                ],
-                [
-                    577.5191040039062,
-                    434.1595458984375
-                ],
-                [
-                    409.76995849609375,
-                    477.60888671875
-                ]
-            ]
-        },
-        "Deletable": {},
-        "Node": {
-            "name": "Aruco 3",
-            "parent_entity_id": 72,
-            "entity_id": 162
-        }
-    },
-    "163": {
-        "ArucoMeasurement": {
-            "detector_entity_id": 19,
-            "camera_entity_id": 38,
-            "marker_entity_id": 3,
-            "marker_id": 3,
-            "marker_dict": 0,
-            "pixels": [
-                [
-                    565.8092041015625,
-                    271.48699951171875
-                ],
-                [
-                    759.7025146484375,
-                    220.37620544433594
-                ],
-                [
-                    786.3101806640625,
-                    397.0914611816406
-                ],
-                [
-                    614.4612426757812,
-                    449.05316162109375
-                ]
-            ]
-        },
-        "Deletable": {},
-        "Node": {
-            "name": "Aruco 3",
-            "parent_entity_id": 78,
-            "entity_id": 163
-        }
-    },
-    "164": {
-        "ArucoMeasurement": {
-            "detector_entity_id": 19,
-            "camera_entity_id": 38,
-            "marker_entity_id": 3,
-            "marker_id": 3,
-            "marker_dict": 0,
-            "pixels": [
-                [
-                    770.226318359375,
-                    238.75880432128906
-                ],
-                [
-                    959.7655639648438,
-                    178.44500732421875
-                ],
-                [
-                    979.4370727539062,
-                    351.9440002441406
-                ],
-                [
-                    810.369384765625,
-                    404.19451904296875
-                ]
-            ]
-        },
-        "Deletable": {},
-        "Node": {
-            "name": "Aruco 3",
-            "parent_entity_id": 84,
-            "entity_id": 164
-        }
-    },
-    "165": {
-        "ArucoMeasurement": {
-            "detector_entity_id": 19,
-            "camera_entity_id": 38,
-            "marker_entity_id": 3,
-            "marker_id": 3,
-            "marker_dict": 0,
-            "pixels": [
-                [
-                    930.2554321289062,
-                    211.66441345214844
-                ],
-                [
-                    1111.236328125,
-                    143.87518310546875
-                ],
-                [
-                    1117.6436767578125,
-                    300.7767639160156
-                ],
-                [
-                    958.1260986328125,
-                    356.31683349609375
-                ]
-            ]
-        },
-        "Deletable": {},
-        "Node": {
-            "name": "Aruco 3",
-            "parent_entity_id": 90,
-            "entity_id": 165
-        }
-    },
-    "166": {
-        "ArucoMeasurement": {
-            "detector_entity_id": 19,
-            "camera_entity_id": 38,
-            "marker_entity_id": 3,
-            "marker_id": 3,
-            "marker_dict": 0,
-            "pixels": [
-                [
-                    642.70703125,
-                    499.360595703125
-                ],
-                [
-                    843.953369140625,
-                    454.7510681152344
-                ],
-                [
-                    868.0686645507812,
-                    619.3648071289062
-                ],
-                [
-                    685.423828125,
-                    659.082763671875
-                ]
-            ]
-        },
-        "Deletable": {},
-        "Node": {
-            "name": "Aruco 3",
-            "parent_entity_id": 96,
-            "entity_id": 166
-        }
-    },
-    "167": {
-        "ArucoMeasurement": {
-            "detector_entity_id": 19,
-            "camera_entity_id": 38,
-            "marker_entity_id": 3,
-            "marker_id": 3,
-            "marker_dict": 0,
-            "pixels": [
-                [
-                    390.9612121582031,
-                    519.7844848632812
-                ],
-                [
-                    578.0436401367188,
-                    505.4186096191406
-                ],
-                [
-                    598.4483642578125,
-                    653.9625854492188
-                ],
-                [
-                    427.4692687988281,
-                    668.6685180664062
-                ]
-            ]
-        },
-        "Deletable": {},
-        "Node": {
-            "name": "Aruco 3",
-            "parent_entity_id": 102,
-            "entity_id": 167
-        }
-    },
-    "168": {
-        "ArucoMeasurement": {
-            "detector_entity_id": 19,
-            "camera_entity_id": 38,
-            "marker_entity_id": 3,
-            "marker_id": 3,
-            "marker_dict": 0,
-            "pixels": [
-                [
-                    87.21429443359375,
-                    436.7281188964844
-                ],
-                [
-                    280.94879150390625,
-                    451.2364501953125
-                ],
-                [
-                    291.0474853515625,
-                    616.5066528320312
-                ],
-                [
-                    107.49140167236328,
-                    606.6465454101562
-                ]
-            ]
-        },
-        "Deletable": {},
-        "Node": {
-            "name": "Aruco 3",
-            "parent_entity_id": 108,
-            "entity_id": 168
-        }
-    },
-    "169": {
-        "ArucoMeasurement": {
-            "detector_entity_id": 19,
-            "camera_entity_id": 38,
-            "marker_entity_id": 3,
-            "marker_id": 3,
-            "marker_dict": 0,
-            "pixels": [
-                [
-                    322.746337890625,
-                    66.21217346191406
-                ],
-                [
-                    442.3523864746094,
-                    79.88247680664062
-                ],
-                [
-                    442.5629577636719,
-                    196.09259033203125
-                ],
-                [
-                    330.32061767578125,
-                    186.04202270507812
-                ]
-            ]
-        },
-        "Deletable": {},
-        "Node": {
-            "name": "Aruco 3",
-            "parent_entity_id": 114,
-            "entity_id": 169
-        }
-    },
-    "170": {
-        "ArucoMeasurement": {
-            "detector_entity_id": 19,
-            "camera_entity_id": 4,
-            "marker_entity_id": 3,
-            "marker_id": 3,
-            "marker_dict": 0,
-            "pixels": [
-                [
-                    492.13177490234375,
-                    32.39216232299805
-                ],
-                [
-                    536.7572631835938,
-                    9.058030128479004
-                ],
-                [
-                    603.6693115234375,
-                    72.76074981689453
-                ],
-                [
-                    566.808349609375,
-                    100.2052230834961
-                ]
-            ]
-        },
-        "Deletable": {},
-        "Node": {
-            "name": "Aruco 3",
-            "parent_entity_id": 117,
-            "entity_id": 170
-        }
-    },
-    "171": {
-        "ArucoMeasurement": {
-            "detector_entity_id": 19,
-            "camera_entity_id": 38,
-            "marker_entity_id": 3,
-            "marker_id": 3,
-            "marker_dict": 0,
-            "pixels": [
-                [
-                    172.32254028320312,
-                    88.28831481933594
-                ],
-                [
-                    288.71209716796875,
-                    120.20551300048828
-                ],
-                [
-                    282.4241638183594,
-                    223.68727111816406
-                ],
-                [
-                    172.977294921875,
-                    197.34288024902344
-                ]
-            ]
-        },
-        "Deletable": {},
-        "Node": {
-            "name": "Aruco 3",
-            "parent_entity_id": 120,
-            "entity_id": 171
-        }
-    },
-    "172": {
-        "ArucoMeasurement": {
-            "detector_entity_id": 19,
-            "camera_entity_id": 4,
-            "marker_entity_id": 3,
-            "marker_id": 3,
-            "marker_dict": 0,
-            "pixels": [
-                [
-                    418.8447570800781,
-                    139.2885284423828
-                ],
-                [
-                    488.530517578125,
-                    112.45243072509766
-                ],
-                [
-                    553.692138671875,
-                    187.8353271484375
-                ],
-                [
-                    493.578125,
-                    221.740478515625
-                ]
-            ]
-        },
-        "Deletable": {},
-        "Node": {
-            "name": "Aruco 3",
-            "parent_entity_id": 123,
-            "entity_id": 172
-        }
-    },
-    "173": {
-        "ArucoMeasurement": {
-            "detector_entity_id": 19,
-            "camera_entity_id": 38,
-            "marker_entity_id": 3,
-            "marker_id": 3,
-            "marker_dict": 0,
-            "pixels": [
-                [
-                    46.7769775390625,
-                    131.94863891601562
-                ],
-                [
-                    172.86354064941406,
-                    173.439208984375
-                ],
-                [
-                    165.75161743164062,
-                    274.2677917480469
-                ],
-                [
-                    47.03049850463867,
-                    239.64891052246094
-                ]
-            ]
-        },
-        "Deletable": {},
-        "Node": {
-            "name": "Aruco 3",
-            "parent_entity_id": 126,
-            "entity_id": 173
-        }
-    },
-    "174": {
-        "ArucoMeasurement": {
-            "detector_entity_id": 19,
-            "camera_entity_id": 4,
-            "marker_entity_id": 3,
-            "marker_id": 3,
-            "marker_dict": 0,
-            "pixels": [
-                [
-                    410.3614807128906,
-                    198.6722869873047
-                ],
-                [
-                    496.6776428222656,
-                    167.61273193359375
-                ],
-                [
-                    563.6085815429688,
-                    256.056396484375
-                ],
-                [
-                    488.6404113769531,
-                    297.43994140625
-                ]
-            ]
-        },
-        "Deletable": {},
-        "Node": {
-            "name": "Aruco 3",
-            "parent_entity_id": 129,
-            "entity_id": 174
-        }
-    },
-    "175": {
-        "ArucoMeasurement": {
-            "detector_entity_id": 19,
-            "camera_entity_id": 38,
-            "marker_entity_id": 3,
-            "marker_id": 3,
-            "marker_dict": 0,
-            "pixels": [
-                [
-                    733.9247436523438,
-                    114.85529327392578
-                ],
-                [
-                    822.6119995117188,
-                    78.65949249267578
-                ],
-                [
-                    841.1444702148438,
-                    178.51344299316406
-                ],
-                [
-                    760.14794921875,
-                    215.3037872314453
-                ]
-            ]
-        },
-        "Deletable": {},
-        "Node": {
-            "name": "Aruco 3",
-            "parent_entity_id": 132,
-            "entity_id": 175
-        }
-    },
-    "176": {
-        "ArucoMeasurement": {
-            "detector_entity_id": 19,
-            "camera_entity_id": 38,
-            "marker_entity_id": 3,
-            "marker_id": 3,
-            "marker_dict": 0,
-            "pixels": [
-                [
-                    575.688720703125,
-                    258.8251037597656
-                ],
-                [
-                    691.7341918945312,
-                    251.6490020751953
-                ],
-                [
-                    698.322265625,
-                    365.15667724609375
-                ],
-                [
-                    588.115234375,
-                    369.1993713378906
-                ]
-            ]
-        },
-        "Deletable": {},
-        "Node": {
-            "name": "Aruco 3",
-            "parent_entity_id": 138,
-            "entity_id": 176
-        }
-    },
-    "177": {
-        "ArucoMeasurement": {
-            "detector_entity_id": 19,
-            "camera_entity_id": 38,
-            "marker_entity_id": 3,
-            "marker_id": 3,
-            "marker_dict": 0,
-            "pixels": [
-                [
-                    542.7803344726562,
-                    381.041015625
-                ],
-                [
-                    663.8735961914062,
-                    378.52777099609375
-                ],
-                [
-                    671.4674682617188,
-                    494.2390441894531
-                ],
-                [
-                    555.9723510742188,
-                    493.25286865234375
-                ]
-            ]
-        },
-        "Deletable": {},
-        "Node": {
-            "name": "Aruco 3",
-            "parent_entity_id": 144,
-            "entity_id": 177
-        }
-    },
-    "178": {
-        "ArucoMeasurement": {
-            "detector_entity_id": 19,
-            "camera_entity_id": 38,
-            "marker_entity_id": 3,
-            "marker_id": 3,
-            "marker_dict": 0,
-            "pixels": [
-                [
-                    304.11138916015625,
-                    523.5108032226562
-                ],
-                [
-                    437.70654296875,
-                    540.7274780273438
-                ],
-                [
-                    439.954345703125,
-                    663.863525390625
-                ],
-                [
-                    311.6069030761719,
-                    646.6529541015625
-                ]
-            ]
-        },
-        "Deletable": {},
-        "Node": {
-            "name": "Aruco 3",
-            "parent_entity_id": 150,
-            "entity_id": 178
-        }
-    },
-    "179": {
-        "ArucoMeasurement": {
-            "detector_entity_id": 19,
-            "camera_entity_id": 4,
-            "marker_entity_id": 3,
-            "marker_id": 3,
-            "marker_dict": 0,
-            "pixels": [
-                [
-                    875.3858032226562,
-                    69.34111785888672
-                ],
-                [
-                    898.3792724609375,
-                    19.20871353149414
-                ],
-                [
-                    973.6749267578125,
-                    78.94234466552734
-                ],
-                [
-                    958.7041625976562,
-                    131.65943908691406
-                ]
-            ]
-        },
-        "Deletable": {},
-        "Node": {
-            "name": "Aruco 3",
-            "parent_entity_id": 153,
-            "entity_id": 179
-        }
-    },
-    "180": {
-        "ArucoMeasurement": {
-            "detector_entity_id": 19,
-            "camera_entity_id": 38,
-            "marker_entity_id": 3,
-            "marker_id": 3,
-            "marker_dict": 0,
-            "pixels": [
-                [
-                    467.3461608886719,
-                    118.42261505126953
-                ],
-                [
-                    580.4981079101562,
-                    111.65586853027344
-                ],
-                [
-                    588.6261596679688,
-                    220.34066772460938
-                ],
-                [
-                    484.36175537109375,
-                    228.5642852783203
-                ]
-            ]
-        },
-        "Deletable": {},
-        "Node": {
-            "name": "Aruco 3",
-            "parent_entity_id": 156,
-            "entity_id": 180
-        }
-    },
-    "181": {
-        "MeasurementGroup": {},
-        "Node": {
-            "name": "Left",
-            "parent_entity_id": 6,
-            "entity_id": 181
-        }
-    },
-    "182": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 21",
-            "parent_entity_id": 181,
-            "entity_id": 182
-        }
-    },
-    "183": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.416516185467014,
-                0.5919531772184309,
-                -0.41204322323466314,
-                -1.647096047168549,
-                -0.15338136080031212,
-                2.5716264604763013,
-                1.2713059027703746
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 182,
-            "entity_id": 183
-        }
-    },
-    "184": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Left/images/220422302296_21.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 182,
-            "entity_id": 184
-        }
-    },
-    "185": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 22",
-            "parent_entity_id": 181,
-            "entity_id": 185
-        }
-    },
-    "186": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.5021994005101089,
-                0.6228534030029186,
-                -0.3627609969582689,
-                -1.6299624802223365,
-                -0.1642920407083078,
-                2.57228761773349,
-                1.4891926049050543
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 185,
-            "entity_id": 186
-        }
-    },
-    "187": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Left/images/220422302296_22.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 185,
-            "entity_id": 187
-        }
-    },
-    "188": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 25",
-            "parent_entity_id": 181,
-            "entity_id": 188
-        }
-    },
-    "189": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.7105556070522866,
-                0.6202478020350155,
-                -0.7519816545408765,
-                -1.9863707830095658,
-                0.16676506334908253,
-                2.8932487044023327,
-                0.9847993272338669
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 188,
-            "entity_id": 189
-        }
-    },
-    "190": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Left/images/220422302296_25.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 188,
-            "entity_id": 190
-        }
-    },
-    "191": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 26",
-            "parent_entity_id": 181,
-            "entity_id": 191
-        }
-    },
-    "192": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.7263763733517534,
-                0.6309561543118338,
-                -0.668217463862482,
-                -1.8516007812915016,
-                0.2145779627894655,
-                2.8206635516464127,
-                0.9947994391435692
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 191,
-            "entity_id": 192
-        }
-    },
-    "193": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Left/images/220422302296_26.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 191,
-            "entity_id": 193
-        }
-    },
-    "194": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 27",
-            "parent_entity_id": 181,
-            "entity_id": 194
-        }
-    },
-    "195": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.7534065344456042,
-                0.8106855866209874,
-                -0.6049398541012592,
-                -1.612463060819204,
-                0.24386706281296955,
-                2.7916309074552785,
-                1.1718628507894133
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 194,
-            "entity_id": 195
-        }
-    },
-    "196": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Left/images/220422302296_27.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 194,
-            "entity_id": 196
-        }
-    },
-    "197": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 28",
-            "parent_entity_id": 181,
-            "entity_id": 197
-        }
-    },
-    "198": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.7528528431222958,
-                1.0122720479071985,
-                -0.5575018551511707,
-                -1.2589158163545255,
-                0.30662639822385995,
-                2.6878751540824966,
-                1.5055902266647219
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 197,
-            "entity_id": 198
-        }
-    },
-    "199": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Left/images/220422302296_28.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 197,
-            "entity_id": 199
-        }
-    },
-    "200": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 29",
-            "parent_entity_id": 181,
-            "entity_id": 200
-        }
-    },
-    "201": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.7667691364049998,
-                1.1680677602672542,
-                -0.539498669529464,
-                -1.0649690330793364,
-                0.3395870681799157,
-                2.6932307983270256,
-                1.546847134235149
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 200,
-            "entity_id": 201
-        }
-    },
-    "202": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Left/images/220422302296_29.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 200,
-            "entity_id": 202
-        }
-    },
-    "203": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 30",
-            "parent_entity_id": 181,
-            "entity_id": 203
-        }
-    },
-    "204": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.9818786329045209,
-                0.6607557366509861,
-                -0.684934518083962,
-                -2.0652274923405347,
-                0.27759397865582086,
-                2.9801675947432353,
-                1.4036889614260504
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 203,
-            "entity_id": 204
-        }
-    },
-    "205": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Left/images/220422302296_30.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 203,
-            "entity_id": 205
-        }
-    },
-    "206": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 31",
-            "parent_entity_id": 181,
-            "entity_id": 206
-        }
-    },
-    "207": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.9829454771584989,
-                0.5522993679574676,
-                -0.7483779441103313,
-                -2.4226695979268174,
-                0.27739167949442295,
-                3.305575860401184,
-                1.2398091063011158
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 206,
-            "entity_id": 207
-        }
-    },
-    "208": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Left/images/220422302296_31.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 206,
-            "entity_id": 208
-        }
-    },
-    "209": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 32",
-            "parent_entity_id": 181,
-            "entity_id": 209
-        }
-    },
-    "210": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.9060313672657214,
-                0.351141922777765,
-                -0.7955031229624221,
-                -2.4367746770220315,
-                0.20965459504258113,
-                3.0685192735542683,
-                0.9882479228343634
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 209,
-            "entity_id": 210
-        }
-    },
-    "211": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Left/images/220422302296_32.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 209,
-            "entity_id": 211
-        }
-    },
-    "212": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 33",
-            "parent_entity_id": 181,
-            "entity_id": 212
-        }
-    },
-    "213": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.6860383877242064,
-                0.5731730460414854,
-                -0.7264520684871586,
-                -2.087965407932985,
-                0.41964387689875987,
-                2.7923206129936538,
-                0.14169819829544142
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 212,
-            "entity_id": 213
-        }
-    },
-    "214": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Left/images/220422302296_33.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 212,
-            "entity_id": 214
-        }
-    },
-    "215": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 34",
-            "parent_entity_id": 181,
-            "entity_id": 215
-        }
-    },
-    "216": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.6000053592969898,
-                0.8014375283647504,
-                -0.7207558304953712,
-                -1.8421906646980108,
-                0.49757580756780934,
-                2.7406674056401306,
-                0.10289076898831764
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 215,
-            "entity_id": 216
-        }
-    },
-    "217": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Left/images/220422302296_34.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 215,
-            "entity_id": 217
-        }
-    },
-    "218": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 35",
-            "parent_entity_id": 181,
-            "entity_id": 218
-        }
-    },
-    "219": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.589430936049311,
-                1.1494539834714605,
-                -0.6404260025581199,
-                -1.2887863927316479,
-                0.9301967226824142,
-                2.9983072960280657,
-                0.5116469534412593
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 218,
-            "entity_id": 219
-        }
-    },
-    "220": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Left/images/220422302296_35.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 218,
-            "entity_id": 220
-        }
-    },
-    "221": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 36",
-            "parent_entity_id": 181,
-            "entity_id": 221
-        }
-    },
-    "222": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.7368496021448502,
-                1.1325458274329523,
-                -0.6419963391425272,
-                -1.2901145595651302,
-                0.9903945248096652,
-                3.0717121377428365,
-                0.8040061393894747
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 221,
-            "entity_id": 222
-        }
-    },
-    "223": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Left/images/220422302296_36.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 221,
-            "entity_id": 223
-        }
-    },
-    "224": {
-        "Measurement": {},
-        "Deletable": {},
-        "Node": {
-            "name": "Left Camera 37",
-            "parent_entity_id": 181,
-            "entity_id": 224
-        }
-    },
-    "225": {
-        "JointMeasurement": {
-            "robot_id": 7,
-            "joint_values": [
-                0.780909137695643,
-                1.1626752884352192,
-                -0.6166101450950009,
-                -1.1439908027349415,
-                1.0025759247904718,
-                3.1031397293381997,
-                0.9911222473103334
-            ]
-        },
-        "Node": {
-            "name": "Joints",
-            "parent_entity_id": 224,
-            "entity_id": 225
-        }
-    },
-    "226": {
-        "ImageMeasurement": {
-            "camera_id": 4,
-            "image_path": "/home/jchakra/repos/waynon/data/Left/images/220422302296_37.png"
-        },
-        "Node": {
-            "name": "Image",
-            "parent_entity_id": 224,
-            "entity_id": 226
+            "parent_entity_id": 37,
+            "entity_id": 54
+        }
+    },
+    "55": {
+        "Transform": {
+            "X_PT": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "locked": false,
+            "visible": true,
+            "modifiable": true
+        },
+        "PinholeCamera": {
+            "fl_x": 642.844970703125,
+            "fl_y": 642.1776733398438,
+            "cx": 655.6039428710938,
+            "cy": 370.8880615234375,
+            "width": 1280,
+            "height": 720
+        },
+        "RealsenseCamera": {
+            "serial": "220422302296"
+        },
+        "Deletable": {},
+        "Draggable": {
+            "type": "transform"
+        },
+        "Nestable": {
+            "type": "transform",
+            "source": true,
+            "target": 0
+        },
+        "Optimizable": {
+            "optimize": true
+        },
+        "Node": {
+            "name": "Realsense_0",
+            "parent_entity_id": 2,
+            "entity_id": 55
         }
     }
 }

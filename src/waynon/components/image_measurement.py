@@ -10,7 +10,7 @@ from .tree_utils import *
 from .component import Component
 from .node import Node
 from .pose_group import PoseGroup
-from .camera import Camera
+from .camera import PinholeCamera
 from .measurement import Measurement
 
 
@@ -31,7 +31,7 @@ class ImageMeasurement(Component):
     def get_camera(self):
         if not esper.entity_exists(self.camera_id):
             return None
-        return esper.component_for_entity(self.camera_id, Camera)
+        return esper.component_for_entity(self.camera_id, PinholeCamera)
     
     def draw_property(self, nursery, entity_id):
         imgui.separator()
@@ -42,7 +42,8 @@ class ImageMeasurement(Component):
 
         imgui.text(f"Image Path: {self.image_path}")
     
-    def default_name(self):
+    @staticmethod
+    def default_name():
         return "Image"
 
     def _fix_on_load(self, new_to_old_entity_ids):

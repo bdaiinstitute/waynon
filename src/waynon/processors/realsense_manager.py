@@ -1,15 +1,10 @@
 from typing import Dict
+import esper
+
 from multiprocessing.managers import SharedMemoryManager
 from waynon.realsense.single_realsense import SingleRealsense
 
-class CameraManager:
-    _instance = None
-
-    @classmethod
-    def instance(cls):
-        if cls._instance is None:
-            cls._instance = CameraManager()
-        return cls._instance
+class RealsenseManager:
 
     def __init__(self):
         self.shm_manager = SharedMemoryManager()
@@ -23,7 +18,6 @@ class CameraManager:
     
     def get_connected_serials(self):
         self.serials =  SingleRealsense.get_connected_devices_serial()
-
     
     def start_camera(self, serial: str):
         assert serial in self.serials
@@ -54,7 +48,7 @@ class CameraManager:
             return self.cameras[serial]
         return None
     
-    def get_image(self, serial: str):
+    def get_data(self, serial: str):
         if serial in self.cameras:
             return self.cameras[serial].get()
         return None
@@ -78,3 +72,24 @@ class CameraManager:
     def __del__(self):
         self.stop_all_cameras()
     
+    def process(self):
+        from waynon.components.realsense_camera import RealsenseCamera
+        from waynon.components.camera import PinholeCamera
+        for entity, (camera, realsense) in esper.get_components(PinholeCamera, RealsenseCamera):
+            if realsense.running():
+                K = realsense.intrinsics()
+                camera.fl_x = K[0, 0]
+                camera.fl_y = K[1, 1]
+                camera.cx = K[0, 2]
+                camera.cy = K[1, 2]
+
+                resolution = realsense.resolution()
+                camera.width = resolution[0]
+                camera.height = resolution[1]
+
+                data = realsense.get_data()
+                rgb = data['color']
+                camera.update_image(rgb)
+
+
+REALSENSE_MANAGER = RealsenseManager()

@@ -12,7 +12,7 @@ import marsoom
 import marsoom.texture
 
 from waynon.components.tree_utils import *
-from waynon.components.camera import Camera
+from waynon.components.camera import PinholeCamera
 from waynon.components.image_measurement import ImageMeasurement
 from waynon.components.aruco_measurement import ArucoMeasurement
 
@@ -34,8 +34,8 @@ class Viewer2DViewModel:
     def _on_image_viewer(self, entity_id):
         if esper.entity_exists(entity_id):
             self.current_entity_id = entity_id
-            if esper.has_component(entity_id, Camera):
-                camera = esper.component_for_entity(entity_id, Camera)
+            if esper.has_component(entity_id, PinholeCamera):
+                camera = esper.component_for_entity(entity_id, PinholeCamera)
                 t = camera.get_texture()
                 if t:
                     self.viewer_2d.set_texture(t)

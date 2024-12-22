@@ -13,8 +13,8 @@ import pyglet
 import marsoom
 
 from waynon.components.scene_utils import create_empty_scene, load_scene, save_scene 
-from waynon.components.camera import Camera
-from waynon.processors.camera import CameraManager
+from waynon.components.camera import PinholeCamera
+from waynon.processors.realsense_manager import REALSENSE_MANAGER
 from waynon.processors.transforms import TransformProcessor
 from waynon.processors.robot import RobotProcessor
 from waynon.processors.render import RenderProcessor
@@ -62,6 +62,7 @@ class Window(marsoom.Window):
         esper.add_processor(RobotProcessor())
         esper.add_processor(TransformProcessor())
         esper.add_processor(RenderProcessor())
+        esper.add_processor(REALSENSE_MANAGER)
     
     def _set_up_assets(self):
         work_path = Path(__file__).parent.parent.parent / "assets"
@@ -76,11 +77,6 @@ class Window(marsoom.Window):
         self.viewer_2d_viewmodel.draw()
 
 
-async def update_cameras(window: marsoom.Window):
-    while not window.should_exit():
-        for _, camera in esper.get_component(Camera):
-            camera.update()
-        await trio.sleep(1/30.0)
 
 async def render_gui(window: marsoom.Window):
     while not window.should_exit():
@@ -93,14 +89,14 @@ async def render_gui(window: marsoom.Window):
 async def main_async():
     wp.init()
     settings = Settings.try_load()
-    CameraManager.instance().get_connected_serials()
-    
+    REALSENSE_MANAGER.get_connected_serials()
+
     async with trio.open_nursery() as nursery:
         window = Window(nursery, settings=settings)
-        nursery.start_soon(update_cameras, window)  
         await render_gui(window)
         nursery.cancel_scope.cancel()
-    CameraManager.instance().stop_all_cameras()
+
+    REALSENSE_MANAGER.stop_all_cameras()
 
     
     settings.save()
