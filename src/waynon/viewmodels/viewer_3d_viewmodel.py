@@ -58,18 +58,19 @@ class Viewer3DViewModel:
     def _draw_guizmo(self):
         if self.modifiable_transform is not None:
             guizmo.set_id(0)
-            X_WT = self.modifiable_transform.get_X_WT()
-            X_WT = self.viewer_3d.manipulate(X_WT, self.guizmo_operation, self.guizmo_frame)
-            self.modifiable_transform.set_X_WT(X_WT)
+            if not self.modifiable_transform._dirty:
+                X_WT = self.modifiable_transform.get_X_WT()
+                X_WT = self.viewer_3d.manipulate(X_WT, self.guizmo_operation, self.guizmo_frame)
+                self.modifiable_transform.set_X_WT(X_WT)
 
     def _draw_everything(self):
         for entity, (transform, drawable) in esper.get_components(Transform, Mesh):
             drawable.draw()
         for entity, (transform, drawable) in esper.get_components(Transform, ImageQuad):
             drawable.draw()
-        for entity, (transform, drawable) in esper.get_components(Transform, CameraWireframe):
-            drawable.draw()
         for entity, (transform, drawable) in esper.get_components(Transform, ArucoDrawable):
+            drawable.draw()
+        for entity, (transform, drawable) in esper.get_components(Transform, CameraWireframe):
             drawable.draw()
 
     def _draw_transforms(self):
@@ -78,6 +79,17 @@ class Viewer3DViewModel:
                 draw_axis(transform.get_X_WT())
 
     def _handle_keys(self):
+        io = imgui.get_io()
+
+        if imgui.is_key_pressed(imgui.Key._1):
+            self.viewer_3d.reset_view()
+        if imgui.is_key_pressed(imgui.Key._2):
+            self.viewer_3d.top_view()
+        if imgui.is_key_pressed(imgui.Key._3):
+            self.viewer_3d.left_view()
+        if imgui.is_key_pressed(imgui.Key._4):
+            self.viewer_3d.front_view()
+
         if imgui.is_key_pressed(imgui.Key.g):
             if self.guizmo_operation == guizmo.OPERATION.translate:
                 self.toggle_guizmo_frame()

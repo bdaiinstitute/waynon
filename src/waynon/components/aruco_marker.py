@@ -12,6 +12,10 @@ class ArucoMarker(Component):
     marker_length: float = 0.07
     marker_dict: int = aruco.DICT_4X4_50
 
+
+    def get_texture(self):
+        return ARUCO_TEXTURES.get_texture(self.id, self.marker_dict)
+
     def draw_property(self, nursery, entity_id):
         imgui.separator()
         _, self.id = imgui.input_int("ID", self.id)

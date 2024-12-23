@@ -8,6 +8,10 @@ from imgui_bundle import imgui
 
 from waynon.components.simple import Component
 from waynon.processors.realsense_manager import RealsenseManager
+from waynon.components.aruco_detector import ArucoDetector
+from waynon.components.aruco_marker import ArucoMarker
+from waynon.detectors.aruco_processor import detect_all_markers_in_image
+from waynon.components.transform import Transform
 
 class PinholeCamera(Component):
     # intrinsics
@@ -30,6 +34,59 @@ class PinholeCamera(Component):
     def get_image_u(self):
         """Get the image as uint8 between 0 and 255"""
         return self._image_u
+    
+    def guess_position(self, camera_entity_id: int, marker_entity_id: int):
+        import cv2
+        from scipy.spatial.transform import Rotation as R
+        # get all markers
+        assert esper.entity_exists(marker_entity_id)
+        assert esper.has_components(marker_entity_id, ArucoMarker, Transform)
+        assert esper.entity_exists(camera_entity_id)
+        assert esper.has_components(camera_entity_id, PinholeCamera, Transform)
+
+        marker = esper.component_for_entity(marker_entity_id, ArucoMarker)
+        marker_transform = esper.component_for_entity(marker_entity_id, Transform)
+        camera_transform = esper.component_for_entity(camera_entity_id, Transform)
+
+        marker_pixels, marker_ids = detect_all_markers_in_image(self._image_u, marker.marker_dict)
+        if marker_ids is None:
+            print("No markers found")
+            return
+        if marker.id not in marker_ids:
+            print(f"Marker {marker.id} not found")
+            return
+        
+        idx = np.where(marker_ids == marker.id)[0][0]
+        all_pixels = marker_pixels[idx]
+        if len(all_pixels) > 1:
+            print(f"Warning: Found {len(all_pixels)} markers with id {marker.id}. Using first one")
+        
+        pixels = all_pixels[0]
+        p_MPs = marker.get_P_MC()
+        distortion = np.zeros((5, 1))
+        K = np.array([[self.fl_x, 0, self.cx],
+                      [0, self.fl_y, self.cy],
+                      [0, 0, 1]], dtype=np.float32)
+
+        _, rvec, tvec = cv2.solvePnP(p_MPs, pixels, K, distortion, False, cv2.SOLVEPNP_IPPE_SQUARE)
+        r = R.from_rotvec(np.array(rvec).flatten())
+        X_CM = np.eye(4)
+        X_CM[:3, :3] = r.as_matrix()
+        X_CM[:3, 3] = np.array(tvec).flatten()
+        X_WM = marker_transform.get_X_WT()
+        X_WC = X_WM @ np.linalg.inv(X_CM)
+
+        rot_x = R.from_rotvec([np.pi, 0, 0]).as_matrix()
+        X_x = np.eye(4)
+        X_x[:3, :3] = rot_x
+
+        X_WC = X_WC @ X_x
+
+        camera_transform.set_X_WT(X_WC)
+
+
+
+        
     
     def update_image(self, image: np.ndarray):
         assert image.dtype == np.uint8, f"Image must be uint8, got {image.dtype}"
@@ -55,6 +112,12 @@ class PinholeCamera(Component):
         imgui.text(f"fl_y: {self.fl_y}")
         imgui.text(f"cx: {self.cx}")
         imgui.text(f"cy: {self.cy}")
+
+        for marker_entity_id, marker in esper.get_component(ArucoMarker):
+            if imgui.image_button(f"guess_{marker_entity_id}", marker.get_texture().id, (50, 50)):
+                self.guess_position(e, marker_entity_id)
+            imgui.same_line()
+        imgui.new_line()
 
     def on_selected(self, nursery, entity_id, just_selected):
         if just_selected:

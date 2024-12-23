@@ -169,7 +169,7 @@ class CameraWireframe(Component, Drawable):
 
     def model_post_init(self, __context):
         self._batch = pyglet.graphics.Batch()
-        self._model = marsoom.camera_wireframe.CameraWireframeWithImage(batch=self._batch, z_offset=self.z_offset)
+        self._model = marsoom.camera_wireframe.CameraWireframeWithImage(batch=self._batch, z_offset=self.z_offset, alpha=self.alpha)
     
     def set_z_offset(self, z_offset: float):
         if self.z_offset == z_offset:
