@@ -74,8 +74,9 @@ class FactorGraphSolver:
         from waynon.components.aruco_measurement import ArucoMeasurement
         from waynon.components.joint_measurement import JointMeasurement
         from waynon.components.transform import Transform
-        from waynon.components.robot import Robot
+        from waynon.components.robot import Robot, FrankaLink
         from waynon.components.camera import PinholeCamera
+        from waynon.components.optimizable import Optimizable
 
         assert esper.entity_exists(factor_graph_id)
         assert esper.has_component(factor_graph_id, FactorGraph)
@@ -128,7 +129,9 @@ class FactorGraphSolver:
                 # Marker Pose (SE3) and initial guess (Optimized)
                 marker_pose_key = f"Marker_{marker_entity_id}_X_PM"
                 initial_values[marker_pose_key] = to_sym_pose(marker_transform.get_X_PT())
-                optimized_keys[marker_pose_key] = marker_entity_id # look up for later to get the results back 
+                marker_optimizable = esper.component_for_entity(marker_entity_id, Optimizable)
+                if marker_optimizable.optimize:
+                    optimized_keys[marker_pose_key] = marker_entity_id # look up for later to get the results back 
 
                 # Camera Intrinsics (LinearCameraCal) and initial guess
                 camera_intinsics_key = f"K_{camera_entity_id}"
@@ -141,11 +144,18 @@ class FactorGraphSolver:
                 X_PT_blender = camera_transform.get_X_PT()
                 X_PT_opencv = rotate_around_x(X_PT_blender)
                 initial_values[camera_pose_key] = to_sym_pose(X_PT_opencv)
-                optimized_keys[camera_pose_key] = camera_entity_id
+                camera_optimizable = esper.component_for_entity(camera_entity_id, Optimizable)
+                if camera_optimizable.optimize:
+                    optimized_keys[camera_pose_key] = camera_entity_id
 
                 # Robot Pose
                 # todo get link name to support putting marker on arbitrary link
-                link_key = "panda_hand"
+                link_id = find_nearest_ancestor_with_component(marker_entity_id, FrankaLink)
+                if link_id is None:
+                    print(f"No link found for {marker}.. This should not happen")
+                    continue
+                link = esper.component_for_entity(link_id, FrankaLink)
+                link_key = link.link_name
                 robot_pose_key = f"X_W{link_key}_{robot_id}_{joint_measurement_id}"
                 q = joint_measurement.joint_values
                 X_WR = robot.get_manager().fk(q)[link_key]

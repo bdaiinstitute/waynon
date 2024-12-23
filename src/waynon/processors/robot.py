@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, Dict
 import enum
 
 import numpy as np
@@ -15,6 +15,12 @@ if TYPE_CHECKING:
 
 
 class RobotManager:
+
+
+    def fk(self, q: np.ndarray) -> Dict[str, np.ndarray]:
+        # Returns a dictionary of link names to their transforms in base frame
+        raise NotImplementedError
+
     def ready_to_move(self) -> bool:
         raise NotImplementedError
     
