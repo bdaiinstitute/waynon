@@ -21,6 +21,7 @@ from .measurement import Measurement
 from .transform import Transform
 
 from waynon.utils.aruco_textures import ARUCO_TEXTURES
+from waynon.utils.utils import COLORS
 
 
 class Drawable:
@@ -33,13 +34,27 @@ class Drawable:
 class Mesh(Component, Drawable):
 
     mesh_path: str
+    color: tuple[float, float, float, float] = (0.0, 1.0, 0.0, 1.0)
 
     def model_post_init(self, __context):
         self._batch = pyglet.graphics.Batch()
         self._model = pyglet.resource.model(self.mesh_path, batch=self._batch)
+        try:
+            self._model.groups[0].color = self.color
+        except:
+            pass
     
     def set_X_WT(self, X_WT: np.ndarray):
         self._model.matrix = pyglet.math.Mat4(X_WT.T.flatten().tolist())
+    
+    def set_color(self, color: tuple[float, float, float, float]):
+        if self.color == color:
+            return
+        self.color = color
+        try:
+            self._model.groups[0].color = color
+        except:
+            print(f"Wanted to set color {color} but group does not support it")
     
     def draw(self):
         self._batch.draw()
@@ -149,7 +164,16 @@ class CameraWireframe(Component, Drawable):
     alpha: float = 1.0
 
     def draw_property(self, nursery, entity_id):
+        # imgui.push_style_color(imgui.Col_.button, COLORS["BLUE"])
         imgui.separator_text("Camera Wireframe")
+        imgui.spacing()
+        if imgui.button("Go To View", (imgui.get_content_region_avail().x, 40)):
+            transform = esper.component_for_entity(entity_id, Transform)
+            X_WV = transform.get_X_WT()
+            esper.dispatch_event("go_to_view", (X_WV, self.fl_x, self.fl_y, self.cx, self.cy, self.width, self.height))
+        # imgui.pop_style_color()
+        imgui.spacing()
+
         res, new_offset = imgui.slider_float("Z Offset", self.z_offset, 0.0, 1.0)
         if res:
             self.set_z_offset(new_offset)
@@ -157,19 +181,16 @@ class CameraWireframe(Component, Drawable):
         if res:
             self.set_alpha(new_alpha)
 
-        if imgui.button("Go to view"):
-            # X_WV, fx, fy, cx, cy, width, height
-            transform = esper.component_for_entity(entity_id, Transform)
-            X_WV = transform.get_X_WT()
-            esper.dispatch_event("go_to_view", (X_WV, self.fl_x, self.fl_y, self.cx, self.cy, self.width, self.height))
+        
 
     
     def property_order(self):
-        return 120
+        return 500
 
     def model_post_init(self, __context):
         self._batch = pyglet.graphics.Batch()
         self._model = marsoom.camera_wireframe.CameraWireframeWithImage(batch=self._batch, z_offset=self.z_offset, alpha=self.alpha)
+        self.update_intrinsics(self.fl_x, self.fl_y, self.cx, self.cy, self.width, self.height, force=True)
     
     def set_z_offset(self, z_offset: float):
         if self.z_offset == z_offset:
@@ -186,10 +207,11 @@ class CameraWireframe(Component, Drawable):
     def set_texture_id(self, texture_id):
         self._model.set_texture_id(texture_id)
 
-    def update_intrinsics(self, fl_x: float, fl_y: float, cx: float, cy: float, width: int, height: int):
-        if self.fl_x == fl_x and self.fl_y == fl_y and self.cx == cx and self.cy == cy and self.width == width and self.height == height:
-            return
-        print(f"Updating intrinsics: {fl_x}, {fl_y}, {cx}, {cy}, {width}, {height}")
+    def update_intrinsics(self, fl_x: float, fl_y: float, cx: float, cy: float, width: int, height: int, force:bool = False):
+        if not force:
+            if self.fl_x == fl_x and self.fl_y == fl_y and self.cx == cx and self.cy == cy and self.width == width and self.height == height:
+                return
+
         self.fl_x = fl_x
         self.fl_y = fl_y
         self.cx = cx

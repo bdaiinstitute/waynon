@@ -1,3 +1,4 @@
+import numpy as np
 import trio
 import pyglet
 import esper
@@ -18,23 +19,50 @@ class Viewer3DViewModel:
         self.nursery = nursery  
         self.window = window
         self.batch = pyglet.graphics.Batch()
+        self.grid = marsoom.Grid(batch=self.batch)
         self.guizmo_operation = guizmo.OPERATION.translate
         self.guizmo_frame = guizmo.MODE.local   
         self.viewer_3d = self.window.create_3D_viewer()
         self.modifiable_transform = None
+        self._draw_callbacks = []
 
         esper.set_handler("modify_transform", self._handle_transform_selected)
         esper.set_handler("go_to_view", self._go_to_view)
+        esper.set_handler("3d_draw_callback", self._add_draw_callback)
 
     def draw(self):
         self._handle_keys()
+        self.draw_controls()
         imgui.begin("3D Viewer")
         with self.viewer_3d.draw(in_imgui_window=True) as ctx:
+            self.batch.draw()
             self._draw_everything()
+            for entity_id, callback in self._draw_callbacks:
+                callback()
+        self._draw_callbacks = []
         self._draw_guizmo()
 
         if imgui.is_window_focused() and not guizmo.is_using_any():
             self.viewer_3d.process_nav()
+        imgui.end()
+    
+    def draw_controls(self):
+        imgui.begin("3D Controls")
+        v = self.viewer_3d
+        if imgui.button("Reset View"):
+            v.reset_view()
+        if imgui.button("Top View"):
+            v.top_view()
+        if imgui.button("Left View"):
+            v.left_view()
+        if imgui.button("Front View"):
+            v.front_view()
+        
+        _, v.screen_center_x = imgui.slider_float("Center X", v.screen_center_x, 0, 1)
+        _, v.screen_center_y = imgui.slider_float("Center Y", v.screen_center_y, 0, 1)
+        _, v.fl_x = imgui.slider_float("Focal Length X", v.fl_x, 0, 1000)
+        _, v.fl_y = imgui.slider_float("Focal Length Y", v.fl_y, 0, 1000)
+        
         imgui.end()
 
     def toggle_guizmo_frame(self):
@@ -42,6 +70,9 @@ class Viewer3DViewModel:
             self.guizmo_frame = guizmo.MODE.world
         else:
             self.guizmo_frame = guizmo.MODE.local
+    
+    def _add_draw_callback(self, entity_id, callback):
+        self._draw_callbacks.append((entity_id, callback))
     
     def _handle_transform_selected(self, entity_id):
         if not esper.entity_exists(entity_id):

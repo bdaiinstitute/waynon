@@ -133,7 +133,7 @@ class Desk:
         self._logged_in = False
         _logger.info('Logout succesful.')  
     
-    async def set_mode(self, mode: typing.Literal["execution"] | typing.Literal["programming"]) -> None:
+    async def set_mode(self, mode: typing.Literal["execution", "programming"]) -> None:
         """
         Uses the object's instance parameters to log into the Desk.
         The :py:class`Desk` class's constructor will try to connect

@@ -5,7 +5,7 @@ class Optimizable(Component):
     optimize: bool = True
 
     def draw_property(self, nursery, entity_id):
-        imgui.separator()
+        imgui.separator_text("Optimization")
         _, self.optimize = imgui.checkbox("Optimize", self.optimize)
     
     def property_order(self):

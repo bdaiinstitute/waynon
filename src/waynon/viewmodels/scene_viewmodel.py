@@ -4,7 +4,7 @@ import esper
 from imgui_bundle import imgui
 
 from waynon.components.tree_utils import *
-from waynon.components.scene_utils import get_root_id
+from waynon.components.scene_utils import get_root_id, get_world_id, get_collector_id
 from waynon.components.component import Component
 from waynon.components.node import Node
 from waynon.components.simple import Draggable, Nestable
@@ -69,7 +69,7 @@ class SceneViewModel:
             entity_id = get_root_id()
         node = esper.component_for_entity(entity_id, Node)
         is_leaf = not node.children
-        flags = imgui.TreeNodeFlags_.open_on_arrow | imgui.TreeNodeFlags_.default_open
+        flags = imgui.TreeNodeFlags_.open_on_arrow 
         if is_leaf:
             flags |= imgui.TreeNodeFlags_.leaf
         selected = self.selected_entity_id == entity_id
@@ -92,13 +92,16 @@ class SceneViewModel:
 
     def draw(self):
         imgui.begin("Scene")
-        self.traverse_tree()
-        # if clicked on empty space
-        if imgui.is_window_hovered() and imgui.is_mouse_clicked(0):
-            self.selected_entity_id = -1
-            esper.dispatch_event("property", -1)
-            esper.dispatch_event("modify_transform", -1)
+        self.traverse_tree(get_world_id())
         imgui.end()
+        imgui.begin("Calibrator")
+        self.traverse_tree(get_collector_id())
+        imgui.end()
+        # if clicked on empty space
+        # if imgui.is_window_hovered() and imgui.is_mouse_clicked(0):
+        #     self.selected_entity_id = -1
+        #     esper.dispatch_event("property", -1)
+        #     esper.dispatch_event("modify_transform", -1)
 
 def get_sorted_components(entity_id):
     components: list[Component] = list(esper.components_for_entity(entity_id))

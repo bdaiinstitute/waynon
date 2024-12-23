@@ -9,8 +9,20 @@ from imgui_bundle import imgui
 from waynon.utils.utils import ASSET_PATH, static, one_at_a_time
 from waynon.components.component import Component
 
-from waynon.processors.robot import Robot
+from waynon.processors.robot import FrankaManager, RobotManager
+from waynon.utils.utils import COLORS
 
+
+class Robot(Component):
+
+    def set_manager(self, manager: RobotManager):
+        self._manager = manager
+
+    def get_manager(self) -> RobotManager | None:
+        return self._manager
+
+    def model_post_init(self, __context):
+        self._manager = None
 
 class Franka(Component):
     name: str = "noname"
@@ -18,14 +30,13 @@ class Franka(Component):
     username: str = "admin"
     password: str = "Password!"
 
-
     @staticmethod
     def get_robot_links(robot_id):
         pass
 
     def model_post_init(self, __context):
         super().model_post_init(__context)
-        self._manager = Robot(self)
+        self._manager = FrankaManager(self)
 
     def get_manager(self):
         return self._manager
@@ -35,6 +46,13 @@ class Franka(Component):
     
     def property_order(self):
         return 200
+    
+    @staticmethod
+    def default_name():
+        return "Franka"
+
+class FrankaLinks(Component):
+    pass
 
 class FrankaLink(Component):
     robot_id: int
@@ -56,22 +74,11 @@ class FrankaLink(Component):
 
 @static(busy = False, 
         cancel_scope = trio.CancelScope())
-def draw_property(nursery: trio.Nursery, robot: Robot):
+def draw_property(nursery: trio.Nursery, robot: FrankaManager):
     static = draw_property
     settings: Franka = robot.settings   
 
-    imgui.separator()
-
-    imgui.text(f"Connection: {robot.connect_status.value}")
-    imgui.text(f"Brakes {robot.brake_status.value}")
-    imgui.text(f"Mode: {robot.operating_mode.value}")
-
-    imgui.separator()
-
-    imgui.input_text("IP", settings.ip)
-    _, settings.username = imgui.input_text("Username", settings.username)
-    _, settings.password = imgui.input_text("Password", settings.password, flags=imgui.InputTextFlags_.password)
-
+    imgui.separator_text("Franka Emika")
 
     async def connect_to_ip():
         static.cancel_scope.cancel()
@@ -86,16 +93,28 @@ def draw_property(nursery: trio.Nursery, robot: Robot):
         static.cancel_scope.cancel()
         await robot.disconnect()
 
-    if robot.connect_status == Robot.ConnectionStatus.DISCONNECTED:
-        if imgui.button("Connect"):
+    if robot.connect_status == FrankaManager.ConnectionStatus.DISCONNECTED:
+        imgui.push_style_color(imgui.Col_.button, COLORS["GREEN"])
+        if imgui.button("Connect", size=(imgui.get_content_region_avail().x, 40)):
             nursery.start_soon(connect_to_ip)
+        imgui.pop_style_color()
     else:
-        if imgui.button("Disconnect") and robot.connect_status == Robot.ConnectionStatus.CONNECTED:
+        imgui.push_style_color(imgui.Col_.button, COLORS["RED"])
+        if imgui.button("Disconnect", size=(imgui.get_content_region_avail().x, 40)) and robot.connect_status == FrankaManager.ConnectionStatus.CONNECTED:
             nursery.start_soon(disconnect)
-    
+        imgui.pop_style_color()
+    imgui.spacing()
+
+    _, settings.ip = imgui.input_text("IP", settings.ip)
+    _, settings.username = imgui.input_text("Username", settings.username)
+    _, settings.password = imgui.input_text("Password", settings.password, flags=imgui.InputTextFlags_.password)
+    imgui.label_text("Connection", robot.connect_status.value)
+    imgui.label_text("Brakes", robot.brake_status.value)
+    imgui.label_text("Mode", robot.operating_mode.value)
+
     @one_at_a_time(static)
     async def switch_mode():
-        if robot.operating_mode == Robot.OperatingMode.EXECUTION:
+        if robot.operating_mode == FrankaManager.OperatingMode.EXECUTION:
             await robot.desk.set_mode("programming")
         else:
             await robot.desk.set_mode("execution")
@@ -111,11 +130,13 @@ def draw_property(nursery: trio.Nursery, robot: Robot):
     @one_at_a_time(static)
     async def home():
         await robot.home()
+
+    imgui.spacing()
+    imgui.separator()
     
-    connected = robot.connect_status == Robot.ConnectionStatus.CONNECTED
+    connected = robot.connect_status == FrankaManager.ConnectionStatus.CONNECTED
     if connected:
-        imgui.same_line()
-        if robot.brake_status == Robot.BrakeStatus.OPEN:
+        if robot.brake_status == FrankaManager.BrakeStatus.OPEN:
             if imgui.button("Lock"):
                 nursery.start_soon(lock_brakes)
             imgui.same_line()
@@ -128,11 +149,11 @@ def draw_property(nursery: trio.Nursery, robot: Robot):
         imgui.same_line()
         if imgui.button("Home"):
             nursery.start_soon(home)
-        
         imgui.separator()
-        imgui.text("Joints")
-        q = robot.q
-        if q is not None:
-            for i, q_i in enumerate(q):
-                imgui.text(f"q{i}: {q_i:.3f}")
+        imgui.spacing()
+        # imgui.text("Joints")
+        # q = robot.q
+        # if q is not None:
+        #     for i, q_i in enumerate(q):
+        #         imgui.text(f"q{i}: {q_i:.3f}")
     imgui.same_line()

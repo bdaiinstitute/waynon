@@ -44,6 +44,9 @@ class Camera(Component):
     def get_manager(self):
         return RealsenseManager.instance()
     
+    def property_order(self):
+        return 300
+    
     def draw_property(self, nursery, e:int):
         imgui.separator_text("Camera")
         c = esper.component_for_entity(e, Camera)

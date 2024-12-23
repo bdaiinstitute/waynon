@@ -51,7 +51,7 @@ class Transform(Component):
         return 100
     
     def draw_property(self, nursery, entity_id:int):
-        imgui.separator()
+        imgui.separator_text("Transform")
         _, self.visible = imgui.checkbox("Draw Frame", self.visible)
     
     def on_selected(self, nursery, entity_id, just_selected):

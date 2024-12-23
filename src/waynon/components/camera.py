@@ -47,6 +47,9 @@ class PinholeCamera(Component):
         marker = esper.component_for_entity(marker_entity_id, ArucoMarker)
         marker_transform = esper.component_for_entity(marker_entity_id, Transform)
         camera_transform = esper.component_for_entity(camera_entity_id, Transform)
+        if self._image_u is None:
+            print("No image to detect markers in")
+            return
 
         marker_pixels, marker_ids = detect_all_markers_in_image(self._image_u, marker.marker_dict)
         if marker_ids is None:
@@ -68,7 +71,16 @@ class PinholeCamera(Component):
                       [0, self.fl_y, self.cy],
                       [0, 0, 1]], dtype=np.float32)
 
-        _, rvec, tvec = cv2.solvePnP(p_MPs, pixels, K, distortion, False, cv2.SOLVEPNP_IPPE_SQUARE)
+        res, rvec, tvec = cv2.solvePnP(
+            p_MPs, 
+            pixels, 
+            K, 
+            distortion, 
+            False, 
+            cv2.SOLVEPNP_IPPE_SQUARE)
+        if not res:
+            print("Failed to solve PnP")
+            return
         r = R.from_rotvec(np.array(rvec).flatten())
         X_CM = np.eye(4)
         X_CM[:3, :3] = r.as_matrix()
@@ -84,9 +96,6 @@ class PinholeCamera(Component):
 
         camera_transform.set_X_WT(X_WC)
 
-
-
-        
     
     def update_image(self, image: np.ndarray):
         assert image.dtype == np.uint8, f"Image must be uint8, got {image.dtype}"
@@ -106,18 +115,20 @@ class PinholeCamera(Component):
     
     def draw_property(self, nursery, e:int):
         imgui.separator_text("Pinhole Camera")
-        imgui.text(f"Resolution: {self.width}x{self.height}")
-        imgui.text("Intrinsics:")
-        imgui.text(f"fl_x: {self.fl_x}")
-        imgui.text(f"fl_y: {self.fl_y}")
-        imgui.text(f"cx: {self.cx}")
-        imgui.text(f"cy: {self.cy}")
+        # imgui.label_text("Resolution", f"{self.width}x{self.height}")
+        # imgui.label_text("Focal", f"{self.fl_x}, {self.fl_y}")
+        # imgui.label_text("Principal", f"{self.cx}, {self.cy}")
 
-        for marker_entity_id, marker in esper.get_component(ArucoMarker):
-            if imgui.image_button(f"guess_{marker_entity_id}", marker.get_texture().id, (50, 50)):
-                self.guess_position(e, marker_entity_id)
-            imgui.same_line()
-        imgui.new_line()
+        imgui.spacing()
+
+        markers = esper.get_component(ArucoMarker)
+        if markers:
+            imgui.text_wrapped("Guess the position of the camera using one of the below markers")
+            for marker_entity_id, marker in markers: 
+                if imgui.image_button(f"guess_{marker_entity_id}", marker.get_texture().id, (50, 50)):
+                    self.guess_position(e, marker_entity_id)
+                imgui.same_line()
+            imgui.new_line()
 
     def on_selected(self, nursery, entity_id, just_selected):
         if just_selected:
@@ -135,11 +146,11 @@ class DepthCamera(Component):
         self._texture = marsoom.texture.Texture(1280, 720, 3)
         self._depth_image = None
     
-    def draw_property(self, nursery, entity_id):
-        imgui.separator_text("Depth Camera")
-        imgui.text(f"Resolution: {self.width}x{self.height}")
+    # def draw_property(self, nursery, entity_id):
+    #     imgui.separator_text("Depth Camera")
+    #     imgui.text(f"Resolution: {self.width}x{self.height}")
     
     def property_order(self):
-        return 300
+        return 150
 
 

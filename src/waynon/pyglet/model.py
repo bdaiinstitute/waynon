@@ -23,6 +23,7 @@ class BaseMaterialGroup(graphics.Group):
     default_vert_src: str
     default_frag_src: str
     matrix: Mat4 = Mat4()
+    color: tuple[float, float, float, float] = (1.0, 0.0, 0.0, 1.0)
 
     def __init__(self, program: ShaderProgram, order: int = 0, parent: Group | None = None) -> None:
         super().__init__(order, parent)
@@ -64,6 +65,8 @@ class MaterialGroup(BaseMaterialGroup):
     in vec3 vertex_position;
     out vec4 final_colors;
 
+    uniform vec4 color;
+
     void main()
     {
         float ambientStrength = 0.3;
@@ -74,15 +77,19 @@ class MaterialGroup(BaseMaterialGroup):
         float diff = max(dot(normalize(vertex_normals), sun_direction), 0.0);
         vec3 diffuse = diff * lightColor;
 
-        vec3 result = (ambient + diffuse) * vertex_colors.rgb;
+        //vec3 result = (ambient + diffuse) * vertex_colors.rgb;
 
-        final_colors = vec4(result, vertex_colors.a);
+        //final_colors = vec4(result, vertex_colors.a);
+        vec3 result = (ambient + diffuse) * color.rgb;
+
+        final_colors = vec4(result, color.a);
     }
     """
 
     def set_state(self) -> None:
         self.program.use()
         self.program['model'] = self.matrix
+        self.program['color'] = self.color
     
     def __hash__(self) -> int:
         return hash((self.program, self.order, self.parent))

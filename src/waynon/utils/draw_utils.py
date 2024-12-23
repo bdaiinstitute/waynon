@@ -40,9 +40,9 @@ def fk(q: np.ndarray, gripper_width = 0.0) -> list[np.ndarray]:
     return res
 
 @static(models = None, batch = None)
-def draw_robot(q, color=COLORS["RED"]):
+def draw_robot(q, color=COLORS["PURPLE"]):
     static = draw_robot
-    names = ["link0", "link1", "link2", "link3", "link4", "link5", "link6", "link7", "hand", "finger", "finger"]
+    names = ["link0", "link1", "link2", "link3", "link4", "link5", "link6", "link7", "hand"]#, "finger", "finger"]
     if static.models is None:
         static.models = {}
         batch = pyglet.graphics.Batch()    

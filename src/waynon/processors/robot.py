@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 import enum
 
 import numpy as np
@@ -8,12 +8,21 @@ import panda_py
 import pinocchio as pin
 
 from waynon.panda.desk import Desk
-from waynon.utils.utils import ASSET_PATH
+from waynon.utils.utils import ASSET_PATH, COLORS
 
 if TYPE_CHECKING:
-    from waynon.components.robot import Franka
+    from waynon.components.robot import Franka, Robot
 
-class Robot:
+
+class RobotManager:
+    def ready_to_move(self) -> bool:
+        raise NotImplementedError
+    
+    async def move_to(self, q: np.ndarray):
+        raise NotImplementedError
+
+
+class FrankaManager(RobotManager):
     class ConnectionStatus(enum.Enum):
         DISCONNECTED = "disconnected"
         CONNECTING = "connecting"
@@ -34,9 +43,9 @@ class Robot:
     def __init__(self, settings: "Franka"):
         self.settings = settings
         self.desk = Desk()
-        self.connect_status = Robot.ConnectionStatus.DISCONNECTED
-        self.brake_status = Robot.BrakeStatus.UNKNOWN
-        self.operating_mode = Robot.OperatingMode.UNKNOWN
+        self.connect_status = FrankaManager.ConnectionStatus.DISCONNECTED
+        self.brake_status = FrankaManager.BrakeStatus.UNKNOWN
+        self.operating_mode = FrankaManager.OperatingMode.UNKNOWN
         self.q = np.array([0.0, -0.785, 0.0, -2.356, 0.0, 1.571, 0.785], dtype=np.float32)
         self._initialize_buttons()
         urdf_path = ASSET_PATH / "robots" / "panda" / "panda.urdf"
@@ -47,26 +56,26 @@ class Robot:
         #     self._full_model, [8, 9], np.zeros(9))
         self._model_data = self._full_model.createData()
 
-        self.last_transforms = self._fk(self.q)
+        self.last_transforms = self.fk(self.q)
     
     async def connect_to_ip(self, nursery: trio.Nursery, ip: str, username: str, password: str, platform: str = "fr3"):
         try:
             self.desk = Desk(ip, platform)
-            self.connect_status = Robot.ConnectionStatus.CONNECTING
+            self.connect_status = FrankaManager.ConnectionStatus.CONNECTING
             await self.desk.login(username, password)
             res = await self.desk.take_control(force=True)
             await self.desk.activate_fci()
 
         except Exception as e:
             print(f"Failed to connect to robot: {e}")
-            self.connect_status = Robot.ConnectionStatus.DISCONNECTED
+            self.connect_status = FrankaManager.ConnectionStatus.DISCONNECTED
             return False
 
         if not res:
-            self.connect_status = Robot.ConnectionStatus.DISCONNECTED
+            self.connect_status = FrankaManager.ConnectionStatus.DISCONNECTED
             return False
 
-        self.connect_status = Robot.ConnectionStatus.CONNECTED
+        self.connect_status = FrankaManager.ConnectionStatus.CONNECTED
             
         nursery.start_soon(self._read_brake_status)
         nursery.start_soon(self._read_joint_status)
@@ -77,9 +86,9 @@ class Robot:
     async def disconnect(self):
         assert self.desk is not None
         await self.desk.logout()
-        self.connect_status = Robot.ConnectionStatus.DISCONNECTED
-        self.brake_status = Robot.BrakeStatus.UNKNOWN
-        self.operating_mode = Robot.OperatingMode.UNKNOWN
+        self.connect_status = FrankaManager.ConnectionStatus.DISCONNECTED
+        self.brake_status = FrankaManager.BrakeStatus.UNKNOWN
+        self.operating_mode = FrankaManager.OperatingMode.UNKNOWN
     
     def fk(self, q: np.ndarray, gripper_width = 0.0) -> list[np.ndarray]: 
         assert len(q) == 7
@@ -95,33 +104,6 @@ class Robot:
         oMi = {link: d.oMf[frame_id].homogeneous for link, frame_id in zip(links, frame_ids)}
         return oMi
 
-    def _fk(self, q: np.ndarray, gripper_width = 0.0) -> list[np.ndarray]: 
-        assert len(q) == 7
-        q = np.append(q, [0.01, 0.01])
-        pin.forwardKinematics(self._full_model, self._model_data, q)
-        pin.updateFramePlacements(self._full_model, self._model_data)
-
-        links = ["panda_link0", "panda_link1", "panda_link2", "panda_link3", "panda_link4", "panda_link5", "panda_link6", "panda_link7", "panda_hand", "panda_leftfinger", "panda_rightfinger"]
-        prev_links = [None] + links[:-1]
-
-        d = self._model_data
-        frame_ids = [self._full_model.getFrameId(link) for link in links]
-        oMi = {link: d.oMf[frame_id].homogeneous for link, frame_id in zip(links, frame_ids)}
-
-        liMi = {}
-
-        for link, prev_link in zip(links, prev_links):
-            if prev_link is None:
-                liMi[link] = oMi[link]
-            else:
-                X_WP1 = oMi[prev_link]
-                X_WP2 = oMi[link]
-                X_P1P2 = np.linalg.inv(X_WP1) @ X_WP2
-                liMi[link] = X_P1P2
-
-        return liMi
-
-
     async def _read_brake_status(self):
         async with self.desk.system_status_generator() as status:
             async for s in status:
@@ -136,13 +118,13 @@ class Robot:
 
                 brake_status = [b for b in s["jointStatus"]]
                 if any([b == 2 for b in brake_status]):
-                    self.brake_status = Robot.BrakeStatus.OPENING
+                    self.brake_status = FrankaManager.BrakeStatus.OPENING
                 if all([b == 3 for b in brake_status]):
-                    self.brake_status = Robot.BrakeStatus.OPEN
+                    self.brake_status = FrankaManager.BrakeStatus.OPEN
                 if any([b == 5 for b in brake_status]):
-                    self.brake_status = Robot.BrakeStatus.CLOSING
+                    self.brake_status = FrankaManager.BrakeStatus.CLOSING
                 if all([b == 0 for b in brake_status]):
-                    self.brake_status = Robot.BrakeStatus.CLOSED
+                    self.brake_status = FrankaManager.BrakeStatus.CLOSED
             
     async def _read_joint_status(self):
         async with self.desk.system_state_generator() as state:
@@ -158,11 +140,11 @@ class Robot:
                 if "derived" in s and "operatingMode" in s["derived"]:
                     mode = s["derived"]["operatingMode"]
                     if mode == "Execution":
-                        self.operating_mode = Robot.OperatingMode.EXECUTION
+                        self.operating_mode = FrankaManager.OperatingMode.EXECUTION
                     elif mode == "Programming":
-                        self.operating_mode = Robot.OperatingMode.PROGRAMMING
+                        self.operating_mode = FrankaManager.OperatingMode.PROGRAMMING
                     else:
-                        self.operating_mode = Robot.OperatingMode.UNKNOWN
+                        self.operating_mode = FrankaManager.OperatingMode.UNKNOWN
                 else:
                     print(f"Missing operatingMode in state: {s}")
     
@@ -174,29 +156,35 @@ class Robot:
                         self.buttons_down[button]["down"] = e[button]
 
     def tick(self):
-        self.last_transforms = self._fk(self.q)
+        self.last_transforms = self.fk(self.q)
         for button in self.buttons_down:
             if self.buttons_down[button]["down"]:
                 self.buttons_down[button]["t"] += 1
                 t = self.buttons_down[button]["t"]
             else:
                 self.buttons_down[button]["t"] = 0
+
+
     
-    def is_button_pressed(self, button: str) -> bool:
+    def is_button_pressed(self, button: Literal["circle", "cross", "check", "up", "down", "left", "right"]) -> bool:
         return self.buttons_down[button]["down"] and self.buttons_down[button]["t"] == 1
     
     def ready_to_move(self) -> bool:
-        return self.connect_status == Robot.ConnectionStatus.CONNECTED and self.brake_status == Robot.BrakeStatus.OPEN
+        return self.connect_status == FrankaManager.ConnectionStatus.CONNECTED and self.brake_status == FrankaManager.BrakeStatus.OPEN
     
     async def home(self):
-        assert self.connect_status == Robot.ConnectionStatus.CONNECTED
+        assert self.connect_status == FrankaManager.ConnectionStatus.CONNECTED
         panda = panda_py.Panda(self.settings.ip)
         return await trio.to_thread.run_sync(panda.move_to_start)
     
     async def move_to(self, q: np.ndarray):
-        assert self.connect_status == Robot.ConnectionStatus.CONNECTED
+        assert self.connect_status == FrankaManager.ConnectionStatus.CONNECTED
         panda = panda_py.Panda(self.settings.ip)
-        return await trio.to_thread.run_sync(panda.move_to_joint_position, q)
+        try:
+            return await trio.to_thread.run_sync(panda.move_to_joint_position, q)
+        except Exception as e:
+            print(f"Failed to move to position: {e}")
+            return False
 
     def _initialize_buttons(self):
         self.buttons_down = {
@@ -232,16 +220,23 @@ class Robot:
 
 class RobotProcessor(esper.Processor):
     def process(self):
-        from waynon.components.robot import Franka, FrankaLink
+        from waynon.components.robot import Franka, FrankaLink, Robot
         from waynon.components.transform import Transform
         from waynon.components.node import Node
-        for entity, franka in esper.get_component(Franka):
+        from waynon.components.renderable import Mesh
+
+        for entity, (robot, franka) in esper.get_components(Robot, Franka):
             manager = franka.get_manager()  
+            robot.set_manager(manager)
             manager.tick()
 
-        for entity, (node, franka, transform) in esper.get_components(Node, FrankaLink, Transform):
+        for entity, (node, franka, transform, mesh) in esper.get_components(Node, FrankaLink, Transform, Mesh):
             robot = esper.component_for_entity(franka.robot_id, Franka).get_manager()
-            X_PL = robot.last_transforms[franka.link_name]
-            transform.set_X_PT(X_PL)
+            X_BL = robot.last_transforms[franka.link_name] # All relative to base
+            transform.set_X_PT(X_BL)
+            if robot.ready_to_move():
+                mesh.set_color(COLORS["GREEN"])
+            else:
+                mesh.set_color(COLORS["RED"])
 
 

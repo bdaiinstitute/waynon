@@ -11,7 +11,7 @@ from .simple import Root, World, Visiblity, OptimizedPose, PoseFolder, Pose, Dra
 from .optimizable import Optimizable
 from .aruco_marker import ArucoMarker
 from .pose_group import PoseGroup
-from .robot import Franka, FrankaLink
+from .robot import Franka, FrankaLink, FrankaLinks, Robot
 from .collector import CollectorData, DataNode, MeasurementGroup, Solvers
 from .measurement import Measurement
 from .image_measurement import ImageMeasurement
@@ -70,15 +70,19 @@ def create_collector(parent_id: int):
     create_entity("Solvers", id, Solvers())
     return id, node
 
-def create_robot(name:str, parent_id:int=None):
+def create_robot(parent_id:int=None, name:str=None):
+    if name is None:
+        name = default_name(Franka)
     rd, node = create_entity(name, parent_id, 
                               Transform(modifiable=False), 
                               Franka(), 
+                              Robot(),
                               Deletable(), 
                               Draggable(type="transform"),
                               Nestable(type="transform", target=True, source=False)
                               )
     id, _ = create_entity("Poses", rd, PoseFolder())
+    lid, _ = create_entity("Links", rd, FrankaLinks())
 
     link_to_mesh_name = {
         "panda_link0": "link0",
@@ -101,24 +105,28 @@ def create_robot(name:str, parent_id:int=None):
                 Mesh(mesh_path=mesh_path),
                 FrankaLink(robot_id=rd, link_name=name)]
 
-    l0, _ = create_entity("L0", rd, *link_components("panda_link0")) 
-    l1, _ = create_entity("L1", l0, *link_components("panda_link1")) 
-    l2, _ = create_entity("L2", l1, *link_components("panda_link2")) 
-    l3, _ = create_entity("L3", l2, *link_components("panda_link3")) 
-    l4, _ = create_entity("L4", l3, *link_components("panda_link4")) 
-    l5, _ = create_entity("L5", l4, *link_components("panda_link5")) 
-    l6, _ = create_entity("L6", l5, *link_components("panda_link6")) 
-    l7, _ = create_entity("L7", l6, *link_components("panda_link7")) 
-    l8, _ = create_entity("Hand", l7, *link_components("panda_hand")) 
+    l0, _ = create_entity("L0", lid, *link_components("panda_link0")) 
+    l1, _ = create_entity("L1", lid, *link_components("panda_link1")) 
+    l2, _ = create_entity("L2", lid, *link_components("panda_link2")) 
+    l3, _ = create_entity("L3", lid, *link_components("panda_link3")) 
+    l4, _ = create_entity("L4", lid, *link_components("panda_link4")) 
+    l5, _ = create_entity("L5", lid, *link_components("panda_link5")) 
+    l6, _ = create_entity("L6", lid, *link_components("panda_link6")) 
+    l7, _ = create_entity("L7", lid, *link_components("panda_link7")) 
+    l8, _ = create_entity("Hand", lid, *link_components("panda_hand")) 
     return rd, node
 
-def create_posegroup(name:str, parent_id:int):
+def create_posegroup(parent_id:int, name:str=None):
+    if name is None:
+        name = default_name(PoseGroup)
     return create_entity(name, parent_id, 
                          PoseGroup(), 
                          Draggable(type="posegroup"), 
                          Deletable())
 
-def create_motion(name:str, parent_id:int, q):
+def create_motion(parent_id:int, q, name:str=None):
+    if name is None:
+        name = default_name(Pose)
     return create_entity(name, parent_id, 
                          Pose(q=q), 
                          Draggable(type="pose"), 
@@ -170,6 +178,9 @@ def get_root_id():
 
 def get_world_id():
     return esper.get_components(World)[0][0]
+
+def get_collector_id():
+    return esper.get_components(CollectorData)[0][0]
 
 def save_scene(path: Path = Path("default.json")):
     print(f"Saving to {path}")
@@ -239,7 +250,7 @@ def get_detectors(collector_id: int, predicate: Callable[[int, Detector], bool] 
     return children
 
 def is_dynamic(entity_id: int):
-    id = find_nearest_ancestor_with_component(entity_id, Franka)
+    id = find_nearest_ancestor_with_component(entity_id, Robot)
     if id is None:
         return False
     return True

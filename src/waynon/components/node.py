@@ -33,7 +33,7 @@ class Node(Component, NodeMixin):
             self.parent = esper.component_for_entity(self.parent_entity_id, Node)
     
     def draw_property(self, nursery, entity_id:int):
-        imgui.separator()
+        imgui.separator_text("Node")
         _, self.name = imgui.input_text("Name", self.name)
     
     def property_order(self):

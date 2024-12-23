@@ -7,10 +7,11 @@ from imgui_bundle import imgui
 
 from waynon.components.simple import Component
 from waynon.processors.realsense_manager import REALSENSE_MANAGER
+from waynon.utils.utils import COLORS
 
 class RealsenseCamera(Component):
     serial: str = ""
-    enable_depth: bool = True
+    enable_depth: bool = False
     verbose: bool = False
 
     def running(self):
@@ -34,27 +35,14 @@ class RealsenseCamera(Component):
         imgui.separator_text("Realsense")
         c = esper.component_for_entity(e, RealsenseCamera)
         manager = c.get_manager()
-        _, c.serial = imgui.input_text("Serial", c.serial)
-        _, c.enable_depth = imgui.checkbox("Enable Depth", c.enable_depth)
-        _, c.verbose = imgui.checkbox("Verbose", c.verbose)
-
-        data = c.get_data()
-        if data:
-            if "depth" in data:
-                imgui.text(f"Depth: {data['depth'].shape}")
-            if "color" in data:
-                imgui.text(f"Color: {data['color'].shape}")
-            if "timestamp" in data:
-                imgui.text(f"Timestamp: {data['timestamp']}")
-            if "step_idx" in data:
-                imgui.text(f"Step: {data['step_idx']}")
-            if "camera_capture_timestamp" in data:
-                imgui.text(f"Camera Capture Timestamp: {data['camera_capture_timestamp']}")
-            if "camera_receive_timestamp" in data:
-                imgui.text(f"Camera Receive Timestamp: {data['camera_receive_timestamp']}")
+        # _, c.enable_depth = imgui.checkbox("Enable Depth", c.enable_depth)
+        # _, c.verbose = imgui.checkbox("Verbose", c.verbose)
 
 
+
+        imgui.spacing()
         if not c.serial:
+            _, c.serial = imgui.input_text("Serial", c.serial)
             imgui.spacing()
             imgui.text("No serial set - select one")
             imgui.spacing()
@@ -70,16 +58,17 @@ class RealsenseCamera(Component):
             camera = manager.get_camera(c.serial)
             if camera:
                 alive = manager.camera_started(c.serial)
-                if alive:
-                    imgui.text(f"Status: active")
-                else:
-                    imgui.text(f"Status: inactive")
                 if not alive:
-                    if imgui.button("Start"):
+
+                    imgui.push_style_color(imgui.Col_.button, COLORS["GREEN"])
+                    if imgui.button("Start", (imgui.get_content_region_avail().x, 40)):
                         manager.start_camera(e)
+                    imgui.pop_style_color()
                 else:
-                    if imgui.button("Stop"):
+                    imgui.push_style_color(imgui.Col_.button, COLORS["RED"])
+                    if imgui.button("Stop", (imgui.get_content_region_avail().x, 40)):
                         manager.stop_camera(e)
+                    imgui.pop_style_color()
                 # texture = c.get_texture()
                 # if texture:
                 #     w = min(imgui.get_content_region_avail().x, 500)
@@ -87,10 +76,28 @@ class RealsenseCamera(Component):
                 #     imgui.image(texture.id, image_size=(w, h))
             else:
                 imgui.text("Serial not connected")
+        imgui.spacing()
+
+        _, c.serial = imgui.input_text("Serial", c.serial)
+
+        data = c.get_data()
+        if data:
+            if "depth" in data:
+                imgui.label_text("Depth", f"{data['depth'].shape}")
+            if "color" in data:
+                imgui.label_text("Color", f"{data['color'].shape}")
+            if "timestamp" in data:
+                imgui.label_text("Timestamp", f"{data['timestamp']}")
+            if "step_idx" in data:
+                imgui.label_text("Step", f"{data['step_idx']}")
+            if "camera_capture_timestamp" in data:
+                imgui.label_text("Camera Capture Timestamp", f"{data['camera_capture_timestamp']}")
+            if "camera_receive_timestamp" in data:
+                imgui.label_text("Camera Receive Timestamp", f"{data['camera_receive_timestamp']}")
     @staticmethod 
     def default_name():
         return "Realsense"
     
     def property_order(self):
-        return 400
+        return 200
     

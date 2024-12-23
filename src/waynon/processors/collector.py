@@ -11,7 +11,7 @@ from waynon.components.pose_group import PoseGroup
 from waynon.components.tree_utils import *
 from waynon.components.scene_utils import get_world_id, is_dynamic
 from waynon.components.node import Node
-from waynon.components.robot import Franka
+from waynon.components.robot import Robot
 from waynon.components.camera import PinholeCamera
 from waynon.components.collector import CollectorData, MeasurementGroup, DataNode
 from waynon.components.measurement import Measurement
@@ -35,8 +35,7 @@ class Collector:
         # robot = esper.component_for_entity(data.robot_id, Franka)
         # ready_to_move = robot.get_manager().ready_to_move()
         cameras = [(i,c) for (i,c) in esper.get_component(PinholeCamera) if i not in data.camera_blacklist]
-        all_cameras_running = all([c.running() for i,c in cameras])
-        return all_cameras_running
+        return True
     
 
     async def run_detectors(self, collector_id: int):
@@ -71,6 +70,9 @@ class Collector:
         for entity, c in esper.get_component(PinholeCamera):
             if entity in data.camera_blacklist:
                 continue
+            if c.get_image_u() is None:
+                print(f"Camera {entity} has no image")
+                return
             cameras.append((entity, c))
 
         pose_group_ids = find_descendants_with_component(get_world_id(), PoseGroup)
@@ -102,9 +104,12 @@ class Collector:
             pose_ids = find_descendants_with_component(pose_group_id, Pose)
 
             poses = get_components(pose_ids, Pose)
-            robot_id = find_nearest_ancestor_with_component(pose_group_id, Franka)
+            robot_id = find_nearest_ancestor_with_component(pose_group_id, Robot)
             assert robot_id is not None
-            robot_manager = esper.component_for_entity(robot_id, Franka).get_manager()
+            robot_manager = esper.component_for_entity(robot_id, Robot).get_manager()
+            if robot_manager and not robot_manager.ready_to_move():
+                print("Robot not ready to move")
+                return
 
             for pose_id, pose in zip(pose_ids, poses):
                 q = pose.q
@@ -114,14 +119,14 @@ class Collector:
                 q = robot_manager.q.tolist()
                 for k, (cam_id, cam) in enumerate(cameras):
                     # each one of these is one measurement
+                    camera_node = get_node(cam_id)
                     image = cam.get_image_u()
-                    print(f"Saving image for {cam.serial}")
-                    image_name = f"{cam.serial}_{pose_id}.png"
+                    print(f"Saving image for {cam_id}")
+                    image_name = f"{camera_node.name}_{pose_id}.png"
                     image_path = image_dir / image_name
                     
                     Image.fromarray(image).save(image_path)
-                    cam_node = esper.component_for_entity(cam_id, Node)
-                    measurement_name = f"{cam_node.name} {pose_id}"
+                    measurement_name = f"{camera_node.name} {pose_id}"
 
                     joint_measurement = JointMeasurement(robot_id=robot_id, joint_values=q)
                     image_measurement = ImageMeasurement(camera_id=cam_id, image_path=str(image_path))

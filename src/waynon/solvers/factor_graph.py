@@ -74,7 +74,7 @@ class FactorGraphSolver:
         from waynon.components.aruco_measurement import ArucoMeasurement
         from waynon.components.joint_measurement import JointMeasurement
         from waynon.components.transform import Transform
-        from waynon.components.robot import Franka
+        from waynon.components.robot import Robot
         from waynon.components.camera import PinholeCamera
 
         assert esper.entity_exists(factor_graph_id)
@@ -107,8 +107,8 @@ class FactorGraphSolver:
 
             if is_dynamic(marker_entity_id) and not is_dynamic(camera_entity_id):
                 # Get the robot this marker is attached to
-                robot_id = find_nearest_ancestor_with_component(marker_entity_id, Franka)
-                robot = esper.component_for_entity(robot_id, Franka)
+                robot_id = find_nearest_ancestor_with_component(marker_entity_id, Robot)
+                robot = esper.component_for_entity(robot_id, Robot)
 
                 # Check we have a joint measurement associated with this robot
                 joint_measurement_id = find_child_with_component(measurement_id, JointMeasurement, predicate=lambda id, c: c.robot_id == robot_id)
@@ -132,9 +132,8 @@ class FactorGraphSolver:
 
                 # Camera Intrinsics (LinearCameraCal) and initial guess
                 camera_intinsics_key = f"K_{camera_entity_id}"
-                camera_intrinsics = camera.get_manager().get_intrinsics(camera.serial)
-                fl_x, fl_y = camera_intrinsics[0, 0], camera_intrinsics[1, 1]
-                cx, cy = camera_intrinsics[0, 2], camera_intrinsics[1, 2]
+                fl_x, fl_y = camera.fl_x, camera.fl_y
+                cx, cy = camera.cx, camera.cy
                 initial_values[camera_intinsics_key] = sf.LinearCameraCal(focal_length=(fl_x, fl_y), principal_point=(cx, cy))
 
                 # Camera Pose (SE3) (Optimized)
