@@ -10,6 +10,8 @@ from waynon.processors.realsense_manager import REALSENSE_MANAGER
 
 class RealsenseCamera(Component):
     serial: str = ""
+    enable_depth: bool = True
+    verbose: bool = False
 
     def running(self):
         return REALSENSE_MANAGER.camera_ready(self.serial)
@@ -33,6 +35,25 @@ class RealsenseCamera(Component):
         c = esper.component_for_entity(e, RealsenseCamera)
         manager = c.get_manager()
         _, c.serial = imgui.input_text("Serial", c.serial)
+        _, c.enable_depth = imgui.checkbox("Enable Depth", c.enable_depth)
+        _, c.verbose = imgui.checkbox("Verbose", c.verbose)
+
+        data = c.get_data()
+        if data:
+            if "depth" in data:
+                imgui.text(f"Depth: {data['depth'].shape}")
+            if "color" in data:
+                imgui.text(f"Color: {data['color'].shape}")
+            if "timestamp" in data:
+                imgui.text(f"Timestamp: {data['timestamp']}")
+            if "step_idx" in data:
+                imgui.text(f"Step: {data['step_idx']}")
+            if "camera_capture_timestamp" in data:
+                imgui.text(f"Camera Capture Timestamp: {data['camera_capture_timestamp']}")
+            if "camera_receive_timestamp" in data:
+                imgui.text(f"Camera Receive Timestamp: {data['camera_receive_timestamp']}")
+
+
         if not c.serial:
             imgui.spacing()
             imgui.text("No serial set - select one")
@@ -55,10 +76,10 @@ class RealsenseCamera(Component):
                     imgui.text(f"Status: inactive")
                 if not alive:
                     if imgui.button("Start"):
-                        manager.start_camera(c.serial)
+                        manager.start_camera(e)
                 else:
                     if imgui.button("Stop"):
-                        manager.stop_camera(c.serial)
+                        manager.stop_camera(e)
                 # texture = c.get_texture()
                 # if texture:
                 #     w = min(imgui.get_content_region_avail().x, 500)
@@ -69,4 +90,7 @@ class RealsenseCamera(Component):
     @staticmethod 
     def default_name():
         return "Realsense"
+    
+    def property_order(self):
+        return 400
     

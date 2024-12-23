@@ -19,18 +19,32 @@ class RealsenseManager:
     def get_connected_serials(self):
         self.serials =  SingleRealsense.get_connected_devices_serial()
     
-    def start_camera(self, serial: str):
+    def start_camera(self, entity_id: int):
+        from waynon.components.realsense_camera import RealsenseCamera
+        assert esper.entity_exists(entity_id)
+        assert esper.has_component(entity_id, RealsenseCamera)
+        realsense_data = esper.component_for_entity(entity_id, RealsenseCamera)
+        serial = realsense_data.serial
+        enable_depth = realsense_data.enable_depth
+
+
         assert serial in self.serials
         if serial not in self.cameras or not self.cameras[serial].is_alive():
             self.cameras[serial] = SingleRealsense(
                 shm_manager=self.shm_manager,
                 serial_number=serial,
                 resolution=self.resolution,
-                verbose=False
+                enable_depth=enable_depth,
+                verbose=realsense_data.verbose
             )
         self.cameras[serial].start()
     
-    def stop_camera(self, serial: str):
+    def stop_camera(self, entity_id: int):
+        from waynon.components.realsense_camera import RealsenseCamera
+        assert esper.entity_exists(entity_id)
+        assert esper.has_component(entity_id, RealsenseCamera)
+        realsense_data = esper.component_for_entity(entity_id, RealsenseCamera)
+        serial = realsense_data.serial
         assert serial in self.serials
         if serial in self.cameras:
             self.cameras[serial].stop()
@@ -90,6 +104,8 @@ class RealsenseManager:
                 data = realsense.get_data()
                 rgb = data['color']
                 camera.update_image(rgb)
+            else:
+                pass
 
 
 REALSENSE_MANAGER = RealsenseManager()

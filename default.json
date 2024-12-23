@@ -44,74 +44,6 @@
         }
     },
     "3": {
-        "ArucoMarker": {
-            "id": 3,
-            "square_length": 0.09000000357627869,
-            "marker_length": 0.07000000029802322,
-            "marker_dict": 0
-        },
-        "Transform": {
-            "X_PT": [
-                -0.02652121449790884,
-                0.0019164049613383805,
-                0.9996464137751808,
-                0.01972281289718078,
-                -0.9996391046647967,
-                0.004226821271247322,
-                -0.02652912374928168,
-                0.026569733348537485,
-                -0.004276167269844089,
-                -0.9999892306289928,
-                0.0018036129061483885,
-                0.06781003756701912,
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "locked": false,
-            "visible": true,
-            "modifiable": true
-        },
-        "Deletable": {},
-        "Draggable": {
-            "type": "transform"
-        },
-        "Nestable": {
-            "type": "transform",
-            "source": 1,
-            "target": 0
-        },
-        "ImageQuad": {
-            "texture_id": 5,
-            "top_left": [
-                -0.035,
-                0.035,
-                0.0
-            ],
-            "top_right": [
-                0.035,
-                0.035,
-                0.0
-            ],
-            "bot_right": [
-                0.035,
-                -0.035,
-                0.0
-            ],
-            "bot_left": [
-                -0.035,
-                -0.035,
-                0.0
-            ]
-        },
-        "Node": {
-            "name": "Marker 3",
-            "parent_entity_id": 16,
-            "entity_id": 3
-        }
-    },
-    "4": {
         "CollectorData": {
             "group_blacklist": [
                 39
@@ -123,18 +55,18 @@
         "Node": {
             "name": "Collector",
             "parent_entity_id": 1,
+            "entity_id": 3
+        }
+    },
+    "4": {
+        "DataNode": {},
+        "Node": {
+            "name": "Data",
+            "parent_entity_id": 3,
             "entity_id": 4
         }
     },
     "5": {
-        "DataNode": {},
-        "Node": {
-            "name": "Data",
-            "parent_entity_id": 4,
-            "entity_id": 5
-        }
-    },
-    "6": {
         "Transform": {
             "X_PT": [
                 1.0,
@@ -176,18 +108,18 @@
         "Node": {
             "name": "Sheep",
             "parent_entity_id": 2,
+            "entity_id": 5
+        }
+    },
+    "6": {
+        "PoseFolder": {},
+        "Node": {
+            "name": "Poses",
+            "parent_entity_id": 5,
             "entity_id": 6
         }
     },
     "7": {
-        "PoseFolder": {},
-        "Node": {
-            "name": "Poses",
-            "parent_entity_id": 6,
-            "entity_id": 7
-        }
-    },
-    "8": {
         "Transform": {
             "X_PT": [
                 1.0,
@@ -220,16 +152,16 @@
             "mesh_path": "robots/panda/meshes/link0.stl"
         },
         "FrankaLink": {
-            "robot_id": 6,
+            "robot_id": 5,
             "link_name": "panda_link0"
         },
         "Node": {
             "name": "L0",
-            "parent_entity_id": 6,
-            "entity_id": 8
+            "parent_entity_id": 5,
+            "entity_id": 7
         }
     },
-    "9": {
+    "8": {
         "Transform": {
             "X_PT": [
                 1.0,
@@ -262,16 +194,16 @@
             "mesh_path": "robots/panda/meshes/link1.stl"
         },
         "FrankaLink": {
-            "robot_id": 6,
+            "robot_id": 5,
             "link_name": "panda_link1"
         },
         "Node": {
             "name": "L1",
-            "parent_entity_id": 8,
-            "entity_id": 9
+            "parent_entity_id": 7,
+            "entity_id": 8
         }
     },
-    "10": {
+    "9": {
         "Transform": {
             "X_PT": [
                 0.7073882506299715,
@@ -304,16 +236,16 @@
             "mesh_path": "robots/panda/meshes/link2.stl"
         },
         "FrankaLink": {
-            "robot_id": 6,
+            "robot_id": 5,
             "link_name": "panda_link2"
         },
         "Node": {
             "name": "L2",
-            "parent_entity_id": 9,
-            "entity_id": 10
+            "parent_entity_id": 8,
+            "entity_id": 9
         }
     },
-    "11": {
+    "10": {
         "Transform": {
             "X_PT": [
                 1.0,
@@ -346,16 +278,16 @@
             "mesh_path": "robots/panda/meshes/link3.stl"
         },
         "FrankaLink": {
-            "robot_id": 6,
+            "robot_id": 5,
             "link_name": "panda_link3"
         },
         "Node": {
             "name": "L3",
-            "parent_entity_id": 10,
-            "entity_id": 11
+            "parent_entity_id": 9,
+            "entity_id": 10
         }
     },
-    "12": {
+    "11": {
         "Transform": {
             "X_PT": [
                 -0.7069692047089476,
@@ -388,16 +320,16 @@
             "mesh_path": "robots/panda/meshes/link4.stl"
         },
         "FrankaLink": {
-            "robot_id": 6,
+            "robot_id": 5,
             "link_name": "panda_link4"
         },
         "Node": {
             "name": "L4",
-            "parent_entity_id": 11,
-            "entity_id": 12
+            "parent_entity_id": 10,
+            "entity_id": 11
         }
     },
-    "13": {
+    "12": {
         "Transform": {
             "X_PT": [
                 0.9999999999999999,
@@ -430,16 +362,16 @@
             "mesh_path": "robots/panda/meshes/link5.stl"
         },
         "FrankaLink": {
-            "robot_id": 6,
+            "robot_id": 5,
             "link_name": "panda_link5"
         },
         "Node": {
             "name": "L5",
-            "parent_entity_id": 12,
-            "entity_id": 13
+            "parent_entity_id": 11,
+            "entity_id": 12
         }
     },
-    "14": {
+    "13": {
         "Transform": {
             "X_PT": [
                 -0.00020365317653499665,
@@ -472,16 +404,16 @@
             "mesh_path": "robots/panda/meshes/link6.stl"
         },
         "FrankaLink": {
-            "robot_id": 6,
+            "robot_id": 5,
             "link_name": "panda_link6"
         },
         "Node": {
             "name": "L6",
-            "parent_entity_id": 13,
-            "entity_id": 14
+            "parent_entity_id": 12,
+            "entity_id": 13
         }
     },
-    "15": {
+    "14": {
         "Transform": {
             "X_PT": [
                 0.7073882506299716,
@@ -514,16 +446,16 @@
             "mesh_path": "robots/panda/meshes/link7.stl"
         },
         "FrankaLink": {
-            "robot_id": 6,
+            "robot_id": 5,
             "link_name": "panda_link7"
         },
         "Node": {
             "name": "L7",
-            "parent_entity_id": 14,
-            "entity_id": 15
+            "parent_entity_id": 13,
+            "entity_id": 14
         }
     },
-    "16": {
+    "15": {
         "Transform": {
             "X_PT": [
                 0.7071067811868645,
@@ -556,24 +488,24 @@
             "mesh_path": "robots/panda/meshes/hand.stl"
         },
         "FrankaLink": {
-            "robot_id": 6,
+            "robot_id": 5,
             "link_name": "panda_hand"
         },
         "Node": {
             "name": "Hand",
-            "parent_entity_id": 15,
+            "parent_entity_id": 14,
+            "entity_id": 15
+        }
+    },
+    "16": {
+        "Detectors": {},
+        "Node": {
+            "name": "Detectors",
+            "parent_entity_id": 3,
             "entity_id": 16
         }
     },
     "17": {
-        "Detectors": {},
-        "Node": {
-            "name": "Detectors",
-            "parent_entity_id": 4,
-            "entity_id": 17
-        }
-    },
-    "18": {
         "ArucoDetector": {
             "enabled": true,
             "marker_dict": 0
@@ -581,11 +513,11 @@
         "Deletable": {},
         "Node": {
             "name": "Aruco Detector",
-            "parent_entity_id": 17,
-            "entity_id": 18
+            "parent_entity_id": 16,
+            "entity_id": 17
         }
     },
-    "19": {
+    "18": {
         "PoseGroup": {
             "color": [
                 1.0,
@@ -599,11 +531,11 @@
         "Deletable": {},
         "Node": {
             "name": "Left",
-            "parent_entity_id": 7,
-            "entity_id": 19
+            "parent_entity_id": 6,
+            "entity_id": 18
         }
     },
-    "20": {
+    "19": {
         "Pose": {
             "q": [
                 0.4171421667043967,
@@ -621,11 +553,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 19,
-            "entity_id": 20
+            "parent_entity_id": 18,
+            "entity_id": 19
         }
     },
-    "21": {
+    "20": {
         "Pose": {
             "q": [
                 0.5015433649210216,
@@ -643,19 +575,19 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 19,
+            "parent_entity_id": 18,
+            "entity_id": 20
+        }
+    },
+    "21": {
+        "Solvers": {},
+        "Node": {
+            "name": "Solvers",
+            "parent_entity_id": 3,
             "entity_id": 21
         }
     },
     "22": {
-        "Solvers": {},
-        "Node": {
-            "name": "Solvers",
-            "parent_entity_id": 4,
-            "entity_id": 22
-        }
-    },
-    "23": {
         "FactorGraph": {
             "iterations": 250,
             "enable_bold_updates": false,
@@ -663,11 +595,11 @@
         },
         "Node": {
             "name": "Factor Graph",
-            "parent_entity_id": 22,
-            "entity_id": 23
+            "parent_entity_id": 21,
+            "entity_id": 22
         }
     },
-    "24": {
+    "23": {
         "Pose": {
             "q": [
                 0.7121632622027335,
@@ -685,11 +617,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 19,
-            "entity_id": 24
+            "parent_entity_id": 18,
+            "entity_id": 23
         }
     },
-    "25": {
+    "24": {
         "Pose": {
             "q": [
                 0.7258316870888385,
@@ -707,11 +639,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 19,
-            "entity_id": 25
+            "parent_entity_id": 18,
+            "entity_id": 24
         }
     },
-    "26": {
+    "25": {
         "Pose": {
             "q": [
                 0.7530299048348692,
@@ -729,11 +661,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 19,
-            "entity_id": 26
+            "parent_entity_id": 18,
+            "entity_id": 25
         }
     },
-    "27": {
+    "26": {
         "Pose": {
             "q": [
                 0.7524956224977861,
@@ -751,11 +683,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 19,
-            "entity_id": 27
+            "parent_entity_id": 18,
+            "entity_id": 26
         }
     },
-    "28": {
+    "27": {
         "Pose": {
             "q": [
                 0.7664037762683582,
@@ -773,11 +705,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 19,
-            "entity_id": 28
+            "parent_entity_id": 18,
+            "entity_id": 27
         }
     },
-    "29": {
+    "28": {
         "Pose": {
             "q": [
                 0.9832222901296298,
@@ -795,11 +727,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 19,
-            "entity_id": 29
+            "parent_entity_id": 18,
+            "entity_id": 28
         }
     },
-    "30": {
+    "29": {
         "Pose": {
             "q": [
                 0.9840433204983943,
@@ -817,11 +749,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 19,
-            "entity_id": 30
+            "parent_entity_id": 18,
+            "entity_id": 29
         }
     },
-    "31": {
+    "30": {
         "Pose": {
             "q": [
                 0.9062739450887436,
@@ -839,11 +771,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 19,
-            "entity_id": 31
+            "parent_entity_id": 18,
+            "entity_id": 30
         }
     },
-    "32": {
+    "31": {
         "Pose": {
             "q": [
                 0.6854962178232342,
@@ -861,11 +793,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 19,
-            "entity_id": 32
+            "parent_entity_id": 18,
+            "entity_id": 31
         }
     },
-    "33": {
+    "32": {
         "Pose": {
             "q": [
                 0.598808054152881,
@@ -883,11 +815,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 19,
-            "entity_id": 33
+            "parent_entity_id": 18,
+            "entity_id": 32
         }
     },
-    "34": {
+    "33": {
         "Pose": {
             "q": [
                 0.5878670451822854,
@@ -905,11 +837,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 19,
-            "entity_id": 34
+            "parent_entity_id": 18,
+            "entity_id": 33
         }
     },
-    "35": {
+    "34": {
         "Pose": {
             "q": [
                 0.7363336433908594,
@@ -927,11 +859,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 19,
-            "entity_id": 35
+            "parent_entity_id": 18,
+            "entity_id": 34
         }
     },
-    "36": {
+    "35": {
         "Pose": {
             "q": [
                 0.7805229263278242,
@@ -949,11 +881,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 19,
-            "entity_id": 36
+            "parent_entity_id": 18,
+            "entity_id": 35
         }
     },
-    "37": {
+    "36": {
         "PoseGroup": {
             "color": [
                 1.0,
@@ -967,11 +899,11 @@
         "Deletable": {},
         "Node": {
             "name": "Right",
-            "parent_entity_id": 7,
-            "entity_id": 37
+            "parent_entity_id": 6,
+            "entity_id": 36
         }
     },
-    "38": {
+    "37": {
         "Pose": {
             "q": [
                 0.22405740015649758,
@@ -989,11 +921,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 37,
-            "entity_id": 38
+            "parent_entity_id": 36,
+            "entity_id": 37
         }
     },
-    "39": {
+    "38": {
         "Pose": {
             "q": [
                 0.2916977047839101,
@@ -1011,11 +943,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 37,
-            "entity_id": 39
+            "parent_entity_id": 36,
+            "entity_id": 38
         }
     },
-    "40": {
+    "39": {
         "Pose": {
             "q": [
                 0.3675207872197115,
@@ -1033,11 +965,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 37,
-            "entity_id": 40
+            "parent_entity_id": 36,
+            "entity_id": 39
         }
     },
-    "41": {
+    "40": {
         "Pose": {
             "q": [
                 0.44480434752966985,
@@ -1055,11 +987,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 37,
-            "entity_id": 41
+            "parent_entity_id": 36,
+            "entity_id": 40
         }
     },
-    "42": {
+    "41": {
         "Pose": {
             "q": [
                 0.5162220369197187,
@@ -1077,11 +1009,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 37,
-            "entity_id": 42
+            "parent_entity_id": 36,
+            "entity_id": 41
         }
     },
-    "43": {
+    "42": {
         "Pose": {
             "q": [
                 0.6039673806863851,
@@ -1099,11 +1031,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 37,
-            "entity_id": 43
+            "parent_entity_id": 36,
+            "entity_id": 42
         }
     },
-    "44": {
+    "43": {
         "Pose": {
             "q": [
                 0.6009832452350843,
@@ -1121,11 +1053,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 37,
-            "entity_id": 44
+            "parent_entity_id": 36,
+            "entity_id": 43
         }
     },
-    "45": {
+    "44": {
         "Pose": {
             "q": [
                 0.5944278238284328,
@@ -1143,11 +1075,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 37,
-            "entity_id": 45
+            "parent_entity_id": 36,
+            "entity_id": 44
         }
     },
-    "46": {
+    "45": {
         "Pose": {
             "q": [
                 0.5286140621290651,
@@ -1165,11 +1097,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 37,
-            "entity_id": 46
+            "parent_entity_id": 36,
+            "entity_id": 45
         }
     },
-    "47": {
+    "46": {
         "Pose": {
             "q": [
                 0.5265343049971002,
@@ -1187,11 +1119,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 37,
-            "entity_id": 47
+            "parent_entity_id": 36,
+            "entity_id": 46
         }
     },
-    "48": {
+    "47": {
         "Pose": {
             "q": [
                 0.5261828768243231,
@@ -1209,11 +1141,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 37,
-            "entity_id": 48
+            "parent_entity_id": 36,
+            "entity_id": 47
         }
     },
-    "49": {
+    "48": {
         "Pose": {
             "q": [
                 0.480423444266842,
@@ -1231,11 +1163,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 37,
-            "entity_id": 49
+            "parent_entity_id": 36,
+            "entity_id": 48
         }
     },
-    "50": {
+    "49": {
         "Pose": {
             "q": [
                 0.594021056102899,
@@ -1253,11 +1185,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 37,
-            "entity_id": 50
+            "parent_entity_id": 36,
+            "entity_id": 49
         }
     },
-    "51": {
+    "50": {
         "Pose": {
             "q": [
                 0.5924856741812186,
@@ -1275,11 +1207,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 37,
-            "entity_id": 51
+            "parent_entity_id": 36,
+            "entity_id": 50
         }
     },
-    "52": {
+    "51": {
         "Pose": {
             "q": [
                 0.5920075531462586,
@@ -1297,11 +1229,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 37,
-            "entity_id": 52
+            "parent_entity_id": 36,
+            "entity_id": 51
         }
     },
-    "53": {
+    "52": {
         "Pose": {
             "q": [
                 0.5848677841507594,
@@ -1319,11 +1251,11 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 37,
-            "entity_id": 53
+            "parent_entity_id": 36,
+            "entity_id": 52
         }
     },
-    "54": {
+    "53": {
         "Pose": {
             "q": [
                 0.5966803073248129,
@@ -1341,17 +1273,23 @@
         "Deletable": {},
         "Node": {
             "name": "q",
-            "parent_entity_id": 37,
-            "entity_id": 54
+            "parent_entity_id": 36,
+            "entity_id": 53
         }
     },
-    "55": {
+    "54": {
+        "ArucoMarker": {
+            "id": 2,
+            "square_length": 0.09000000357627869,
+            "marker_length": 0.10000000149011612,
+            "marker_dict": 0
+        },
         "Transform": {
             "X_PT": [
                 1.0,
                 0.0,
                 0.0,
-                0.0,
+                0.35871291160583496,
                 0.0,
                 1.0,
                 0.0,
@@ -1369,16 +1307,69 @@
             "visible": true,
             "modifiable": true
         },
+        "Deletable": {},
+        "Draggable": {
+            "type": "transform"
+        },
+        "Nestable": {
+            "type": "transform",
+            "source": 1,
+            "target": 0
+        },
+        "ArucoDrawable": {
+            "marker_size": 0.10000000149011612,
+            "marker_id": 2,
+            "marker_dict": 0
+        },
+        "Optimizable": {
+            "optimize": true
+        },
+        "Node": {
+            "name": "Aruco_0",
+            "parent_entity_id": 2,
+            "entity_id": 54
+        }
+    },
+    "55": {
+        "Transform": {
+            "X_PT": [
+                0.1887839138507843,
+                -0.982018768787384,
+                0.0,
+                0.4525578022003174,
+                0.982018768787384,
+                0.1887839138507843,
+                0.0,
+                -0.10765673965215683,
+                0.0,
+                0.0,
+                1.0,
+                0.8230892419815063,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "locked": false,
+            "visible": true,
+            "modifiable": true
+        },
         "PinholeCamera": {
-            "fl_x": 642.844970703125,
-            "fl_y": 642.1776733398438,
+            "fl_x": 642.669921875,
+            "fl_y": 642.0027465820312,
             "cx": 655.6039428710938,
             "cy": 370.8880615234375,
             "width": 1280,
             "height": 720
         },
+        "DepthCamera": {
+            "width": 1280,
+            "height": 720
+        },
         "RealsenseCamera": {
-            "serial": "220422302296"
+            "serial": "220422302296",
+            "enable_depth": false,
+            "verbose": false
         },
         "Deletable": {},
         "Draggable": {
@@ -1386,8 +1377,18 @@
         },
         "Nestable": {
             "type": "transform",
-            "source": true,
+            "source": 1,
             "target": 0
+        },
+        "CameraWireframe": {
+            "fl_x": 642.669921875,
+            "fl_y": 642.0027465820312,
+            "cx": 655.6039428710938,
+            "cy": 370.8880615234375,
+            "width": 1280,
+            "height": 720,
+            "z_offset": 0.24400000274181366,
+            "alpha": 0.550000011920929
         },
         "Optimizable": {
             "optimize": true

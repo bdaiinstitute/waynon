@@ -9,7 +9,7 @@ from marsoom import guizmo
 
 from waynon.components.robot import Franka
 from waynon.components.transform import Transform
-from waynon.components.renderable import Mesh, ImageQuad
+from waynon.components.renderable import Mesh, ImageQuad, CameraWireframe, ArucoDrawable    
 from waynon.components.aruco_marker import ArucoMarker
 from waynon.utils.draw_utils import draw_axis, draw_robot
 
@@ -24,14 +24,13 @@ class Viewer3DViewModel:
         self.modifiable_transform = None
 
         esper.set_handler("modify_transform", self._handle_transform_selected)
+        esper.set_handler("go_to_view", self._go_to_view)
 
     def draw(self):
         self._handle_keys()
         imgui.begin("3D Viewer")
         with self.viewer_3d.draw(in_imgui_window=True) as ctx:
-            self._draw_transforms()
-            self._draw_meshes()
-            self._draw_quads()
+            self._draw_everything()
         self._draw_guizmo()
 
         if imgui.is_window_focused() and not guizmo.is_using_any():
@@ -52,6 +51,10 @@ class Viewer3DViewModel:
         transform = esper.component_for_entity(entity_id, Transform)
         self.modifiable_transform = transform
     
+    def _go_to_view(self, view):
+        X_WV, fl_x, fl_y, cx, cy, width, height = view
+        self.viewer_3d.go_to_view(X_WV, fl_x, fl_y, cx, cy, width, height)
+    
     def _draw_guizmo(self):
         if self.modifiable_transform is not None:
             guizmo.set_id(0)
@@ -59,14 +62,16 @@ class Viewer3DViewModel:
             X_WT = self.viewer_3d.manipulate(X_WT, self.guizmo_operation, self.guizmo_frame)
             self.modifiable_transform.set_X_WT(X_WT)
 
-    def _draw_meshes(self):
-        for entity, (transform, mesh) in esper.get_components(Transform, Mesh):
-            mesh.draw()
+    def _draw_everything(self):
+        for entity, (transform, drawable) in esper.get_components(Transform, Mesh):
+            drawable.draw()
+        for entity, (transform, drawable) in esper.get_components(Transform, ImageQuad):
+            drawable.draw()
+        for entity, (transform, drawable) in esper.get_components(Transform, CameraWireframe):
+            drawable.draw()
+        for entity, (transform, drawable) in esper.get_components(Transform, ArucoDrawable):
+            drawable.draw()
 
-    def _draw_quads(self):
-        for entity, (transform, quad) in esper.get_components(Transform, ImageQuad):
-            quad.draw()
-    
     def _draw_transforms(self):
         for entity, transform in esper.get_component(Transform):
             if transform.visible:

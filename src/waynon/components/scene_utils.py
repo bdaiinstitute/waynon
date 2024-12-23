@@ -15,7 +15,7 @@ from .robot import Franka, FrankaLink
 from .collector import CollectorData, DataNode, MeasurementGroup, Solvers
 from .measurement import Measurement
 from .image_measurement import ImageMeasurement
-from .camera import PinholeCamera
+from .camera import PinholeCamera, DepthCamera
 from .realsense_camera import RealsenseCamera
 from .aruco_detector import ArucoDetector
 from .aruco_measurement import ArucoMeasurement
@@ -23,7 +23,7 @@ from .measurement import Measurement
 from .joint_measurement import JointMeasurement
 from .transform import Transform
 from .tree_utils import *
-from .renderable import Mesh, ImageQuad
+from .renderable import Mesh, ImageQuad, CameraWireframe, ArucoDrawable
 from .factor_graph import FactorGraph
 from .component import Component
 
@@ -41,10 +41,12 @@ def create_realsense_camera(parent_id:int, name:str=None):
     return create_entity(name, parent_id, 
                         Transform(), 
                         PinholeCamera(), 
+                        DepthCamera(),
                         RealsenseCamera(),
                         Deletable(), 
                         Draggable(type="transform"),
                         Nestable(type="transform", target=False),
+                        CameraWireframe(),
                         Optimizable()
                         )
 
@@ -58,7 +60,7 @@ def create_aruco_marker(parent_id:int, marker: ArucoMarker = ArucoMarker(), name
                         Deletable(), 
                         Draggable(type="transform"),
                         Nestable(type="transform", target=False),
-                        ImageQuad.create_aruco_quad(marker.marker_length),
+                        ArucoDrawable(marker_id=marker.id, marker_size=marker.marker_length, marker_dict=marker.marker_dict),
                         Optimizable()
                         )
     

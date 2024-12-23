@@ -48,7 +48,7 @@ class PinholeCamera(Component):
         return super().model_post_init(__context)
     
     def draw_property(self, nursery, e:int):
-        imgui.separator_text("Pinhole")
+        imgui.separator_text("Pinhole Camera")
         imgui.text(f"Resolution: {self.width}x{self.height}")
         imgui.text("Intrinsics:")
         imgui.text(f"fl_x: {self.fl_x}")
@@ -59,4 +59,24 @@ class PinholeCamera(Component):
     def on_selected(self, nursery, entity_id, just_selected):
         if just_selected:
             esper.dispatch_event("image_viewer", entity_id)
+        
+    def property_order(self):
+        return 200
+
+
+class DepthCamera(Component):
+    width: int = 1280
+    height: int = 720   
+
+    def model_post_init(self, __context):
+        self._texture = marsoom.texture.Texture(1280, 720, 3)
+        self._depth_image = None
     
+    def draw_property(self, nursery, entity_id):
+        imgui.separator_text("Depth Camera")
+        imgui.text(f"Resolution: {self.width}x{self.height}")
+    
+    def property_order(self):
+        return 300
+
+
