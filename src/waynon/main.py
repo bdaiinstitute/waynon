@@ -44,7 +44,7 @@ class Settings(BaseModel):
 
 class Window(marsoom.Window):
     def __init__(self, nursery: trio.Nursery, settings: Settings):
-        super().__init__(docking=True)
+        super().__init__(name="Waynon - Calibration Tool", docking=True)
         self._set_up_assets()
 
         self.nursery = nursery  
