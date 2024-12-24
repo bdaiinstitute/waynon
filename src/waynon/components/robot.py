@@ -132,10 +132,10 @@ def draw_property(nursery: trio.Nursery, robot: FrankaManager):
         await robot.home()
 
     imgui.spacing()
-    imgui.separator()
     
     connected = robot.connect_status == FrankaManager.ConnectionStatus.CONNECTED
     if connected:
+        imgui.separator()
         if robot.brake_status == FrankaManager.BrakeStatus.OPEN:
             if imgui.button("Lock"):
                 nursery.start_soon(lock_brakes)
@@ -149,7 +149,6 @@ def draw_property(nursery: trio.Nursery, robot: FrankaManager):
         imgui.same_line()
         if imgui.button("Home"):
             nursery.start_soon(home)
-        imgui.separator()
         imgui.spacing()
         # imgui.text("Joints")
         # q = robot.q

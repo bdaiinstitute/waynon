@@ -45,10 +45,10 @@ class RealsenseManager:
         assert esper.has_component(entity_id, RealsenseCamera)
         realsense_data = esper.component_for_entity(entity_id, RealsenseCamera)
         serial = realsense_data.serial
-        if serial in self.serials:
-            if serial in self.cameras:
+        if serial in self.serials and serial in self.cameras:
+            if self.cameras[serial].is_alive():
                 self.cameras[serial].stop()
-                del self.cameras[serial]
+            del self.cameras[serial]
     
     def stop_camera(self, entity_id: int):
         from waynon.components.realsense_camera import RealsenseCamera
@@ -59,6 +59,18 @@ class RealsenseManager:
         assert serial in self.serials
         if serial in self.cameras:
             self.cameras[serial].stop()
+    
+    def attach_camera(self, serial: str):
+        if serial in self.serials:
+            self.cameras[serial] = SingleRealsense(
+                shm_manager=self.shm_manager,
+                serial_number=serial,
+                resolution=self.resolution,
+                verbose=False
+            )
+        else:
+            print(f"Serial {serial} not found")
+
     
     def get_camera(self, serial: str):
         if serial in self.cameras:

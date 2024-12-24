@@ -9,4 +9,4 @@ class Optimizable(Component):
         _, self.optimize = imgui.checkbox("Optimize", self.optimize)
     
     def property_order(self):
-        return 100
+        return 500

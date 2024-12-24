@@ -2,7 +2,9 @@ import trio
 import esper
 
 from imgui_bundle import imgui
+from imgui_bundle import icons_fontawesome_6 as icons
 
+from waynon.utils.utils import COLORS
 from waynon.components.tree_utils import *
 from waynon.components.scene_utils import get_root_id, get_world_id, get_collector_id
 from waynon.components.component import Component
@@ -80,16 +82,28 @@ class SceneViewModel:
             for child in node.children:
                 self.traverse_tree(child.entity_id)
         else:
-            # if imgui.tree_node_ex(f"{node.name}##{node.entity_id}", flags):
-            if tree_node(f"{node.name}##{node.entity_id}", flags):
-                if imgui.is_item_clicked():
+            # opened, clicked = tree_node(f"{node.name}##{node.entity_id}", flags)
+            # if clicked:
+            #     self.selected_entity_id = entity_id
+            #     esper.dispatch_event("property", entity_id)
+            # if opened:
+            valid = node.valid()
+            if not valid:
+                imgui.push_style_color(imgui.Col_.text, COLORS["RED"])
+            opened = imgui.tree_node_ex(f"{node.name}##{node.entity_id}", flags)
+            if not valid:
+                imgui.pop_style_color()
+            if opened:
+                if imgui.is_item_clicked(0):
                     self.selected_entity_id = entity_id
                     esper.dispatch_event("property", entity_id)
-
                 self.render_node(entity_id)
                 for child in node.children:
                     self.traverse_tree(child.entity_id)
                 imgui.tree_pop()
+            if not opened and imgui.is_item_clicked(0):
+                self.selected_entity_id = entity_id
+                esper.dispatch_event("property", entity_id)
 
     def draw(self):
         imgui.begin(f"Scene")
@@ -110,25 +124,40 @@ def get_sorted_components(entity_id):
     return components   
 
 
-def tree_node(label: str, flags: imgui.TreeNodeFlags_ = 0):
-    g = imgui.get_current_context()
-    window = g.current_window
-    id = window.get_id(label)
-    pos = window.dc.cursor_pos
-    bb = imgui.internal.ImRect(pos, imgui.ImVec2(pos.x + imgui.get_content_region_avail().x, pos.y + g.font_size + g.style.frame_padding.y*2))
-    # opened = imgui.internal.tree_node_get_open(id)
-    opened = imgui.internal.tree_node_behavior(id, flags, label)
-    # hovered = False
-    # held = False
-    # res, hovered, held = imgui.internal.button_behavior(bb, id, hovered, held)
-    # if res:
-    #     window.dc.state_storage.set_int(id, 0 if opened else 1)
-    # if hovered or held:
-    #     window.draw_list.add_rect_filled(bb.min, bb.max, imgui.get_color_u32(imgui.Col_.header_active if held else imgui.Col_.header_hovered))
+# def tree_node(label: str, flags: imgui.TreeNodeFlags_ = 0):
+#     g = imgui.get_current_context()
+#     window = g.current_window
+#     id = window.get_id(label)
+#     pos = window.dc.cursor_pos
+#     bb = imgui.internal.ImRect(pos, imgui.ImVec2(pos.x + imgui.get_content_region_avail().x, pos.y + g.font_size + g.style.frame_padding.y*2))
+#     opened = imgui.internal.tree_node_get_open(id)
+#     # opened = imgui.internal.tree_node_behavior(id, flags, label)
+#     hovered = False
+#     held = False
+#     clicked, hovered, held = imgui.internal.button_behavior(bb, id, hovered, held)
+#     double_clicked = False
+#     if hovered and g.io.mouse_clicked_count[0] == 2:
+#         double_clicked = True
+
+#     selected = flags & imgui.TreeNodeFlags_.selected
+#     if double_clicked:
+#         window.dc.state_storage.set_int(id, 0 if opened else 1)
+#     if hovered or held:
+#         window.draw_list.add_rect_filled(bb.min, bb.max, imgui.get_color_u32(imgui.Col_.header_active if held else imgui.Col_.header_hovered))
+#     if selected:
+#         window.draw_list.add_rect_filled(bb.min, bb.max, imgui.get_color_u32(imgui.Col_.header_active))
     
-    # imgui.internal.render_text(imgui.ImVec2(pos.x + g.style.item_inner_spacing.x, pos.y + g.style.frame_padding.y), label)
-    # imgui.internal.item_size(bb, g.style.frame_padding.y)
-    # imgui.internal.item_add(bb, id)
-    # if opened:
-    #     imgui.tree_push(label)
-    return opened
+#     is_leaf = flags & imgui.TreeNodeFlags_.leaf
+    
+#     if is_leaf:
+#         label = f"  {label}"
+#     else:
+#         icon = icons.ICON_FA_CARET_DOWN if opened else icons.ICON_FA_CARET_RIGHT
+#         label = f"{icon} {label}"
+#     imgui.internal.render_text(imgui.ImVec2(pos.x + g.style.item_inner_spacing.x, pos.y + g.style.frame_padding.y), label)
+#     imgui.internal.item_size(bb, g.style.frame_padding.y)
+#     imgui.internal.item_add(bb, id)
+#     if opened:
+#         imgui.tree_push(label)
+
+#     return opened, clicked

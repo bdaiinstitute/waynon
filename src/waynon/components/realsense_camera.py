@@ -4,6 +4,7 @@ import marsoom.texture
 import marsoom
 
 from imgui_bundle import imgui
+from imgui_bundle import icons_fontawesome_6 as icons
 
 from waynon.components.simple import Component
 from waynon.processors.realsense_manager import REALSENSE_MANAGER
@@ -13,6 +14,11 @@ class RealsenseCamera(Component):
     serial: str = ""
     enable_depth: bool = False
     verbose: bool = False
+
+    def model_post_init(self, __context):
+        manager = REALSENSE_MANAGER
+        if self.serial in manager.serials:
+            manager.attach_camera(self.serial)
 
     def running(self):
         return REALSENSE_MANAGER.camera_ready(self.serial)
@@ -34,12 +40,12 @@ class RealsenseCamera(Component):
     def draw_context(self, nursery, entity_id):
         c = esper.component_for_entity(entity_id, RealsenseCamera)
         if c.running():
-            if imgui.menu_item_simple("Stop"):
+            if imgui.menu_item_simple(f"{icons.ICON_FA_STOP} Stop"):
                 REALSENSE_MANAGER.stop_camera(entity_id)
         else:
             enabled =  c.serial in REALSENSE_MANAGER.cameras
             imgui.begin_disabled(not enabled)
-            if imgui.menu_item_simple("Start"):
+            if imgui.menu_item_simple(f"{icons.ICON_FA_PLAY} Start"):
                 REALSENSE_MANAGER.start_camera(entity_id)
             imgui.end_disabled()
     
@@ -60,7 +66,7 @@ class RealsenseCamera(Component):
             for serial in serials:
                 imgui.push_id(serial)
                 if serial in manager.cameras:
-                    imgui.text_colored(serial, COLORS["RED"])
+                    imgui.text_colored(COLORS["RED"], serial)
                 else:
                     imgui.text(serial)
                 imgui.same_line(imgui.get_window_width() - 40)
@@ -81,11 +87,15 @@ class RealsenseCamera(Component):
                     if imgui.button("Stop", (imgui.get_content_region_avail().x, 40)):
                         manager.stop_camera(e)
                     imgui.pop_style_color()
+                if imgui.button("Detach", (imgui.get_content_region_avail().x, 20)):
+                    manager.delete_camera(e)
+                    self.serial = ""
+
             else:
                 imgui.text("Serial not connected")
         imgui.spacing()
 
-        _, c.serial = imgui.input_text("Serial", c.serial)
+        imgui.label_text("Serial", c.serial)
 
         data = c.get_data()
         if data:
@@ -106,5 +116,5 @@ class RealsenseCamera(Component):
         return "Realsense"
     
     def property_order(self):
-        return 200
+        return 50
     

@@ -206,17 +206,20 @@ class FactorGraphSolver:
         )
 
         result = optimizer.optimize(initial_values)
-        print(result.status)
+        print(result.status, result.error())
 
-        optimized_values = result.optimized_values
-        for key, entity_id in optimized_keys.items():
-            pose = from_sym_pose(optimized_values[key])
-            if esper.has_component(entity_id, PinholeCamera):
-                pose = rotate_around_x(pose)
-            transform = esper.component_for_entity(entity_id, Transform)
-            print(f"Setting {key} to \n {pose} - Old: \n{transform.get_X_PT()}")
-            
-            transform.set_X_PT(pose)
+        if result == Optimizer.Status.SUCCESS:
+            optimized_values = result.optimized_values
+            for key, entity_id in optimized_keys.items():
+                pose = from_sym_pose(optimized_values[key])
+                if esper.has_component(entity_id, PinholeCamera):
+                    pose = rotate_around_x(pose)
+                transform = esper.component_for_entity(entity_id, Transform)
+                print(f"Setting {key} to \n {pose} - Old: \n{transform.get_X_PT()}")
+                
+                transform.set_X_PT(pose)
+        else:
+            print("Optimization failed")
 
 
 

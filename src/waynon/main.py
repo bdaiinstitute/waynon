@@ -136,6 +136,7 @@ class Window(marsoom.Window):
             path = Path(result)
             load_scene(path)
             self.settings.path = path
+            self.settings.save()
             self._open_dialog = None
         if self._save_dialog is not None and self._save_dialog.ready():
             result = self._save_dialog.result()
@@ -143,9 +144,9 @@ class Window(marsoom.Window):
                 path = Path(result)
                 save_scene(path)
                 self.settings.path = path
+                self.settings.save()
                 self._save_dialog = None
     
-
 
 
 async def render_gui(window: marsoom.Window):
@@ -168,9 +169,7 @@ async def main_async():
 
     REALSENSE_MANAGER.stop_all_cameras()
 
-    
     settings.save()
-    save_scene(settings.path)
 
 if __name__ == '__main__':
     trio.run(main_async)

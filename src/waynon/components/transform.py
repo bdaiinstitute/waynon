@@ -48,7 +48,7 @@ class Transform(Component):
         return transform.get_X_WT()
     
     def property_order(self):
-        return 100
+        return 600
     
     def draw_property(self, nursery, entity_id:int):
         imgui.separator_text("Transform")
