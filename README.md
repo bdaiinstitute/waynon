@@ -7,4 +7,4 @@ Waynon is a calibration tool that uses a GUI to help the user specify their prob
 ## Features
 Construct your station by creating robots, cameras, and markers.
 
-![Scene Graph](assets/images/waynon_scenegraph.webm)
+![Scene Graph](assets/images/waynon_scenegraph.mp4)
