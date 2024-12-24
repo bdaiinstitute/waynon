@@ -39,6 +39,17 @@ class RealsenseManager:
             )
         self.cameras[serial].start()
     
+    def delete_camera(self, entity_id: int):
+        from waynon.components.realsense_camera import RealsenseCamera
+        assert esper.entity_exists(entity_id)
+        assert esper.has_component(entity_id, RealsenseCamera)
+        realsense_data = esper.component_for_entity(entity_id, RealsenseCamera)
+        serial = realsense_data.serial
+        if serial in self.serials:
+            if serial in self.cameras:
+                self.cameras[serial].stop()
+                del self.cameras[serial]
+    
     def stop_camera(self, entity_id: int):
         from waynon.components.realsense_camera import RealsenseCamera
         assert esper.entity_exists(entity_id)

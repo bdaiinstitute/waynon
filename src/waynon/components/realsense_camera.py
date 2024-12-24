@@ -31,14 +31,24 @@ class RealsenseCamera(Component):
     def get_manager(self):
         return REALSENSE_MANAGER
     
+    def draw_context(self, nursery, entity_id):
+        c = esper.component_for_entity(entity_id, RealsenseCamera)
+        if c.running():
+            if imgui.menu_item_simple("Stop"):
+                REALSENSE_MANAGER.stop_camera(entity_id)
+        else:
+            enabled =  c.serial in REALSENSE_MANAGER.cameras
+            imgui.begin_disabled(not enabled)
+            if imgui.menu_item_simple("Start"):
+                REALSENSE_MANAGER.start_camera(entity_id)
+            imgui.end_disabled()
+    
     def draw_property(self, nursery, e:int):
         imgui.separator_text("Realsense")
         c = esper.component_for_entity(e, RealsenseCamera)
         manager = c.get_manager()
         # _, c.enable_depth = imgui.checkbox("Enable Depth", c.enable_depth)
         # _, c.verbose = imgui.checkbox("Verbose", c.verbose)
-
-
 
         imgui.spacing()
         if not c.serial:
@@ -49,9 +59,12 @@ class RealsenseCamera(Component):
             serials = manager.serials
             for serial in serials:
                 imgui.push_id(serial)
-                imgui.text(serial)
+                if serial in manager.cameras:
+                    imgui.text_colored(serial, COLORS["RED"])
+                else:
+                    imgui.text(serial)
                 imgui.same_line(imgui.get_window_width() - 40)
-                if imgui.small_button("set"):
+                if imgui.small_button("Set"):
                     c.serial = serial
                 imgui.pop_id()
         else:
@@ -59,7 +72,6 @@ class RealsenseCamera(Component):
             if camera:
                 alive = manager.camera_started(c.serial)
                 if not alive:
-
                     imgui.push_style_color(imgui.Col_.button, COLORS["GREEN"])
                     if imgui.button("Start", (imgui.get_content_region_avail().x, 40)):
                         manager.start_camera(e)
@@ -69,11 +81,6 @@ class RealsenseCamera(Component):
                     if imgui.button("Stop", (imgui.get_content_region_avail().x, 40)):
                         manager.stop_camera(e)
                     imgui.pop_style_color()
-                # texture = c.get_texture()
-                # if texture:
-                #     w = min(imgui.get_content_region_avail().x, 500)
-                #     h = w * texture.height // texture.width
-                #     imgui.image(texture.id, image_size=(w, h))
             else:
                 imgui.text("Serial not connected")
         imgui.spacing()

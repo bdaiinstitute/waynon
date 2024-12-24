@@ -80,7 +80,8 @@ class SceneViewModel:
             for child in node.children:
                 self.traverse_tree(child.entity_id)
         else:
-            if imgui.tree_node_ex(f"{node.name}##{node.entity_id}", flags):
+            # if imgui.tree_node_ex(f"{node.name}##{node.entity_id}", flags):
+            if tree_node(f"{node.name}##{node.entity_id}", flags):
                 if imgui.is_item_clicked():
                     self.selected_entity_id = entity_id
                     esper.dispatch_event("property", entity_id)
@@ -91,7 +92,7 @@ class SceneViewModel:
                 imgui.tree_pop()
 
     def draw(self):
-        imgui.begin("Scene")
+        imgui.begin(f"Scene")
         self.traverse_tree(get_world_id())
         imgui.end()
         imgui.begin("Calibrator")
@@ -107,3 +108,27 @@ def get_sorted_components(entity_id):
     components: list[Component] = list(esper.components_for_entity(entity_id))
     components.sort(key=lambda x: x.property_order())
     return components   
+
+
+def tree_node(label: str, flags: imgui.TreeNodeFlags_ = 0):
+    g = imgui.get_current_context()
+    window = g.current_window
+    id = window.get_id(label)
+    pos = window.dc.cursor_pos
+    bb = imgui.internal.ImRect(pos, imgui.ImVec2(pos.x + imgui.get_content_region_avail().x, pos.y + g.font_size + g.style.frame_padding.y*2))
+    # opened = imgui.internal.tree_node_get_open(id)
+    opened = imgui.internal.tree_node_behavior(id, flags, label)
+    # hovered = False
+    # held = False
+    # res, hovered, held = imgui.internal.button_behavior(bb, id, hovered, held)
+    # if res:
+    #     window.dc.state_storage.set_int(id, 0 if opened else 1)
+    # if hovered or held:
+    #     window.draw_list.add_rect_filled(bb.min, bb.max, imgui.get_color_u32(imgui.Col_.header_active if held else imgui.Col_.header_hovered))
+    
+    # imgui.internal.render_text(imgui.ImVec2(pos.x + g.style.item_inner_spacing.x, pos.y + g.style.frame_padding.y), label)
+    # imgui.internal.item_size(bb, g.style.frame_padding.y)
+    # imgui.internal.item_add(bb, id)
+    # if opened:
+    #     imgui.tree_push(label)
+    return opened

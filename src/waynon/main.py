@@ -12,6 +12,7 @@ import pyglet
 
 import marsoom
 from imgui_bundle import imgui, portable_file_dialogs as pfd 
+import imgui_bundle.immapp.icons_fontawesome_6 as font_awesome
 
 from waynon.components.scene_utils import create_empty_scene, load_scene, save_scene 
 from waynon.components.camera import PinholeCamera
@@ -71,6 +72,16 @@ class Window(marsoom.Window):
     
     def _set_up_assets(self):
         work_path = Path(__file__).parent.parent.parent / "assets"
+        font_path = work_path / "fonts"/ "Font_Awesome_6_Free-Solid-900.otf"
+        io = imgui.get_io()
+
+        font_size_pixel = 10.0
+        font_cfg = imgui.ImFontConfig()
+        font_cfg.merge_mode = True
+        icons_range = [font_awesome.ICON_MIN_FA, font_awesome.ICON_MAX_FA, 0]
+        io.fonts.add_font_from_file_ttf(filename=str(font_path), size_pixels=font_size_pixel, font_cfg=font_cfg, glyph_ranges_as_int_list=icons_range)
+        io.fonts.build()
+        self.imgui_renderer.refresh_font_texture()
         pyglet.resource.path.append(str(work_path.absolute()))
         pyglet.resource.reindex()
     

@@ -2,6 +2,7 @@ from typing import Optional
 
 import esper
 from imgui_bundle import imgui
+from imgui_bundle.immapp.icons_fontawesome_6 import *
 
 from waynon.components.component import Component
 from waynon.components.tree_utils import find_nearest_ancestor_with_component
@@ -16,11 +17,11 @@ class Root(Component):
 class World(Component):
     def draw_context(self, nursery, entity_id):
         from waynon.components.scene_utils import create_realsense_camera, create_aruco_marker, create_robot
-        if imgui.menu_item_simple("Add Franka Robot"):
+        if imgui.menu_item_simple(f"{ICON_FA_ROBOT} Add Franka Robot"):
             create_robot(entity_id)
-        if imgui.menu_item_simple("Add Realsense Camera"):
+        if imgui.menu_item_simple(f"{ICON_FA_CAMERA} Add Realsense Camera"):
             create_realsense_camera(entity_id)
-        if imgui.menu_item_simple("Add Aruco Marker"):
+        if imgui.menu_item_simple(f"{ICON_FA_MARKER} Add Aruco Marker"):
             create_aruco_marker(entity_id)
 
 class Visiblity(Component):
@@ -30,7 +31,7 @@ class Visiblity(Component):
 class Deletable(Component):
     def draw_context(self, nursery, entity_id):
         from waynon.components.tree_utils import delete_entity
-        if imgui.menu_item_simple("Delete"):
+        if imgui.menu_item_simple(f"{ICON_FA_TRASH} Delete"):
             delete_entity(entity_id)
 
 class OptimizedPose(Component):
@@ -40,7 +41,7 @@ class OptimizedPose(Component):
 class PoseFolder(Component):
     def draw_context(self, nursery, entity_id):
         from waynon.components.scene_utils import create_posegroup
-        if imgui.menu_item_simple("Add Pose Group"):
+        if imgui.menu_item_simple(f"{ICON_FA_PLUS} Add Pose Group"):
             create_posegroup(entity_id)
 
 
