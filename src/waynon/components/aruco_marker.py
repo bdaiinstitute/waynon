@@ -42,6 +42,7 @@ class ArucoMarker(Component):
         return ARUCO_TEXTURES.get_texture(self.id, self.marker_dict)
 
     def draw_property(self, nursery, entity_id):
+        imgui.push_id(entity_id)
         imgui.separator_text("Aruco Marker")
         t = ARUCO_TEXTURES.get_texture(self.id, self.marker_dict)
         width = imgui.get_content_region_avail().x
@@ -65,6 +66,7 @@ class ArucoMarker(Component):
                 if selected:
                     imgui.set_item_default_focus()
             imgui.end_combo()
+        imgui.pop_id()
     
     def get_P_MC(self) -> np.ndarray:
         """Get the marker points in the marker coordinate system"""

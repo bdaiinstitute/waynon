@@ -50,9 +50,12 @@ def create_realsense_camera(parent_id:int, name:str=None):
                         Optimizable()
                         )
 
-def create_aruco_marker(parent_id:int, marker: ArucoMarker = ArucoMarker(), name:str=None):
+def create_aruco_marker(parent_id:int, marker: ArucoMarker = None, name:str=None):
     if name is None:
         name = default_name(ArucoMarker)
+    
+    if marker is None:
+        marker = ArucoMarker()
 
     return create_entity(name, parent_id, 
                         marker, 
@@ -166,6 +169,8 @@ def create_root():
     return create_entity("root", None, Root())
 
 def create_empty_scene():
+    esper.clear_database()
+    esper.clear_cache()
     root_id, _ = create_root()
     world_id, _ = create_world()
     create_collector(root_id)
@@ -182,7 +187,7 @@ def get_world_id():
 def get_collector_id():
     return esper.get_components(CollectorData)[0][0]
 
-def save_scene(path: Path = Path("default.json")):
+def save_scene(path: Path):
     print(f"Saving to {path}")
     path = Path(path)
     res = {}

@@ -1,5 +1,7 @@
 data/ 
 imgui.ini
+default.json
+settings.json
 
 .pixi/
 

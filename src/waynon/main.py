@@ -11,6 +11,7 @@ import esper
 import pyglet
 
 import marsoom
+from imgui_bundle import imgui, portable_file_dialogs as pfd 
 
 from waynon.components.scene_utils import create_empty_scene, load_scene, save_scene 
 from waynon.components.camera import PinholeCamera
@@ -26,7 +27,7 @@ from waynon.viewmodels.viewer_3d_viewmodel import Viewer3DViewModel
 
 
 class Settings(BaseModel):
-    path: Optional[Path] = "default.json"   
+    path: Optional[Path] = Path("default.json")
 
     @staticmethod
     def try_load(path = Path("settings.json")):
@@ -55,9 +56,13 @@ class Window(marsoom.Window):
         self.viewer_3d_viewmodel = Viewer3DViewModel(self.nursery, self)
         self.viewer_2d_viewmodel = Viewer2DViewModel(self.nursery, self)
 
+        self._open_dialog = None
+        self._save_dialog = None
+
 
         create_empty_scene()
-        load_scene()
+        if settings.path:
+            load_scene(self.settings.path)
 
         esper.add_processor(RobotProcessor())
         esper.add_processor(TransformProcessor())
@@ -71,10 +76,64 @@ class Window(marsoom.Window):
     
 
     def draw(self):
+        self._handle_keys()
+        self._draw_menu_bar()
         self.property_viewmodel.draw()
         self.scene_viewmodel.draw()
         self.viewer_3d_viewmodel.draw()
         self.viewer_2d_viewmodel.draw()
+
+    def _handle_keys(self):
+        io = imgui.get_io()
+        if io.key_ctrl and imgui.is_key_pressed(imgui.Key.s):
+            self._save_scene()
+
+    def _save_scene(self):
+        if self.settings.path is not None and self.settings.path.exists():  
+            save_scene(self.settings.path)
+        else:
+            default_path = Path.cwd()
+            self._save_dialog = pfd.save_file("Save Scene", str(default_path), ["*.json"])
+
+    def _draw_menu_bar(self):
+        if imgui.begin_main_menu_bar():
+            if imgui.begin_menu("File", True):
+                if imgui.menu_item_simple("New"):
+                    create_empty_scene()
+                if imgui.menu_item_simple("Open"):
+                    default_path = self.settings.path.parent
+                    if not default_path.exists():
+                        default_path = Path.cwd()
+                    self._open_dialog = pfd.open_file("Open Scene", str(default_path), ["*.json"])
+
+
+                if imgui.menu_item_simple("Save", "Ctrl+S"):
+                    self._save_scene()
+
+                if imgui.menu_item_simple("Save As"):
+                    default_path = self.settings.path.parent
+                    if not default_path.exists():
+                        default_path = Path.cwd()
+                    self._save_dialog = pfd.save_file("Save Scene", str(default_path), ["*.json"])
+
+                imgui.end_menu()
+            imgui.end_main_menu_bar()       
+        if self._open_dialog is not None and self._open_dialog.ready():
+            result = self._open_dialog.result()
+            if result:
+                result = result[0]
+            path = Path(result)
+            load_scene(path)
+            self.settings.path = path
+            self._open_dialog = None
+        if self._save_dialog is not None and self._save_dialog.ready():
+            result = self._save_dialog.result()
+            if result:
+                path = Path(result)
+                save_scene(path)
+                self.settings.path = path
+                self._save_dialog = None
+    
 
 
 

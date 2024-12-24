@@ -35,6 +35,7 @@ class Mesh(Component, Drawable):
 
     mesh_path: str
     color: tuple[float, float, float, float] = (0.0, 1.0, 0.0, 1.0)
+    visible: bool = True
 
     def model_post_init(self, __context):
         self._batch = pyglet.graphics.Batch()
@@ -57,7 +58,18 @@ class Mesh(Component, Drawable):
             print(f"Wanted to set color {color} but group does not support it")
     
     def draw(self):
-        self._batch.draw()
+        if self.visible:
+            self._batch.draw()
+        
+    def draw_property(self, nursery, entity_id):
+        imgui.push_id(entity_id)
+        imgui.separator_text("Mesh")
+        _, self.visible = imgui.checkbox("Visible", self.visible)
+        imgui.pop_id()
+    
+    def property_order(self):
+        return 500
+        
 
 class ImageQuad(Component, Drawable):
     texture_id: int = 0
