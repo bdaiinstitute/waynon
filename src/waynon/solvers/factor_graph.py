@@ -5,6 +5,7 @@ from scipy.spatial.transform import Rotation as R
 import esper
 
 import sym.ops
+import symforce.opt.factor
 import symforce.opt.optimizer
 import symforce.opt
 from symforce.values import Values
@@ -121,7 +122,14 @@ class FactorGraphSolver:
 
                 marker_transform = esper.component_for_entity(marker_entity_id, Transform)
                 camera_transform = esper.component_for_entity(camera_entity_id, Transform)
-                X_WC = camera_transform.get_X_WT()
+                marker_optimizable = esper.component_for_entity(marker_entity_id, Optimizable)
+                camera_optimizable = esper.component_for_entity(camera_entity_id, Optimizable)
+                if not marker_optimizable.use_in_optimization:
+                    print(f"Skipping measurements for {marker}")
+                    continue
+                if not camera_optimizable.use_in_optimization:
+                    print(f"Skipping measurements for {camera}")
+                    continue
 
                 # "epsilon" some symforce thing
                 epsilon_key = "epsilon"
@@ -129,7 +137,6 @@ class FactorGraphSolver:
                 # Marker Pose (SE3) and initial guess (Optimized)
                 marker_pose_key = f"Marker_{marker_entity_id}_X_PM"
                 initial_values[marker_pose_key] = to_sym_pose(marker_transform.get_X_PT())
-                marker_optimizable = esper.component_for_entity(marker_entity_id, Optimizable)
                 if marker_optimizable.optimize:
                     optimized_keys[marker_pose_key] = marker_entity_id # look up for later to get the results back 
 
@@ -144,7 +151,6 @@ class FactorGraphSolver:
                 X_PT_blender = camera_transform.get_X_PT()
                 X_PT_opencv = rotate_around_x(X_PT_blender)
                 initial_values[camera_pose_key] = to_sym_pose(X_PT_opencv)
-                camera_optimizable = esper.component_for_entity(camera_entity_id, Optimizable)
                 if camera_optimizable.optimize:
                     optimized_keys[camera_pose_key] = camera_entity_id
 
@@ -168,7 +174,7 @@ class FactorGraphSolver:
                     initial_values[marker_3D_point_key] = sf.V3(marker.get_P_MC()[i].tolist())
 
                     # Pixel Measurment (2D)
-                    pixel_measurement_key = f"p2D_{measurement_id}_{i}"
+                    pixel_measurement_key = f"p2D_{marker_entity_id}_{measurement_id}_{i}"
                     point = aruco_measurement.pixels[i]
                     initial_values[pixel_measurement_key] = sf.V2(point)
 
@@ -201,6 +207,7 @@ class FactorGraphSolver:
                 verbose=factor_graph.verbose,
                 iterations=factor_graph.iterations,
                 early_exit_min_reduction=1e-10,
+                initial_lambda=factor_graph.initial_lambda,
                 enable_bold_updates=factor_graph.enable_bold_updates,
                 )
         )
@@ -208,15 +215,15 @@ class FactorGraphSolver:
         result = optimizer.optimize(initial_values)
         print(result.status, result.error())
 
-        if result == Optimizer.Status.SUCCESS:
+        # dot_file = symforce.opt.factor.visualize_factors(factors, "factor_graph.dot")
+
+        if result.status == Optimizer.Status.SUCCESS:
             optimized_values = result.optimized_values
             for key, entity_id in optimized_keys.items():
                 pose = from_sym_pose(optimized_values[key])
                 if esper.has_component(entity_id, PinholeCamera):
                     pose = rotate_around_x(pose)
                 transform = esper.component_for_entity(entity_id, Transform)
-                print(f"Setting {key} to \n {pose} - Old: \n{transform.get_X_PT()}")
-                
                 transform.set_X_PT(pose)
         else:
             print("Optimization failed")
