@@ -20,6 +20,8 @@ from waynon.components.scene_utils import (get_world_id, is_dynamic,
                                            rotate_around_x)
 from waynon.components.tree_utils import *
 
+symforce.set_log_level("WARNING")
+
 
 def to_sym_pose(X: np.ndarray, compiled=False):
     from scipy.spatial.transform import Rotation as R
@@ -85,6 +87,7 @@ class FactorGraphSolver:
         optimized_keys_to_entity_id = {}
 
         factors = []
+        num_measurements = 0
         for aruco_measurement_id, aruco_measurement in esper.get_component(
             ArucoMeasurement
         ):
@@ -199,6 +202,7 @@ class FactorGraphSolver:
                 # Now do every corner
                 p_MC = marker.get_P_MC()
                 for i in range(4):
+                    num_measurements += 1
                     # Marker Point (3D)
                     marker_3D_point_key = f"p_MP_{i}_{marker_entity_id}"
                     initial_values[marker_3D_point_key] = sf.V3(p_MC[i].tolist())
@@ -251,9 +255,9 @@ class FactorGraphSolver:
         )
 
         result = optimizer.optimize(initial_values)
-        print(result.status, result.error())
+        print(result.status, result.error() / num_measurements)
 
-        dot_file = symforce.opt.factor.visualize_factors(factors, "factor_graph.dot")
+        # dot_file = symforce.opt.factor.visualize_factors(factors, "factor_graph.dot")
 
         if result.status == Optimizer.Status.SUCCESS:
             optimized_values = result.optimized_values
