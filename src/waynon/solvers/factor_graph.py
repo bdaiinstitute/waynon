@@ -3,6 +3,8 @@ from typing import Tuple
 
 import esper
 import numpy as np
+import symforce
+symforce.set_epsilon_to_symbol()
 import sym
 import sym.ops
 import symforce.opt
@@ -80,7 +82,7 @@ class FactorGraphSolver:
         factor_graph = esper.component_for_entity(factor_graph_id, FactorGraph)
 
         initial_values = Values(epsilon=sf.numeric_epsilon)
-        optimized_keys = {}
+        optimized_keys_to_entity_id = {}
 
         factors = []
         for aruco_measurement_id, aruco_measurement in esper.get_component(
@@ -153,12 +155,12 @@ class FactorGraphSolver:
                 epsilon_key = "epsilon"
 
                 # Marker Pose (SE3) and initial guess (Optimized)
-                marker_pose_key = f"X_PM_{marker_entity_id}"
+                marker_pose_key = f"O1_X_PM_{marker_entity_id}"
                 initial_values[marker_pose_key] = to_sym_pose(
                     marker_transform.get_X_PT()
                 )
                 if marker_optimizable.optimize:
-                    optimized_keys[marker_pose_key] = (
+                    optimized_keys_to_entity_id[marker_pose_key] = (
                         marker_entity_id  # look up for later to get the results back
                     )
 
@@ -171,13 +173,13 @@ class FactorGraphSolver:
                 )
 
                 # Camera Pose (SE3) (Optimized)
-                camera_pose_key = f"X_WC_{camera_entity_id}"
+                camera_pose_key = f"O0_X_WC_{camera_entity_id}"
                 if camera_pose_key not in initial_values:
                     X_PT = camera_transform.get_X_PT().copy()
                     X_PT = rotate_around_x(X_PT)
                     initial_values[camera_pose_key] = to_sym_pose(X_PT)
                 if camera_optimizable.optimize:
-                    optimized_keys[camera_pose_key] = camera_entity_id
+                    optimized_keys_to_entity_id[camera_pose_key] = camera_entity_id
 
                 # Robot Pose
                 # todo get link name to support putting marker on arbitrary link
@@ -230,10 +232,14 @@ class FactorGraphSolver:
         if len(factors) == 0:
             print("No factors found")
             return
+        
+        optimized_keys = list(optimized_keys_to_entity_id.keys())
+        optimized_keys.sort() # ORDER MATTERS FOR SOME REASON. DO NOT REMOVE!!!!!!!!!!
+        print(optimized_keys)
 
         optimizer = Optimizer(
             factors=[*factors],
-            optimized_keys=list(optimized_keys.keys()),
+            optimized_keys=optimized_keys,
             debug_stats=True,
             params=Optimizer.Params(
                 verbose=factor_graph.verbose,
@@ -251,7 +257,7 @@ class FactorGraphSolver:
 
         if result.status == Optimizer.Status.SUCCESS:
             optimized_values = result.optimized_values
-            for key, entity_id in optimized_keys.items():
+            for key, entity_id in optimized_keys_to_entity_id.items():
                 pose = from_sym_pose(optimized_values[key])
                 if esper.has_component(entity_id, PinholeCamera):
                     pose = rotate_around_x(pose)

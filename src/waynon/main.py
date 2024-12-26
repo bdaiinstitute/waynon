@@ -1,10 +1,6 @@
 from pathlib import Path
 from typing import Optional
 
-import symforce
-
-symforce.set_epsilon_to_symbol()
-
 import esper
 import imgui_bundle.immapp.icons_fontawesome_6 as font_awesome
 import marsoom
