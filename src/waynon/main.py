@@ -2,25 +2,25 @@ from pathlib import Path
 from typing import Optional
 
 import symforce
+
 symforce.set_epsilon_to_symbol()
 
-from pydantic import BaseModel
+import esper
+import imgui_bundle.immapp.icons_fontawesome_6 as font_awesome
+import marsoom
+import pyglet
 import trio
 import warp as wp
-import esper
-import pyglet
+from imgui_bundle import imgui
+from imgui_bundle import portable_file_dialogs as pfd
+from pydantic import BaseModel
 
-import marsoom
-from imgui_bundle import imgui, portable_file_dialogs as pfd 
-import imgui_bundle.immapp.icons_fontawesome_6 as font_awesome
-
-from waynon.components.scene_utils import create_empty_scene, load_scene, save_scene 
 from waynon.components.camera import PinholeCamera
+from waynon.components.scene_utils import create_empty_scene, load_scene, save_scene
 from waynon.processors.realsense_manager import REALSENSE_MANAGER
-from waynon.processors.transforms import TransformProcessor
-from waynon.processors.robot import RobotProcessor
 from waynon.processors.render import RenderProcessor
-
+from waynon.processors.robot import RobotProcessor
+from waynon.processors.transforms import TransformProcessor
 from waynon.viewmodels.property_viewer import PropertyViewModel
 from waynon.viewmodels.scene_viewmodel import SceneViewModel
 from waynon.viewmodels.viewer_2d_viewmodel import Viewer2DViewModel
@@ -31,14 +31,14 @@ class Settings(BaseModel):
     path: Optional[Path] = Path("default.json")
 
     @staticmethod
-    def try_load(path = Path("settings.json")):
+    def try_load(path=Path("settings.json")):
         if path.exists():
             with open("settings.json", "r") as f:
                 settings = Settings.model_validate_json(f.read())
         else:
             settings = Settings()
         return settings
-    
+
     def save(self, path: Path = Path("settings.json")):
         with open(path, "w") as f:
             f.write(self.model_dump_json(indent=4))
@@ -49,7 +49,7 @@ class Window(marsoom.Window):
         super().__init__(caption="Waynon - Calibration Tool", docking=True)
         self._set_up_assets()
 
-        self.nursery = nursery  
+        self.nursery = nursery
         self.settings = settings
 
         self.property_viewmodel = PropertyViewModel(self.nursery)
@@ -60,7 +60,6 @@ class Window(marsoom.Window):
         self._open_dialog = None
         self._save_dialog = None
 
-
         create_empty_scene()
         if settings.path:
             load_scene(self.settings.path)
@@ -69,22 +68,27 @@ class Window(marsoom.Window):
         esper.add_processor(TransformProcessor())
         esper.add_processor(RenderProcessor())
         esper.add_processor(REALSENSE_MANAGER)
-    
+
     def _set_up_assets(self):
         work_path = Path(__file__).parent.parent.parent / "assets"
-        font_path = work_path / "fonts"/ "Font_Awesome_6_Free-Solid-900.otf"
+        font_path = work_path / "fonts" / "Font_Awesome_6_Free-Solid-900.otf"
         io = imgui.get_io()
+        io.config_flags |= imgui.ConfigFlags_.nav_enable_keyboard.value
 
         font_size_pixel = 10.0
         font_cfg = imgui.ImFontConfig()
         font_cfg.merge_mode = True
         icons_range = [font_awesome.ICON_MIN_FA, font_awesome.ICON_MAX_FA, 0]
-        io.fonts.add_font_from_file_ttf(filename=str(font_path), size_pixels=font_size_pixel, font_cfg=font_cfg, glyph_ranges_as_int_list=icons_range)
+        io.fonts.add_font_from_file_ttf(
+            filename=str(font_path),
+            size_pixels=font_size_pixel,
+            font_cfg=font_cfg,
+            glyph_ranges_as_int_list=icons_range,
+        )
         io.fonts.build()
         self.imgui_renderer.refresh_font_texture()
         pyglet.resource.path.append(str(work_path.absolute()))
         pyglet.resource.reindex()
-    
 
     def draw(self):
         self._handle_keys()
@@ -100,11 +104,13 @@ class Window(marsoom.Window):
             self._save_scene()
 
     def _save_scene(self):
-        if self.settings.path is not None and self.settings.path.exists():  
+        if self.settings.path is not None and self.settings.path.exists():
             save_scene(self.settings.path)
         else:
             default_path = Path.cwd()
-            self._save_dialog = pfd.save_file("Save Scene", str(default_path), ["*.json"])
+            self._save_dialog = pfd.save_file(
+                "Save Scene", str(default_path), ["*.json"]
+            )
 
     def _draw_menu_bar(self):
         if imgui.begin_main_menu_bar():
@@ -115,8 +121,9 @@ class Window(marsoom.Window):
                     default_path = self.settings.path.parent
                     if not default_path.exists():
                         default_path = Path.cwd()
-                    self._open_dialog = pfd.open_file("Open Scene", str(default_path), ["*.json"])
-
+                    self._open_dialog = pfd.open_file(
+                        "Open Scene", str(default_path), ["*.json"]
+                    )
 
                 if imgui.menu_item_simple("Save", "Ctrl+S"):
                     self._save_scene()
@@ -125,10 +132,12 @@ class Window(marsoom.Window):
                     default_path = self.settings.path.parent
                     if not default_path.exists():
                         default_path = Path.cwd()
-                    self._save_dialog = pfd.save_file("Save Scene", str(default_path), ["*.json"])
+                    self._save_dialog = pfd.save_file(
+                        "Save Scene", str(default_path), ["*.json"]
+                    )
 
                 imgui.end_menu()
-            imgui.end_main_menu_bar()       
+            imgui.end_main_menu_bar()
         if self._open_dialog is not None and self._open_dialog.ready():
             result = self._open_dialog.result()
             if result:
@@ -146,14 +155,13 @@ class Window(marsoom.Window):
                 self.settings.path = path
                 self.settings.save()
                 self._save_dialog = None
-    
 
 
 async def render_gui(window: marsoom.Window):
     while not window.should_exit():
         esper.process()
         window.step()
-        await trio.sleep(1/60.0)
+        await trio.sleep(1 / 60.0)
 
 
 # ENTRY POINT
@@ -171,5 +179,6 @@ async def main_async():
 
     settings.save()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     trio.run(main_async)

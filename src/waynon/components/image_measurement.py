@@ -1,17 +1,15 @@
-from PIL import Image
-import numpy as np
-
 import esper
+import numpy as np
 import trio
-
 from imgui_bundle import imgui
+from PIL import Image
 
-from .tree_utils import *
+from .camera import PinholeCamera
 from .component import Component
+from .measurement import Measurement
 from .node import Node
 from .pose_group import PoseGroup
-from .camera import PinholeCamera
-from .measurement import Measurement
+from .tree_utils import *
 
 
 class ImageMeasurement(Component):
@@ -21,18 +19,14 @@ class ImageMeasurement(Component):
     def get_image_u(self):
         return np.array(Image.open(self.image_path))
 
-    def on_selected(self, nursery, entity_id, just_selected):
-        if just_selected:
-            esper.dispatch_event("image_viewer", entity_id)
-
     def property_order(self):
         return 100
-    
+
     def get_camera(self):
         if not esper.entity_exists(self.camera_id):
             return None
         return esper.component_for_entity(self.camera_id, PinholeCamera)
-    
+
     def draw_property(self, nursery, entity_id):
         imgui.separator()
         camera = self.get_camera()
@@ -41,7 +35,7 @@ class ImageMeasurement(Component):
             imgui.text(f"Camera: {node.name}")
 
         imgui.text(f"Image Path: {self.image_path}")
-    
+
     @staticmethod
     def default_name():
         return "Image"

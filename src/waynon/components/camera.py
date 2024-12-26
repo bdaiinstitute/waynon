@@ -1,17 +1,16 @@
-import numpy as np
 import esper
-
-import marsoom.texture
 import marsoom
-
+import marsoom.texture
+import numpy as np
 from imgui_bundle import imgui
 
-from waynon.components.simple import Component
-from waynon.processors.realsense_manager import RealsenseManager
 from waynon.components.aruco_detector import ArucoDetector
 from waynon.components.aruco_marker import ArucoMarker
-from waynon.detectors.aruco_processor import detect_all_markers_in_image
+from waynon.components.simple import Component
 from waynon.components.transform import Transform
+from waynon.detectors.aruco_processor import detect_all_markers_in_image
+from waynon.processors.realsense_manager import RealsenseManager
+
 
 class PinholeCamera(Component):
     # intrinsics
@@ -24,20 +23,27 @@ class PinholeCamera(Component):
     width: int = 1280
     height: int = 720
 
+    def K(self):
+        return np.array(
+            [[self.fl_x, 0.0, self.cx], [0.0, self.fl_y, self.cy], [0.0, 0.0, 1.0]],
+            dtype=np.float32,
+        )
+
     def get_texture(self):
         return self._texture
-    
+
     def get_image_f(self):
         """Get the image as float32 between 0 and 1"""
         return self._image_f
-    
+
     def get_image_u(self):
         """Get the image as uint8 between 0 and 255"""
         return self._image_u
-    
+
     def guess_position(self, camera_entity_id: int, marker_entity_id: int):
         import cv2
         from scipy.spatial.transform import Rotation as R
+
         # get all markers
         assert esper.entity_exists(marker_entity_id)
         assert esper.has_components(marker_entity_id, ArucoMarker, Transform)
@@ -51,33 +57,34 @@ class PinholeCamera(Component):
             print("No image to detect markers in")
             return
 
-        marker_pixels, marker_ids = detect_all_markers_in_image(self._image_u, marker.marker_dict)
+        marker_pixels, marker_ids = detect_all_markers_in_image(
+            self._image_u, marker.marker_dict
+        )
         if marker_ids is None:
             print("No markers found")
             return
         if marker.id not in marker_ids:
             print(f"Marker {marker.id} not found")
             return
-        
+
         idx = np.where(marker_ids == marker.id)[0][0]
         all_pixels = marker_pixels[idx]
         if len(all_pixels) > 1:
-            print(f"Warning: Found {len(all_pixels)} markers with id {marker.id}. Using first one")
-        
+            print(
+                f"Warning: Found {len(all_pixels)} markers with id {marker.id}. Using first one"
+            )
+
         pixels = all_pixels[0]
         p_MPs = marker.get_P_MC()
         distortion = np.zeros((5, 1))
-        K = np.array([[self.fl_x, 0, self.cx],
-                      [0, self.fl_y, self.cy],
-                      [0, 0, 1]], dtype=np.float32)
+        K = np.array(
+            [[self.fl_x, 0, self.cx], [0, self.fl_y, self.cy], [0, 0, 1]],
+            dtype=np.float32,
+        )
 
         res, rvec, tvec = cv2.solvePnP(
-            p_MPs, 
-            pixels, 
-            K, 
-            distortion, 
-            False, 
-            cv2.SOLVEPNP_IPPE_SQUARE)
+            p_MPs, pixels, K, distortion, False, cv2.SOLVEPNP_IPPE_SQUARE
+        )
         if not res:
             print("Failed to solve PnP")
             return
@@ -96,7 +103,6 @@ class PinholeCamera(Component):
 
         camera_transform.set_X_WT(X_WC)
 
-    
     def update_image(self, image: np.ndarray):
         assert image.dtype == np.uint8, f"Image must be uint8, got {image.dtype}"
         # if self._image_u == image:
@@ -112,8 +118,8 @@ class PinholeCamera(Component):
         self._image_f = None
         self._image_u = None
         return super().model_post_init(__context)
-    
-    def draw_property(self, nursery, e:int):
+
+    def draw_property(self, nursery, e: int):
         imgui.separator_text("Pinhole Camera")
         # imgui.label_text("Resolution", f"{self.width}x{self.height}")
         # imgui.label_text("Focal", f"{self.fl_x}, {self.fl_y}")
@@ -123,9 +129,13 @@ class PinholeCamera(Component):
 
         markers = esper.get_component(ArucoMarker)
         if markers:
-            imgui.text_wrapped("Guess the position of the camera using one of the below markers")
-            for marker_entity_id, marker in markers: 
-                if imgui.image_button(f"guess_{marker_entity_id}", marker.get_texture().id, (50, 50)):
+            imgui.text_wrapped(
+                "Guess the position of the camera using one of the below markers"
+            )
+            for marker_entity_id, marker in markers:
+                if imgui.image_button(
+                    f"guess_{marker_entity_id}", marker.get_texture().id, (50, 50)
+                ):
                     self.guess_position(e, marker_entity_id)
                 imgui.same_line()
             imgui.new_line()
@@ -133,24 +143,22 @@ class PinholeCamera(Component):
     def on_selected(self, nursery, entity_id, just_selected):
         if just_selected:
             esper.dispatch_event("image_viewer", entity_id)
-        
+
     def property_order(self):
         return 200
 
 
 class DepthCamera(Component):
     width: int = 1280
-    height: int = 720   
+    height: int = 720
 
     def model_post_init(self, __context):
         self._texture = marsoom.texture.Texture(1280, 720, 3)
         self._depth_image = None
-    
+
     # def draw_property(self, nursery, entity_id):
     #     imgui.separator_text("Depth Camera")
     #     imgui.text(f"Resolution: {self.width}x{self.height}")
-    
+
     def property_order(self):
         return 150
-
-
