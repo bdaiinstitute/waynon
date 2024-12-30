@@ -1,15 +1,10 @@
 import numpy as np
 import esper
 
-from waynon.components.node import Node
 from waynon.components.transform import Transform
 from waynon.components.renderable import Mesh, ImageQuad, CameraWireframe, ArucoDrawable
 from waynon.components.camera import PinholeCamera
 from waynon.components.aruco_marker import ArucoMarker
-from waynon.components.scene_utils import get_world_id
-from waynon.utils.aruco_textures import ARUCO_TEXTURES
-import pyglet
-
 class RenderProcessor(esper.Processor):
 
     def process(self):        

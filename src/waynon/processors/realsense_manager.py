@@ -2,7 +2,7 @@ from typing import Dict
 import esper
 
 from multiprocessing.managers import SharedMemoryManager
-from waynon.realsense.single_realsense import SingleRealsense
+from realsense.single_realsense import SingleRealsense
 
 class RealsenseManager:
 

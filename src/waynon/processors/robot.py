@@ -7,7 +7,7 @@ import panda_py
 import pinocchio as pin
 import trio
 
-from waynon.panda.desk import Desk
+from panda_desk import Desk
 from waynon.utils.utils import ASSET_PATH, COLORS
 
 if TYPE_CHECKING:
@@ -139,7 +139,7 @@ class FrankaManager(RobotManager):
         return oMi
 
     async def _read_brake_status(self):
-        async with self.desk.system_status_generator() as status:
+        async with self.desk.system_status() as status:
             async for s in status:
                 # 0 is closed
                 # 2 is opening
@@ -161,7 +161,7 @@ class FrankaManager(RobotManager):
                     self.brake_status = FrankaManager.BrakeStatus.CLOSED
 
     async def _read_joint_status(self):
-        async with self.desk.system_state_generator() as state:
+        async with self.desk.robot_states() as state:
             async for s in state:
                 if "jointAngles" in s:
                     self.q = np.asanyarray(s["jointAngles"])
@@ -169,7 +169,7 @@ class FrankaManager(RobotManager):
                     print(f"Missing jointAngles in state: {s}")
 
     async def _read_mode(self):
-        async with self.desk.general_system_status_generator() as state:
+        async with self.desk.general_system_status() as state:
             async for s in state:
                 if "derived" in s and "operatingMode" in s["derived"]:
                     mode = s["derived"]["operatingMode"]
@@ -183,7 +183,7 @@ class FrankaManager(RobotManager):
                     print(f"Missing operatingMode in state: {s}")
 
     async def _read_buttons(self):
-        async with self.desk.events_generator() as events:
+        async with self.desk.button_events() as events:
             async for e in events:
                 for button in self.buttons_down:
                     if button in e:

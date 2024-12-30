@@ -6,7 +6,6 @@ import imgui_bundle.immapp.icons_fontawesome_6 as font_awesome
 import marsoom
 import pyglet
 import trio
-import warp as wp
 from imgui_bundle import imgui
 from imgui_bundle import portable_file_dialogs as pfd
 from pydantic import BaseModel
@@ -162,7 +161,6 @@ async def render_gui(window: marsoom.Window):
 
 # ENTRY POINT
 async def main_async():
-    wp.init()
     settings = Settings.try_load()
     REALSENSE_MANAGER.get_connected_serials()
 

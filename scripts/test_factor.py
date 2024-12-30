@@ -1,7 +1,3 @@
-from pickletools import optimize
-from typing import Tuple
-
-import esper
 import numpy as np
 import symforce
 symforce.set_epsilon_to_symbol()
@@ -12,11 +8,8 @@ import symforce.opt.factor
 import symforce.opt.optimizer
 import symforce.symbolic as sf
 from symforce.opt.factor import Factor
-from symforce.opt.noise_models import DiagonalNoiseModel
 from symforce.opt.optimizer import Optimizer
 from symforce.values import Values
-from symforce import ops
-from symforce import typing as T
 
 
 def to_sym_pose(X: np.ndarray, compiled=False):
@@ -59,56 +52,6 @@ def eye_to_hand_residual(
     error = pixel - point2D
     return error
 
-def prior_factor(
-    value: sf.Pose3, 
-    prior: sf.Pose3,
-    sqrt_info: sf.Matrix66, 
-    epsilon: sf.Scalar = 0
-) -> sf.V6:
-    assert type(value) is type(prior)
-    assert sqrt_info.rows == sqrt_info.cols == ops.LieGroupOps.tangent_dim(value)
-
-    # Compute error
-    tangent_error = prior.local_coordinates(value, epsilon=epsilon)
-    # tangent_error = ops.LieGroupOps.local_coordinates(prior, value, epsilon=epsilon)
-
-    # Apply noise model
-    residual = sqrt_info * sf.V6(tangent_error)
-
-    return residual
-
-# Values(
-#   epsilon: 2.220446049250313e-15,
-#   X_PM_21: <Pose3 R=<Rot3 <Q xyzw=[-0.489114447951239, 0.49289215136063, -0.505995191218143, 0.5116573564374497]>>, t=(0.0185031478297103, 0.0372968098897169, 0.0504876760349542)>,
-#   K_24: <LinearCameraCal
-#   focal_length=[642.669921875, 642.002746582031],
-#   principal_point=[655.603942871094, 370.888061523438],
-#   distortion_coeffs=[]>,
-#   X_WCamera_24: <Pose3 R=<Rot3 <Q xyzw=[0.846475979283113, 0.372804850824109, -0.235141774331901, -0.29866922449886724]>>, t=(0.954485356807709, 0.00440494064241648, 0.367777436971664)>,
-#   X_Wpanda_hand_87: <Pose3 R=<Rot3 <Q xyzw=[0.943658308525011, -0.120803088735552, 0.305572259429198, 0.03925818094359318]>>, t=(0.616351473233307, 0.0486685120681392, 0.286027011788395)>,
-#   m_87_p_MP_aruco_343_corner_0: [-0.0295000001788139]
-# [0.0295000001788139]
-# [0.0],
-#   m_87_aruco_343_corner_0: [130.762496948242]
-# [161.024673461914],
-#   X_PM_65: <Pose3 R=<Rot3 <Q xyzw=[0.713704444180268, 0.00155940667004697, 0.700445144477117, 0.00036631489587447195]>>, t=(0.0194419853215462, -0.0438155354762162, 0.0492611449162438)>,
-#   m_87_p_MP_aruco_344_corner_0: [-0.0295000001788139]
-# [0.0295000001788139]
-# [0.0],
-#   m_87_aruco_344_corner_0: [474.243072509766]
-# [38.9922142028809],
-#   X_Wpanda_hand_96: <Pose3 R=<Rot3 <Q xyzw=[0.944938456947157, -0.136324174767451, 0.297427726114313, 0.006616622610469427]>>, t=(0.624057359384263, 0.0947909630957727, 0.262228138815024)>,
-#   m_96_p_MP_aruco_346_corner_0: [-0.0295000001788139]
-# [0.0295000001788139]
-# [0.0],
-#   m_96_aruco_346_corner_0: [293.525634765625]
-# [180.625991821289],
-#   m_96_p_MP_aruco_347_corner_0: [-0.0295000001788139]
-# [0.0295000001788139]
-# [0.0],
-#   m_96_aruco_347_corner_0: [582.009826660156]
-# [49.0090980529785],
-# )
 
 initial_values = Values()
 eps = sf.numeric_epsilon
@@ -136,21 +79,6 @@ X_WC = to_sym_pose(X_WC)
 #         t=sf.V3(1.954485356807709, 0.00440494064241648, 0.367777436971664))
 camera_key = "X_WCamera_24"
 initial_values[camera_key] = X_WC
-camera_prior_key = "X_WCamera_24_prior"
-initial_values[camera_prior_key] = X_WC
-information_key = "X_WCamera_24_prior_sqrt_info"
-initial_values[information_key] = sf.Matrix66.eye(6) * 1000.0
-
-pf_1 = Factor(
-    residual=prior_factor,
-    keys=[
-        camera_key,
-        camera_prior_key,
-        information_key,
-        "eps"
-    ]
-    )
-
 
 X_PMarker_1 = np.array([
  [ 0.00205235,  0.0356311 ,  0.99936291,  0.01850315],
@@ -275,11 +203,9 @@ f2_2 = Factor(
 
 optimized_keys = [camera_key, marker_1_key, marker_2_key]
 
-# factors = [f1_1, f1_2, f2_1, f2_2, pf_1]
 factors = [f1_1, f1_2, f2_1, f2_2]
 optimizer = Optimizer(
     factors=factors,
-    # optimized_keys=optimized_keys,
     optimized_keys=["X_PM_21", "X_WCamera_24", "X_PM_65"], # DOES NOT WORK
     # optimized_keys=["X_WCamera_24", "X_PM_21", "X_PM_65"], # WORKS
     # optimized_keys=["X_PM_21", "X_PM_65", "X_WCamera_24"], # WORKS
@@ -295,12 +221,4 @@ optimizer = Optimizer(
 result = optimizer.optimize(
     initial_values
 )
-dot_file = symforce.opt.factor.visualize_factors(factors, "factor_graph_test.dot")
-symforce.set_log_level("WARNING")
-print(initial_values.keys())
-print(result.status, result.error())
-import pdb; pdb.set_trace()
-
-# odict_keys(['eps', 'K_24', 'X_WCamera_24', 'X_PMarker_1', 'X_PMarker_2', 'p_MP', 'X_Whand_1', 'pixel_1_1', 'pixel_1_2', 'X_Whand_2', 'pixel_2_1', 'pixel_2_2'])
-
-# odict_keys(['eps', 'X_PM_21', 'K_24', 'X_WCamera_24', 'X_Whand_87', 'p_MP', 'pixel_343', 'X_PM_65', 'pixel_344', 'X_Whand_96', 'pixel_346', 'pixel_347'])
+print(result.status)
