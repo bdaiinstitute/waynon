@@ -1,8 +1,13 @@
 from typing import Dict
+import logging
+
 import esper
 
 from multiprocessing.managers import SharedMemoryManager
 from realsense.single_realsense import SingleRealsense
+
+
+logger = logging.getLogger(__name__)
 
 class RealsenseManager:
 
@@ -89,7 +94,7 @@ class RealsenseManager:
         if serial in self.cameras:
             return self.cameras[serial].get()
         return None
-    
+
     def camera_started(self, serial: str):
         if serial in self.cameras:
             return self.cameras[serial].is_alive()
@@ -114,6 +119,7 @@ class RealsenseManager:
         from waynon.components.camera import PinholeCamera
         for entity, (camera, realsense) in esper.get_components(PinholeCamera, RealsenseCamera):
             if realsense.running():
+                logger.info(f"Processing camera {entity}")
                 K = realsense.intrinsics()
                 camera.fl_x = K[0, 0]
                 camera.fl_y = K[1, 1]
@@ -126,7 +132,7 @@ class RealsenseManager:
 
                 data = realsense.get_data()
                 rgb = data['color']
-                camera.update_image(rgb)
+                camera.update_image(rgb, identifier=data["timestamp"])
             else:
                 pass
 

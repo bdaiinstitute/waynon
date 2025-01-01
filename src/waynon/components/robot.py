@@ -4,6 +4,7 @@ import numpy as np
 import pinocchio as pin
 
 from imgui_bundle import imgui    
+import panda_py
 
 
 from waynon.utils.utils import ASSET_PATH, static, one_at_a_time

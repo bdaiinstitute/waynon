@@ -212,16 +212,13 @@ class FrankaManager(RobotManager):
     async def home(self):
         assert self.connect_status == FrankaManager.ConnectionStatus.CONNECTED
         panda = panda_py.Panda(self.settings.ip)
-        return await trio.to_thread.run_sync(panda.move_to_start)
+        await panda.move_to_start()
+        # return await trio.to_thread.run_sync(panda.move_to_start)
 
     async def move_to(self, q: np.ndarray):
         assert self.connect_status == FrankaManager.ConnectionStatus.CONNECTED
         panda = panda_py.Panda(self.settings.ip)
-        try:
-            return await trio.to_thread.run_sync(panda.move_to_joint_position, q)
-        except Exception as e:
-            print(f"Failed to move to position: {e}")
-            return False
+        await panda.movej(q)
 
     def _initialize_buttons(self):
         self.buttons_down = {

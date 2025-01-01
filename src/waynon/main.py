@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Optional
+import logging
 
 import esper
 import imgui_bundle.immapp.icons_fontawesome_6 as font_awesome
@@ -20,6 +21,10 @@ from waynon.viewmodels.property_viewer import PropertyViewModel
 from waynon.viewmodels.scene_viewmodel import SceneViewModel
 from waynon.viewmodels.viewer_2d_viewmodel import Viewer2DViewModel
 from waynon.viewmodels.viewer_3d_viewmodel import Viewer3DViewModel
+
+# set level
+logging.basicConfig(level=logging.INFO)
+
 
 
 class Settings(BaseModel):
@@ -63,6 +68,8 @@ class Window(marsoom.Window):
         esper.add_processor(TransformProcessor())
         esper.add_processor(RenderProcessor())
         esper.add_processor(REALSENSE_MANAGER)
+    
+
 
     def _set_up_assets(self):
         work_path = Path(__file__).parent.parent.parent / "assets"

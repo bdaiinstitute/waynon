@@ -21,7 +21,7 @@ class RealsenseCamera(Component):
             manager.attach_camera(self.serial)
 
     def running(self):
-        return REALSENSE_MANAGER.camera_ready(self.serial)
+        return REALSENSE_MANAGER.camera_started(self.serial)
     
     def intrinsics(self):
         camera = REALSENSE_MANAGER.get_camera(self.serial)

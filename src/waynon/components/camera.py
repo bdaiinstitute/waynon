@@ -103,10 +103,16 @@ class PinholeCamera(Component):
 
         camera_transform.set_X_WT(X_WC)
 
-    def update_image(self, image: np.ndarray):
+    def update_image(self, image: np.ndarray, identifier: int = None):
         assert image.dtype == np.uint8, f"Image must be uint8, got {image.dtype}"
         # if self._image_u == image:
         #     return
+        if identifier is not None:
+            if self._identifier == identifier:
+                return
+
+            self._identifier = identifier
+
         self._image_u = image
         image_float = image / 255.0
         image_float = image_float.astype("float32")
@@ -117,13 +123,14 @@ class PinholeCamera(Component):
         self._texture = marsoom.texture.Texture(1280, 720, 3)
         self._image_f = None
         self._image_u = None
+        self._identifier = -1
         return super().model_post_init(__context)
 
     def draw_property(self, nursery, e: int):
         imgui.separator_text("Pinhole Camera")
-        # imgui.label_text("Resolution", f"{self.width}x{self.height}")
-        # imgui.label_text("Focal", f"{self.fl_x}, {self.fl_y}")
-        # imgui.label_text("Principal", f"{self.cx}, {self.cy}")
+        imgui.label_text("Resolution", f"{self.width}x{self.height}")
+        imgui.label_text("Focal", f"{self.fl_x}, {self.fl_y}")
+        imgui.label_text("Principal", f"{self.cx}, {self.cy}")
 
         imgui.spacing()
 

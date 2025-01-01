@@ -182,9 +182,24 @@ class CameraWireframe(Component, Drawable):
         if imgui.button("Go To View", (imgui.get_content_region_avail().x, 40)):
             transform = esper.component_for_entity(entity_id, Transform)
             X_WV = transform.get_X_WT()
+            print(self.fl_x, self.fl_y, self.cx, self.cy, self.width, self.height)
             esper.dispatch_event("go_to_view", (X_WV, self.fl_x, self.fl_y, self.cx, self.cy, self.width, self.height))
         # imgui.pop_style_color()
         imgui.spacing()
+
+        res, new_fl_x = imgui.slider_float("Focal Length X", self.fl_x, 0.0, 1000.0)
+        if res:
+            self.update_intrinsics(new_fl_x, self.fl_y, self.cx, self.cy, self.width, self.height)
+        res, new_fl_y = imgui.slider_float("Focal Length Y", self.fl_y, 0.0, 1000.0)
+        if res:
+            self.update_intrinsics(self.fl_x, new_fl_y, self.cx, self.cy, self.width, self.height)
+        res, new_cx = imgui.slider_float("Principal X", self.cx, 0.0, 1000.0)
+        if res:
+            self.update_intrinsics(self.fl_x, self.fl_y, new_cx, self.cy, self.width, self.height)
+        res, new_cy = imgui.slider_float("Principal Y", self.cy, 0.0, 1000.0)
+        if res:
+            self.update_intrinsics(self.fl_x, self.fl_y, self.cx, new_cy, self.width, self.height)
+        
 
         res, new_offset = imgui.slider_float("Z Offset", self.z_offset, 0.0, 1.0)
         if res:
@@ -192,16 +207,23 @@ class CameraWireframe(Component, Drawable):
         res, new_alpha = imgui.slider_float("Alpha", self.alpha, 0.0, 1.0)
         if res:
             self.set_alpha(new_alpha)
-
         
-
     
     def property_order(self):
         return 500
 
     def model_post_init(self, __context):
         self._batch = pyglet.graphics.Batch()
-        self._model = marsoom.camera_wireframe.CameraWireframeWithImage(batch=self._batch, z_offset=self.z_offset, alpha=self.alpha)
+        self._model = marsoom.camera_wireframe.CameraWireframeWithImage(
+            batch=self._batch, 
+            z_offset=self.z_offset, 
+            alpha=self.alpha, 
+            width=self.width, 
+            height=self.height,
+            K=np.array([[self.fl_x, 0, self.cx],    
+                        [0, self.fl_y, self.cy],
+                        [0, 0, 1]], dtype=np.float32)
+            )
         self.update_intrinsics(self.fl_x, self.fl_y, self.cx, self.cy, self.width, self.height, force=True)
     
     def set_z_offset(self, z_offset: float):

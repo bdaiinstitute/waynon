@@ -117,6 +117,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/qhull-static-2020.2-h434a139_5.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/readline-8.2-h8228510_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/ruby-3.3.6-he7af4c9_0.conda
+      - conda: https://conda.anaconda.org/jc211/linux-64/ruckig-0.14.0-h2bc3f7f_1.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/linux-64/scipy-1.14.1-py310hfcf56fc_2.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/setuptools-75.6.0-pyhff2d567_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/simde-0.8.2-h84d6215_0.conda
@@ -143,7 +144,6 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/6e/c5/9023b7673904a5188f9be81f5e129fff69f51f5515655fbd1d5a4e80a47b/black-24.10.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_28_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/12/90/3c9ff0512038035f59d279fddeb79f5f1eccd8859f06d6163c58798b9487/certifi-2024.8.30-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/8d/fb/4da72871d177d63649ac449aec2e8a29efe0274035880c7af59101ca2232/cffi-1.17.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-      - pypi: https://files.pythonhosted.org/packages/f8/01/344ec40cf5d85c1da3c1f57566c59e0c9b56bcc5566c08804a95a6cc8257/charset_normalizer-3.4.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/89/45/f90c1d186cd3cedd5f18642b46ff22e1875d140bae50979bfcd001b0ff33/clang_format-19.1.5-py2.py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/00/2e/d53fa4befbf2cfa713304affc7ca780ce4fc1fd8710527771b58311a3229/click-8.1.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/d5/7c/e9fcff7623954d86bdc17782036cbf715ecab1bec4847c008557affe1ca8/docstring_parser-0.16-py3-none-any.whl
@@ -182,7 +182,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/3f/a4/d2537f47fd7fcfba966bd806e3ec18e7ee1681056d4b0a9c8d983983e4d5/opencv_python-4.10.0.84-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/55/8b/5ab7257531a5d830fc8000c476e63c935488d74609b50f9384a643ec0a62/outcome-1.3.0.post0-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/88/ef/eb23f262cca3c0c4eb7ab1933c3b1f03d021f2c48f54763065b6f0e321be/packaging-24.2-py3-none-any.whl
-      - pypi: git+https://github.com/jc211/panda-py@48d345b7cf5997ee65e0942faa5c03349cb335be
+      - pypi: git+https://github.com/jc211/panda-py@61c04aa1a18ca2491502ed9cc9b2c4bd8a3d4b4a
       - pypi: git+https://github.com/jc211/panda_desk.git@9c2271ee4d2f707fb4e2151d3ccdabbcb045a446
       - pypi: https://files.pythonhosted.org/packages/cc/20/ff623b09d963f88bfde16306a54e12ee5ea43e9b597108672ff3a408aad6/pathspec-0.12.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/41/c3/94f33af0762ed76b5a237c5797e088aa57f2b7fa8ee7932d399087be66a8/pillow-11.0.0-cp310-cp310-manylinux_2_28_x86_64.whl
@@ -196,7 +196,6 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/99/48/00e31747821d3fc56faddd00a4725454d1e694a8b67d715cf20f531506a5/PyOpenGL-3.1.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/a3/6b/3dfb547b45d8e60e46187a006f9ff24157a6b6726b519f0b978e4507ba02/pyrealsense2-2.55.1.6486-cp310-cp310-manylinux1_x86_64.whl
       - pypi: git+https://github.com/jc211/realsense.git@329f655fca883d6ccd61e81044d9365e08490bd1
-      - pypi: https://files.pythonhosted.org/packages/f9/9b/335f9764261e915ed497fcdeb11df5dfd6f7bf257d4a6a2a686d80da4d54/requests-2.32.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/19/71/39c7c0d87f8d4e6c020a393182060eaefeeae6c01dab6a84ec346f2567df/rich-13.9.4-py3-none-any.whl
       - pypi: git+https://github.com/jc211/shared_memory@24904fa27711477ba4a0f8fe51e46f4686656750
       - pypi: https://files.pythonhosted.org/packages/e2/d1/a1d3189e7873408b9dc396aef0d7926c198b0df2aa3ddb5b539d3e89a70f/shtab-1.7.1-py3-none-any.whl
@@ -218,9 +217,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/f2/53/9465dedf2d69fe26008e7732cf6e0a385e387c240869e7d54eed49782a3c/typeguard-4.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/26/9f/ad63fc0248c5379346306f8668cda6e2e2e9c95e01216d2b8ffd9ff037d0/typing_extensions-4.12.2-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/cf/d2/ef243b7354769a39637b5538f580811faaf1645ec61a8ba83e88d9c500fe/tyro-0.9.2-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/ce/d9/5f4c13cecde62396b0d3fe530a50ccea91e7dfc1ccf0e09c228841bb5ba8/urllib3-2.2.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/60/1f/dcc53227634a7c6fa56b0aff1e97e1e49b03f2219f6271df3f16022852d9/warp_lang-1.5.0-py3-none-manylinux2014_x86_64.whl
-      - pypi: https://files.pythonhosted.org/packages/7e/db/f556a1d06635c680ef376be626c632e3f2bbdb1a0189d1d1bffb061c3b70/websockets-14.1-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: git+https://github.com/python-hyper/wsproto.git@b48fa3c5ddf4150ce31fe9153f66cf8aaebe708a
       - pypi: .
 packages:
@@ -491,11 +488,6 @@ packages:
   requires_dist:
   - pycparser
   requires_python: '>=3.8'
-- pypi: https://files.pythonhosted.org/packages/f8/01/344ec40cf5d85c1da3c1f57566c59e0c9b56bcc5566c08804a95a6cc8257/charset_normalizer-3.4.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-  name: charset-normalizer
-  version: 3.4.0
-  sha256: 7f683ddc7eedd742e2889d2bfb96d69573fde1d92fcb811979cdb7165bb9c7d3
-  requires_python: '>=3.7.0'
 - pypi: https://files.pythonhosted.org/packages/89/45/f90c1d186cd3cedd5f18642b46ff22e1875d140bae50979bfcd001b0ff33/clang_format-19.1.5-py2.py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
   name: clang-format
   version: 19.1.5
@@ -2095,22 +2087,13 @@ packages:
   - trio-util
   - httpx
   requires_python: '>=3.10'
-- pypi: git+https://github.com/jc211/panda-py@48d345b7cf5997ee65e0942faa5c03349cb335be
+- pypi: git+https://github.com/jc211/panda-py@61c04aa1a18ca2491502ed9cc9b2c4bd8a3d4b4a
   name: panda-python
   version: 0.8.1
   requires_dist:
-  - websockets>=11.0
-  - requests
   - numpy
-  - roboticstoolbox-python ; extra == 'examples'
-  - matplotlib ; extra == 'examples'
-  - spatialmath-python ; extra == 'examples'
-  - ansitable ; extra == 'examples'
-  - qpsolvers ; extra == 'examples'
-  - furo ; extra == 'docs'
-  - sphinx-reredirects ; extra == 'docs'
-  - sphinx ; extra == 'docs'
-  - pybind11-stubgen ; extra == 'dev'
+  - trio
+  - gello @ git+https://github.com/jc211/gello.git ; extra == 'examples'
   requires_python: '>=3.7'
 - pypi: https://files.pythonhosted.org/packages/cc/20/ff623b09d963f88bfde16306a54e12ee5ea43e9b597108672ff3a408aad6/pathspec-0.12.1-py3-none-any.whl
   name: pathspec
@@ -2375,18 +2358,6 @@ packages:
   - threadpoolctl
   - shared-memory @ git+https://github.com/jc211/shared_memory
   requires_python: '>=3.10,<3.12'
-- pypi: https://files.pythonhosted.org/packages/f9/9b/335f9764261e915ed497fcdeb11df5dfd6f7bf257d4a6a2a686d80da4d54/requests-2.32.3-py3-none-any.whl
-  name: requests
-  version: 2.32.3
-  sha256: 70761cfe03c773ceb22aa2f671b4757976145175cdfca038c02654d061d6dcc6
-  requires_dist:
-  - charset-normalizer>=2,<4
-  - idna>=2.5,<4
-  - urllib3>=1.21.1,<3
-  - certifi>=2017.4.17
-  - pysocks>=1.5.6,!=1.5.7 ; extra == 'socks'
-  - chardet>=3.0.2,<6 ; extra == 'use-chardet-on-py3'
-  requires_python: '>=3.8'
 - pypi: https://files.pythonhosted.org/packages/19/71/39c7c0d87f8d4e6c020a393182060eaefeeae6c01dab6a84ec346f2567df/rich-13.9.4-py3-none-any.whl
   name: rich
   version: 13.9.4
@@ -2421,6 +2392,15 @@ packages:
   purls: []
   size: 11214372
   timestamp: 1730829961849
+- conda: https://conda.anaconda.org/jc211/linux-64/ruckig-0.14.0-h2bc3f7f_1.tar.bz2
+  sha256: a0fd86e275e9e53a1297a41dba4363ad9a7d8daf7e11ff0b5e9e1de51811d38b
+  md5: ad191b5182283bfc1d1799b50547aad7
+  depends:
+  - libgcc >=14
+  - libstdcxx >=14
+  license: MIT
+  size: 85561
+  timestamp: 1733951848557
 - conda: https://conda.anaconda.org/conda-forge/linux-64/scipy-1.14.1-py310hfcf56fc_2.conda
   sha256: a15008a51fd6b6dcaeb5563869ff0a8a015f1e0a8634a9d89d2c189eefbd7182
   md5: b5d548b2a7cf8d0c74fc6c4bf42d1ca5
@@ -2830,17 +2810,6 @@ packages:
   purls: []
   size: 19201
   timestamp: 1726152409175
-- pypi: https://files.pythonhosted.org/packages/ce/d9/5f4c13cecde62396b0d3fe530a50ccea91e7dfc1ccf0e09c228841bb5ba8/urllib3-2.2.3-py3-none-any.whl
-  name: urllib3
-  version: 2.2.3
-  sha256: ca899ca043dcb1bafa3e262d73aa25c465bfb49e0bd9dd5d59f1d0acba2f8fac
-  requires_dist:
-  - brotli>=1.0.9 ; platform_python_implementation == 'CPython' and extra == 'brotli'
-  - brotlicffi>=0.8.0 ; platform_python_implementation != 'CPython' and extra == 'brotli'
-  - h2>=4,<5 ; extra == 'h2'
-  - pysocks>=1.5.6,!=1.5.7,<2.0 ; extra == 'socks'
-  - zstandard>=0.18.0 ; extra == 'zstd'
-  requires_python: '>=3.8'
 - pypi: https://files.pythonhosted.org/packages/60/1f/dcc53227634a7c6fa56b0aff1e97e1e49b03f2219f6271df3f16022852d9/warp_lang-1.5.0-py3-none-manylinux2014_x86_64.whl
   name: warp-lang
   version: 1.5.0
@@ -2860,7 +2829,7 @@ packages:
 - pypi: .
   name: waynon
   version: 1.0.0
-  sha256: ee7ffcf1d4ece6b7e01929fd429b02130ec0557c485f36ff40a9e2d632f99199
+  sha256: 6aea0485260bcf160ea7a67d3004b9369f24c355194d4defd6f968c9922fc682
   requires_dist:
   - numpy
   - scipy
@@ -2875,16 +2844,11 @@ packages:
   - symforce
   - trio-websocket @ git+https://github.com/jc211/trio-websocket
   - marsoom @ git+https://github.com/jc211/marsoom#f2258e7bf359da117928006881b38740dd3c331e
-  - panda-python @ git+https://github.com/jc211/panda-py#07f4dc816f3af6b5bad7e446b26902ed894060b9
+  - panda-python @ git+https://github.com/jc211/panda-py#61c04aa1a18ca2491502ed9cc9b2c4bd8a3d4b4a
   - panda-desk @ git+https://github.com/jc211/panda_desk.git#9c2271ee4d2f707fb4e2151d3ccdabbcb045a446
   - realsense @ git+https://github.com/jc211/realsense.git#329f655fca883d6ccd61e81044d9365e08490bd1
   requires_python: '>=3.10,<3.11'
   editable: true
-- pypi: https://files.pythonhosted.org/packages/7e/db/f556a1d06635c680ef376be626c632e3f2bbdb1a0189d1d1bffb061c3b70/websockets-14.1-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-  name: websockets
-  version: '14.1'
-  sha256: 9607b9a442392e690a57909c362811184ea429585a71061cd5d3c2b98065c199
-  requires_python: '>=3.9'
 - conda: https://conda.anaconda.org/conda-forge/noarch/wheel-0.45.1-pyhd8ed1ab_1.conda
   sha256: 1b34021e815ff89a4d902d879c3bd2040bc1bd6169b32e9427497fa05c55f1ce
   md5: 75cb7132eb58d97896e173ef12ac9986

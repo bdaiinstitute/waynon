@@ -22,7 +22,7 @@ dependencies = [
 
     "trio-websocket@git+https://github.com/jc211/trio-websocket",
     "marsoom @ git+https://github.com/jc211/marsoom#f2258e7bf359da117928006881b38740dd3c331e", 
-    "panda-python@git+https://github.com/jc211/panda-py#07f4dc816f3af6b5bad7e446b26902ed894060b9",
+    "panda-python@git+https://github.com/jc211/panda-py#61c04aa1a18ca2491502ed9cc9b2c4bd8a3d4b4a",
     "panda_desk@git+https://github.com/jc211/panda_desk.git#9c2271ee4d2f707fb4e2151d3ccdabbcb045a446",
     "realsense@git+https://github.com/jc211/realsense.git#329f655fca883d6ccd61e81044d9365e08490bd1",
     ]
@@ -50,3 +50,4 @@ libfranka = "*"
 pinocchio = "*"
 pyrealsense2 = "*"
 pip = "*"
+ruckig = {version = "*", channel="jc211"}
