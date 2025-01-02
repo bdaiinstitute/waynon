@@ -3,6 +3,7 @@ import marsoom
 import marsoom.texture
 import numpy as np
 from imgui_bundle import imgui
+from pyglet import gl
 
 from waynon.components.aruco_detector import ArucoDetector
 from waynon.components.aruco_marker import ArucoMarker
@@ -120,7 +121,7 @@ class PinholeCamera(Component):
         self._texture.copy_from_host(image_float)
 
     def model_post_init(self, __context):
-        self._texture = marsoom.texture.Texture(1280, 720)
+        self._texture = marsoom.texture.Texture(1280, 720, fmt=gl.GL_BGR)
         self._image_f = None
         self._image_u = None
         self._identifier = -1
