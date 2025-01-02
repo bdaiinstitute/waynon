@@ -182,7 +182,6 @@ class CameraWireframe(Component, Drawable):
         if imgui.button("Go To View", (imgui.get_content_region_avail().x, 40)):
             transform = esper.component_for_entity(entity_id, Transform)
             X_WV = transform.get_X_WT()
-            print(self.fl_x, self.fl_y, self.cx, self.cy, self.width, self.height)
             esper.dispatch_event("go_to_view", (X_WV, self.fl_x, self.fl_y, self.cx, self.cy, self.width, self.height))
         # imgui.pop_style_color()
         imgui.spacing()

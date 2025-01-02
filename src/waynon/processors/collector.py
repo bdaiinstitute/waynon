@@ -61,6 +61,7 @@ class Collector:
 
     async def collect(self, collector_id: int):
         from waynon.components.scene_utils import create_measurement
+        from waynon.components.scene_utils import DATA_PATH
 
         assert esper.entity_exists(collector_id) and esper.has_component(collector_id, CollectorData)
         data = esper.component_for_entity(collector_id, CollectorData)
@@ -129,7 +130,10 @@ class Collector:
                     measurement_name = f"{camera_node.name} {pose_id}"
 
                     joint_measurement = JointMeasurement(robot_id=robot_id, joint_values=q)
-                    image_measurement = ImageMeasurement(camera_id=cam_id, image_path=str(image_path))
+                    image_measurement = ImageMeasurement(
+                        camera_id=cam_id, 
+                        image_path=f"{group_node.name}/images/{image_name}.png"
+                        )
 
                     create_measurement(measurement_name,
                                     measurement_group_id,

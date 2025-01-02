@@ -28,7 +28,7 @@ from waynon.viewmodels.viewer_3d_viewmodel import Viewer3DViewModel
 
 
 class Settings(BaseModel):
-    path: Optional[Path] = Path("default.json")
+    path: Optional[Path] = Path("data/default")
 
     @staticmethod
     def try_load(path=Path("settings.json")):
@@ -110,7 +110,7 @@ class Window(marsoom.Window):
         else:
             default_path = Path.cwd()
             self._save_dialog = pfd.save_file(
-                "Save Scene", str(default_path), ["*.json"]
+                "Save Scene", str(default_path), 
             )
 
     def _draw_menu_bar(self):
@@ -122,8 +122,8 @@ class Window(marsoom.Window):
                     default_path = self.settings.path.parent
                     if not default_path.exists():
                         default_path = Path.cwd()
-                    self._open_dialog = pfd.open_file(
-                        "Open Scene", str(default_path), ["*.json"]
+                    self._open_dialog = pfd.select_folder(
+                        "Open Scene", str(default_path), 
                     )
 
                 if imgui.menu_item_simple("Save", "Ctrl+S"):
@@ -142,20 +142,24 @@ class Window(marsoom.Window):
         if self._open_dialog is not None and self._open_dialog.ready():
             result = self._open_dialog.result()
             if result:
-                result = result[0]
-            path = Path(result)
-            load_scene(path)
-            self.settings.path = path
-            self.settings.save()
-            self._open_dialog = None
+                print(result)
+                path = Path(result)
+                load_scene(path)
+                self.settings.path = path
+                self.settings.save()
+                self._open_dialog = None
         if self._save_dialog is not None and self._save_dialog.ready():
             result = self._save_dialog.result()
             if result:
                 path = Path(result)
-                save_scene(path)
-                self.settings.path = path
-                self.settings.save()
-                self._save_dialog = None
+                if path.exists():
+                    print("Already exists")
+                else:
+                    path.mkdir(parents=False, exist_ok=False)
+                    save_scene(path)
+                    self.settings.path = path
+                    self.settings.save()
+                    self._save_dialog = None
 
 
 async def render_gui(window: marsoom.Window):

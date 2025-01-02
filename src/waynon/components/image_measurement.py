@@ -17,7 +17,9 @@ class ImageMeasurement(Component):
     image_path: str
 
     def get_image_u(self):
-        return np.array(Image.open(self.image_path))
+        from .scene_utils import DATA_PATH
+        image_path = DATA_PATH / self.image_path
+        return np.array(Image.open(image_path))
 
     def property_order(self):
         return 100

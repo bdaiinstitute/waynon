@@ -65,8 +65,7 @@ COLORS = {
 }
 
 ASSET_PATH = Path(__file__).parents[3] / "assets"
-DATA_PATH = Path(__file__).parents[3] / "data"
+
 
 assert ASSET_PATH.exists(), f"ASSET_PATH {ASSET_PATH} does not exist"
-assert DATA_PATH.exists(), f"DATA_PATH {DATA_PATH} does not exist"
 

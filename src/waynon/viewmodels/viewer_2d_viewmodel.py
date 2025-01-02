@@ -14,7 +14,7 @@ from waynon.components.aruco_measurement import ArucoMeasurement
 from waynon.components.camera import PinholeCamera
 from waynon.components.image_measurement import ImageMeasurement
 from waynon.components.measurement import Measurement
-from waynon.components.scene_utils import get_relative_transform_X_TS, rotate_around_x
+from waynon.components.scene_utils import get_relative_transform_X_TS, rotate_around_x, get_data_path
 from waynon.components.transform import Transform
 from waynon.components.tree_utils import *
 
@@ -50,7 +50,9 @@ class Viewer2DViewModel:
                 raw_measurement = esper.component_for_entity(
                     entity_id, ImageMeasurement
                 )
-                image_path = raw_measurement.image_path
+                print(get_data_path())
+                image_path = get_data_path() / raw_measurement.image_path
+                print(image_path)
                 if Path(image_path).exists():
                     image = Image.open(image_path)
                     image = np.array(image, dtype=np.uint8)

@@ -203,6 +203,9 @@ def create_empty_scene():
     root_id, _ = create_root()
     world_id, _ = create_world()
     create_collector(root_id)
+    global DATA_PATH
+    DATA_PATH = Path("data/default/data")
+    DATA_PATH.mkdir(exist_ok=True)
 
 
 def get_root_node():
@@ -224,23 +227,46 @@ def get_collector_id():
 def save_scene(path: Path):
     print(f"Saving to {path}")
     path = Path(path)
+    assert path.is_dir()
+    manifest = path / "manifest.json"
+    data_path = path / "data"
+
+    global DATA_PATH
+    if data_path != DATA_PATH:
+        print(f"Copying data from {DATA_PATH} to {data_path}")
+        import shutil
+        shutil.copytree(DATA_PATH, data_path)
+        DATA_PATH = data_path
+
     res = {}
     for entity_id, components in esper._entities.items():
         res[entity_id] = {}
         for class_name, component in components.items():
             res[entity_id][class_name.__name__] = component.model_dump()
 
-    with open(path, "w") as f:
+    with open(manifest, "w") as f:
         f.write(json.dumps(res, indent=4))
 
+def get_data_path():
+    return DATA_PATH
 
-def load_scene(path: Path = Path("default.json")):
+def load_scene(path: Path):
     print(f"Loading from {path}")
-    if not path.exists():
-        print(f"File {path} does not exist")
+    if not path.exists() or not path.is_dir():
+        print(f"Directory {path} does not exist")
         return
-    with open(path, "r") as f:
+
+    manifest = path / "manifest.json"
+    global DATA_PATH
+    DATA_PATH = path / "data"
+    DATA_PATH.mkdir(exist_ok=True)
+    if not manifest.exists():
+        print(f"Manifest {manifest} does not exist")
+        return
+
+    with open(manifest, "r") as f:
         res = json.load(f)
+
     esper.clear_database()
     esper.clear_cache()
     old_id_to_new_id = {}
@@ -358,3 +384,5 @@ def rotate_around_x(X_BC_blender: np.ndarray) -> np.ndarray:
     X_x = np.eye(4)
     X_x[:3, :3] = rot_x
     return X_BC_blender @ X_x
+
+DATA_PATH = None
