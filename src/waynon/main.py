@@ -12,7 +12,7 @@ from imgui_bundle import portable_file_dialogs as pfd
 from pydantic import BaseModel
 
 from waynon.components.camera import PinholeCamera
-from waynon.components.scene_utils import create_empty_scene, load_scene, save_scene
+from waynon.components.scene_utils import create_empty_scene, load_scene, save_scene, export_calibration
 from waynon.processors.realsense_manager import REALSENSE_MANAGER
 from waynon.processors.render import RenderProcessor
 from waynon.processors.robot import RobotProcessor
@@ -59,6 +59,7 @@ class Window(marsoom.Window):
 
         self._open_dialog = None
         self._save_dialog = None
+        self._export_dialog = None
 
         create_empty_scene()
         if settings.path:
@@ -104,6 +105,7 @@ class Window(marsoom.Window):
         if io.key_ctrl and imgui.is_key_pressed(imgui.Key.s):
             self._save_scene()
 
+
     def _save_scene(self):
         if self.settings.path is not None and self.settings.path.exists():
             save_scene(self.settings.path)
@@ -136,13 +138,28 @@ class Window(marsoom.Window):
                     self._save_dialog = pfd.save_file(
                         "Save Scene", str(default_path), ["*.json"]
                     )
+                
+                if imgui.menu_item_simple("Export Calibration"):
+                    default_path = self.settings.path.parent
+                    if not default_path.exists():
+                        default_path = Path.cwd()
+                    self._export_dialog = pfd.save_file(
+                        "Export Calibration", str(default_path), ["*.json"]
+                    )
 
                 imgui.end_menu()
             imgui.end_main_menu_bar()
+        if self._export_dialog is not None and self._export_dialog.ready():
+            result = self._export_dialog.result()
+            if result:
+                path = Path(result)
+                self._export_dialog = None
+                export_calibration(path)
+
+
         if self._open_dialog is not None and self._open_dialog.ready():
             result = self._open_dialog.result()
             if result:
-                print(result)
                 path = Path(result)
                 load_scene(path)
                 self.settings.path = path
