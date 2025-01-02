@@ -65,6 +65,7 @@ def create_realsense_camera(parent_id: int, name: str = None):
         Nestable(type="transform", target=False),
         CameraWireframe(),
         Optimizable(),
+        StructuredPointCloud()
     )
 
 
@@ -95,7 +96,10 @@ def create_aruco_marker(parent_id: int, marker: ArucoMarker = None, name: str = 
 def create_collector(parent_id: int):
     id, node = create_entity("Collector", parent_id, CollectorData())
     create_entity("Data", id, DataNode())
-    create_entity("Solvers", id, Solvers())
+    s_id, _ = create_entity("Solvers", id, Solvers())
+    create_entity("Factor Graph", s_id, FactorGraph())
+    d_id, _ = create_entity("Detectors", id, Detectors())
+    create_aruco_detector("Aruco Detector", d_id)
     return id, node
 
 

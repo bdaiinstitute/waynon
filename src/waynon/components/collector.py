@@ -29,8 +29,8 @@ class Solvers(Component):
 
     def draw_context(self, nursery, entity_id):
         imgui.separator()
-        if imgui.menu_item_simple("Add Factor Graph Solver"):
-            create_entity("Factor Graph", entity_id, FactorGraph())
+        # if imgui.menu_item_simple("Add Factor Graph Solver"):
+        #     create_entity("Factor Graph", entity_id, FactorGraph())
 
 class CollectorData(Component):
     group_blacklist: list[int] = []

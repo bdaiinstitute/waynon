@@ -5,7 +5,6 @@ from PIL import Image
 import esper
 import trio
 
-from waynon.utils.utils import DATA_PATH
 from waynon.components.simple import Pose, Deletable
 from waynon.components.pose_group import PoseGroup
 from waynon.components.tree_utils import *
@@ -132,7 +131,7 @@ class Collector:
                     joint_measurement = JointMeasurement(robot_id=robot_id, joint_values=q)
                     image_measurement = ImageMeasurement(
                         camera_id=cam_id, 
-                        image_path=f"{group_node.name}/images/{image_name}.png"
+                        image_path=f"{group_node.name}/images/{image_name}"
                         )
 
                     create_measurement(measurement_name,
