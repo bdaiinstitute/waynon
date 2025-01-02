@@ -2,6 +2,7 @@ from typing import Dict
 import logging
 
 import esper
+import numpy as np
 
 from multiprocessing.managers import SharedMemoryManager
 from realsense.single_realsense import SingleRealsense
@@ -117,7 +118,8 @@ class RealsenseManager:
     def process(self):
         from waynon.components.realsense_camera import RealsenseCamera
         from waynon.components.camera import PinholeCamera
-        for entity, (camera, realsense) in esper.get_components(PinholeCamera, RealsenseCamera):
+        from waynon.components.renderable import StructuredPointCloud
+        for entity, (camera, realsense, pc) in esper.get_components(PinholeCamera, RealsenseCamera, StructuredPointCloud):
             if realsense.running():
                 logger.info(f"Processing camera {entity}")
                 K = realsense.intrinsics()
@@ -132,7 +134,13 @@ class RealsenseManager:
 
                 data = realsense.get_data()
                 rgb = data['color']
-                camera.update_image(rgb, identifier=data["timestamp"])
+                identifier = data["timestamp"]
+                camera.update_image(rgb, identifier=identifier)
+                if pc.show_pointcloud and "depth" in data:
+                    depth_scale = realsense.depth_scale()
+                    pc.update_depth(data["depth"], identifier=identifier, depth_scale=depth_scale)
+                    pc.update_intrinsics(camera.fl_x, camera.fl_y, camera.cx, camera.cy, camera.width, camera.height)
+                    pc.set_texture_id(camera.get_texture().id)
             else:
                 pass
 

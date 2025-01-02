@@ -10,7 +10,7 @@ from marsoom import guizmo
 
 from waynon.components.robot import Franka
 from waynon.components.transform import Transform
-from waynon.components.renderable import Mesh, ImageQuad, CameraWireframe, ArucoDrawable    
+from waynon.components.renderable import Mesh, ImageQuad, CameraWireframe, ArucoDrawable, StructuredPointCloud
 from waynon.components.aruco_marker import ArucoMarker
 from waynon.utils.draw_utils import draw_axis, draw_robot
 
@@ -103,6 +103,10 @@ class Viewer3DViewModel:
             drawable.draw()
         for entity, (transform, drawable) in esper.get_components(Transform, CameraWireframe):
             drawable.draw()
+        for entity, (transform, drawable) in esper.get_components(Transform, StructuredPointCloud):
+            if drawable.show_pointcloud:
+                pyglet.gl.glPointSize(3)
+                drawable.draw()
 
     def _draw_transforms(self):
         for entity, transform in esper.get_component(Transform):

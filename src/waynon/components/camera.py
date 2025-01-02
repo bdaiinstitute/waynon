@@ -120,7 +120,7 @@ class PinholeCamera(Component):
         self._texture.copy_from_host(image_float)
 
     def model_post_init(self, __context):
-        self._texture = marsoom.texture.Texture(1280, 720, 3)
+        self._texture = marsoom.texture.Texture(1280, 720)
         self._image_f = None
         self._image_u = None
         self._identifier = -1
@@ -158,14 +158,16 @@ class PinholeCamera(Component):
 class DepthCamera(Component):
     width: int = 1280
     height: int = 720
+    # show_pointcloud: bool = False
 
     def model_post_init(self, __context):
-        self._texture = marsoom.texture.Texture(1280, 720, 3)
         self._depth_image = None
+        self._pc = marsoom.StructuredPointCloud(1280, 720)
 
     # def draw_property(self, nursery, entity_id):
     #     imgui.separator_text("Depth Camera")
-    #     imgui.text(f"Resolution: {self.width}x{self.height}")
+    #     _, self.show_pointcloud = imgui.checkbox("Show Pointcloud", self.show_pointcloud)
+    # #     imgui.text(f"Resolution: {self.width}x{self.height}")
 
     def property_order(self):
         return 150

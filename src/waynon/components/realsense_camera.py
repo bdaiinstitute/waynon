@@ -19,6 +19,7 @@ class RealsenseCamera(Component):
         manager = REALSENSE_MANAGER
         if self.serial in manager.serials:
             manager.attach_camera(self.serial)
+    
 
     def running(self):
         return REALSENSE_MANAGER.camera_started(self.serial)
@@ -27,6 +28,11 @@ class RealsenseCamera(Component):
         camera = REALSENSE_MANAGER.get_camera(self.serial)
         assert camera, "Camera not found"
         return camera.get_intrinsics()
+
+    def depth_scale(self):
+        camera = REALSENSE_MANAGER.get_camera(self.serial)
+        assert camera, "Camera not found"
+        return camera.get_depth_scale()
     
     def resolution(self):
         return REALSENSE_MANAGER.get_camera(self.serial).resolution
@@ -53,7 +59,7 @@ class RealsenseCamera(Component):
         imgui.separator_text("Realsense")
         c = esper.component_for_entity(e, RealsenseCamera)
         manager = c.get_manager()
-        # _, c.enable_depth = imgui.checkbox("Enable Depth", c.enable_depth)
+        _, c.enable_depth = imgui.checkbox("Enable Depth", c.enable_depth)
         # _, c.verbose = imgui.checkbox("Verbose", c.verbose)
 
         imgui.spacing()

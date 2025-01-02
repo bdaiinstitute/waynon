@@ -10,7 +10,7 @@ class ArucoTextures:
     
     def get_texture(self, marker_id: int, aruco_dict: int):
         if (marker_id, aruco_dict) not in self.textures:
-            texture = marsoom.texture.Texture(1280, 720, 3)
+            texture = marsoom.texture.Texture(1280, 720)
             dictionary = aruco.getPredefinedDictionary(aruco_dict)
             marker_img = aruco.generateImageMarker(dictionary, int(marker_id), 256)
             marker_img = cv2.cvtColor(marker_img, cv2.COLOR_GRAY2RGB)

@@ -21,7 +21,7 @@ from .node import Node
 from .optimizable import Optimizable
 from .pose_group import PoseGroup
 from .realsense_camera import RealsenseCamera
-from .renderable import ArucoDrawable, CameraWireframe, ImageQuad, Mesh
+from .renderable import ArucoDrawable, CameraWireframe, ImageQuad, Mesh, StructuredPointCloud
 from .robot import Franka, FrankaLink, FrankaLinks, Robot
 from .simple import (
     Deletable,
@@ -256,14 +256,16 @@ def load_scene(path: Path = Path("default.json")):
             esper.add_component(entity, component)
 
     for entity, component_dict in esper._entities.items():
-        for component_type, component in component_dict.items():
+        for component_key, component in component_dict.items():
             component._fix_on_load(old_id_to_new_id)
 
     # copy entities dict to allow looping
     entitiy_keys = list(esper._entities.keys())
     for entity in entitiy_keys:
         component_dict = esper._entities[entity]
-        for component_type, component in component_dict.items():
+        component_keys = list(component_dict.keys())
+        for component_key in component_keys:
+            component = component_dict[component_key]
             component.on_load(entity)
 
     for entity, component in esper.get_component(Node):

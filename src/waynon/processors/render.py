@@ -1,8 +1,9 @@
 import numpy as np
 import esper
+import pyglet
 
 from waynon.components.transform import Transform
-from waynon.components.renderable import Mesh, ImageQuad, CameraWireframe, ArucoDrawable
+from waynon.components.renderable import Mesh, ImageQuad, CameraWireframe, ArucoDrawable, StructuredPointCloud
 from waynon.components.camera import PinholeCamera
 from waynon.components.aruco_marker import ArucoMarker
 class RenderProcessor(esper.Processor):
@@ -23,6 +24,10 @@ class RenderProcessor(esper.Processor):
             texture = camera.get_texture()
             if texture is not None:
                 drawable.set_texture_id(texture.id)
+
+        for entity, (transform, sc) in esper.get_components(Transform, StructuredPointCloud):
+            X_WT = transform.get_X_WT()
+            sc.set_X_WT(X_WT)
 
         for entity, (transform, marker, drawable) in esper.get_components(Transform, ArucoMarker, ArucoDrawable):
             drawable.set_marker_dict(marker.marker_dict)

@@ -263,3 +263,60 @@ class CameraWireframe(Component, Drawable):
     
     def draw(self):
         self._batch.draw()
+
+
+class StructuredPointCloud(Component, Drawable):
+    show_pointcloud: bool = False
+    fl_x: float = 1.0
+    fl_y: float = 1.0
+    cx: float = 0.0
+    cy: float = 0.0
+    width: int = 1280
+    height: int = 720
+
+    def draw_property(self, nursery, entity_id):
+        # imgui.push_style_color(imgui.Col_.button, COLORS["BLUE"])
+        imgui.separator_text("Pointcloud")
+        imgui.spacing()
+        _, self.show_pointcloud = imgui.checkbox("Show", self.show_pointcloud)
+        
+    def property_order(self):
+        return 500
+
+    def model_post_init(self, __context):
+        self._batch = pyglet.graphics.Batch()
+        self._model = marsoom.StructuredPointCloud(
+            1280, 720, batch=self._batch)
+        self._identifier = -1   
+    
+    def set_texture_id(self, texture_id):
+        if self._model.color_texture_id is None or self._model.color_texture_id != texture_id:
+            self._model.color_texture_id = texture_id
+    
+    def update_depth(self, depth: np.ndarray, depth_scale: float, identifier: int = None):
+        if identifier is not None:
+            if self._identifier == identifier:
+                return
+            self._identifier = identifier
+        depth = (depth*depth_scale).astype(np.float32)
+        self._model.update_depth(depth)
+
+    def update_intrinsics(self, fl_x: float, fl_y: float, cx: float, cy: float, width: int, height: int, force:bool = False):
+        if not force:
+            if self.fl_x == fl_x and self.fl_y == fl_y and self.cx == cx and self.cy == cy and self.width == width and self.height == height:
+                return
+
+        self.fl_x = fl_x
+        self.fl_y = fl_y
+        self.cx = cx
+        self.cy = cy
+        self.width = width
+        self.height = height
+
+        self._model.update_intrinsics(fl_x, fl_y, cx, cy)
+    
+    def set_X_WT(self, X_WT: np.ndarray):
+        self._model.matrix = pyglet.math.Mat4(X_WT.T.flatten().tolist())
+    
+    def draw(self):
+        self._batch.draw()

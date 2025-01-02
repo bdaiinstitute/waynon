@@ -7,6 +7,7 @@ import numpy as np
 import trio
 from imgui_bundle import imgui
 from PIL import Image
+import pyglet
 
 from waynon.components.aruco_marker import ArucoMarker
 from waynon.components.aruco_measurement import ArucoMeasurement
@@ -23,12 +24,14 @@ class Viewer2DViewModel:
         self.nursery = nursery
         self.window = window
         self.viewer_2d = self.window.create_2D_viewer()
-        self.local_texture = marsoom.texture.Texture(1280, 720, 3)
+        self.local_texture = marsoom.texture.Texture(1280, 720)
         self.current_entity_id = None
         esper.set_handler("image_viewer", self._on_image_viewer)
 
     def draw(self):
+
         imgui.begin("2D Viewer")
+        # set texture to not repeat
         self.viewer_2d.draw()
         self._draw_image_measurement()
         imgui.end()

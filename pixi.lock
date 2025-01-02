@@ -161,7 +161,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/31/80/3a54838c3fb461f6fec263ebf3a3a41771bd05190238de3486aae8540c36/jinja2-3.1.4-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/42/d7/1ec15b46af6af88f19b8e5ffea08fa375d433c998b8a7639e76935c14f1f/markdown_it_py-3.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/22/35/137da042dfb4720b638d2937c38a9c2df83fe32d20e8c8f3185dbfef05f7/MarkupSafe-3.0.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-      - pypi: git+https://github.com/jc211/marsoom@f2258e7bf359da117928006881b38740dd3c331e
+      - pypi: git+https://github.com/jc211/marsoom@f87e4a4c74473b12af49f4e928b13a5813eccfbd
       - pypi: https://files.pythonhosted.org/packages/b3/38/89ba8ad64ae25be8de66a6d463314cf1eb366222074cfda9ee839c56a4b4/mdurl-0.1.2-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/43/e3/7d92a15f894aa0c9c4b49b8ee9ac9850d6e63b03c9c32c0367a13ae62209/mpmath-1.3.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/56/b3/7c69b37f03260a061883bec0e7b05be7117c1b1c85f5212c72c8c2bc3c8c/munch-4.0.0-py2.py3-none-any.whl
@@ -1789,9 +1789,9 @@ packages:
   version: 3.0.2
   sha256: bbcb445fa71794da8f178f0f6d66789a28d7319071af7a496d4d507ed566270d
   requires_python: '>=3.9'
-- pypi: git+https://github.com/jc211/marsoom@f2258e7bf359da117928006881b38740dd3c331e
+- pypi: git+https://github.com/jc211/marsoom@f87e4a4c74473b12af49f4e928b13a5813eccfbd
   name: marsoom
-  version: 2.0.1
+  version: 2.0.2
   requires_dist:
   - imgui-bundle>=1.6.1
   - pyglet
@@ -2829,7 +2829,7 @@ packages:
 - pypi: .
   name: waynon
   version: 1.0.0
-  sha256: 6aea0485260bcf160ea7a67d3004b9369f24c355194d4defd6f968c9922fc682
+  sha256: 50d801e647311a7b44757a60733925e2d86915cd834d742961df0dde4dc93d3a
   requires_dist:
   - numpy
   - scipy
@@ -2843,7 +2843,7 @@ packages:
   - pillow
   - symforce
   - trio-websocket @ git+https://github.com/jc211/trio-websocket
-  - marsoom @ git+https://github.com/jc211/marsoom#f2258e7bf359da117928006881b38740dd3c331e
+  - marsoom @ git+https://github.com/jc211/marsoom#f87e4a4c74473b12af49f4e928b13a5813eccfbd
   - panda-python @ git+https://github.com/jc211/panda-py#61c04aa1a18ca2491502ed9cc9b2c4bd8a3d4b4a
   - panda-desk @ git+https://github.com/jc211/panda_desk.git#9c2271ee4d2f707fb4e2151d3ccdabbcb045a446
   - realsense @ git+https://github.com/jc211/realsense.git#329f655fca883d6ccd61e81044d9365e08490bd1

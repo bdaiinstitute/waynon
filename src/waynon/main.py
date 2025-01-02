@@ -23,7 +23,7 @@ from waynon.viewmodels.viewer_2d_viewmodel import Viewer2DViewModel
 from waynon.viewmodels.viewer_3d_viewmodel import Viewer3DViewModel
 
 # set level
-logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
 
 
 
@@ -68,7 +68,6 @@ class Window(marsoom.Window):
         esper.add_processor(TransformProcessor())
         esper.add_processor(RenderProcessor())
         esper.add_processor(REALSENSE_MANAGER)
-    
 
 
     def _set_up_assets(self):
