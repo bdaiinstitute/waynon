@@ -17,6 +17,10 @@ cd waynon
 pixi r start
 ```
 
+## Demo
+
+Watch a [demo](https://drive.google.com/file/d/19FXmHkiccVga9ZXLLtYzjFnivqkYFcFb/view?usp=sharing) going from an empty scene to a calibrated one.
+
 ## Features
 Construct your station by creating robots, cameras, and markers.
 
@@ -41,5 +45,3 @@ Set robot poses, visualize them, and the move to to them from the interface.
 Solve jointly using an automatically built factor graph
 
 ![Correct Aruco](assets/images/waynon_factorgraph.gif)
-
-
