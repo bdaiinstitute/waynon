@@ -243,10 +243,19 @@ def save_scene(path: Path):
         DATA_PATH = data_path
 
     res = {}
-    for entity_id, components in esper._entities.items():
+    root_node = get_root_node()
+    nodes = [root_node, *root_node.descendants]
+    for node in nodes:
+        entity_id = node.entity_id
+        components = esper.components_for_entity(entity_id)
         res[entity_id] = {}
-        for class_name, component in components.items():
-            res[entity_id][class_name.__name__] = component.model_dump()
+        for component in components:
+            res[entity_id][component.__class__.__name__] = component.model_dump()
+    
+    # for entity_id, components in esper._entities.items():
+    #     res[entity_id] = {}
+    #     for class_name, component in components.items():
+    #         res[entity_id][class_name.__name__] = component.model_dump()
 
     with open(manifest, "w") as f:
         f.write(json.dumps(res, indent=4))
@@ -255,54 +264,61 @@ def get_data_path():
     return DATA_PATH
 
 def load_scene(path: Path):
-    print(f"Loading from {path}")
-    if not path.exists() or not path.is_dir():
-        print(f"Directory {path} does not exist")
-        return
+    try:
+        print(f"Loading from {path}")
+        if not path.exists() or not path.is_dir():
+            print(f"Directory {path} does not exist")
+            return
 
-    manifest = path / "manifest.json"
-    global DATA_PATH
-    DATA_PATH = path / "data"
-    DATA_PATH.mkdir(exist_ok=True)
-    if not manifest.exists():
-        print(f"Manifest {manifest} does not exist")
-        return
+        manifest = path / "manifest.json"
+        global DATA_PATH
+        DATA_PATH = path / "data"
+        DATA_PATH.mkdir(exist_ok=True)
+        if not manifest.exists():
+            print(f"Manifest {manifest} does not exist")
+            return
 
-    with open(manifest, "r") as f:
-        res = json.load(f)
+        with open(manifest, "r") as f:
+            res = json.load(f)
 
-    esper.clear_database()
-    esper.clear_cache()
-    old_id_to_new_id = {}
-    for entity_id, components in res.items():
-        entity_id = int(entity_id)
-        entity = esper.create_entity()
-        old_id_to_new_id[entity_id] = entity
-        for class_name, component in components.items():
-            class_name = globals()[class_name]
-            component = class_name.model_validate(component)
-            if isinstance(component, Node):
-                component.entity_id = entity
-            esper.add_component(entity, component)
+        esper.clear_database()
+        esper.clear_cache()
+        old_id_to_new_id = {}
+        for entity_id, components in res.items():
+            entity_id = int(entity_id)
+            entity = esper.create_entity()
+            old_id_to_new_id[entity_id] = entity
+            for class_name, component in components.items():
+                class_name = globals()[class_name]
+                component = class_name.model_validate(component)
+                if isinstance(component, Node):
+                    component.entity_id = entity
+                esper.add_component(entity, component)
 
-    for entity, component_dict in esper._entities.items():
-        for component_key, component in component_dict.items():
-            component._fix_on_load(old_id_to_new_id)
+        for entity, component_dict in esper._entities.items():
+            for component_key, component in component_dict.items():
+                component._fix_on_load(old_id_to_new_id)
 
-    # copy entities dict to allow looping
-    entitiy_keys = list(esper._entities.keys())
-    for entity in entitiy_keys:
-        component_dict = esper._entities[entity]
-        component_keys = list(component_dict.keys())
-        for component_key in component_keys:
-            component = component_dict[component_key]
-            component.on_load(entity)
+        # copy entities dict to allow looping
+        entitiy_keys = list(esper._entities.keys())
+        for entity in entitiy_keys:
+            component_dict = esper._entities[entity]
+            component_keys = list(component_dict.keys())
+            for component_key in component_keys:
+                component = component_dict[component_key]
+                component.on_load(entity)
 
-    for entity, component in esper.get_component(Node):
-        component.refresh()
+        for entity, component in esper.get_component(Node):
+            component.refresh()
 
-    if not esper.get_component(CollectorData):
-        create_collector(get_root_id())
+        if not esper.get_component(CollectorData):
+            create_collector(get_root_id())
+    except Exception as e:
+        esper.clear_database()
+        esper.clear_cache()
+        create_empty_scene()
+        print(e)
+        print("Failed to load scene")
 
 
 def get_detectors(
