@@ -78,7 +78,13 @@ class SceneViewModel:
         valid = node.valid()
         if not valid:
             imgui.push_style_color(imgui.Col_.text.value, COLORS["RED"])
+
+        if node.opened:
+            flags |= imgui.TreeNodeFlags_.default_open.value
+
         opened = imgui.tree_node_ex(f"{node.name}##Node_{node.entity_id}", flags)
+        node.opened = opened
+
         if not valid:
             imgui.pop_style_color()
 
@@ -94,7 +100,7 @@ class SceneViewModel:
             for component in get_sorted_components(entity_id):
                 component.draw_context(self.nursery, entity_id)
             imgui.end_popup()
-        if opened:
+        if node.opened:
             self.render_node(entity_id)
             for child in node.children:
                 self.traverse_tree(child.entity_id)

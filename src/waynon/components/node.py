@@ -15,6 +15,7 @@ class Node(Component, NodeMixin):
     name: str = ""
     parent_entity_id: Optional[int] = None
     entity_id: Optional[int] = None
+    opened: bool = False
 
     def model_post_init(self, __context):
         return super().model_post_init(__context)
