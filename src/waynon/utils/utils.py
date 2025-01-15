@@ -2,6 +2,8 @@
 from typing import Callable, TypeVar, Any
 from pathlib import Path
 from contextlib import contextmanager
+from imgui_bundle import imgui
+import trio
 
 # Create type variables for the argument and return types of the function
 A = TypeVar("A", bound=Callable[..., Any])
@@ -53,6 +55,33 @@ def one_at_a_time(static):
                 return await func(*args, **kwargs)
         return wrapper
     return decorator
+
+
+# def cancellable
+class Cancellable:
+    def __init__(self, nursery: trio.Nursery, name: str, coroutine, *args):
+        self.name = name
+        self.nursery = nursery  
+        self.coroutine = coroutine
+        self.args = args
+        self.running = False
+
+    async def run(self):
+        self.running = True
+        with trio.CancelScope() as self.scope:
+            await self.coroutine(*self.args)
+        self.running = False
+    
+    def draw(self, size = None):
+        if self.running:
+            if imgui.button(f"Cancel", size):
+                self.scope.cancel()
+        else:
+            if imgui.button(f"{self.name}", size):
+                self.nursery.start_soon(self.run)
+
+
+        
 
 
 COLORS = {

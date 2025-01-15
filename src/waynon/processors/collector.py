@@ -57,6 +57,9 @@ class Collector:
                 for detector_id in detectors_ids:
                     detector = component_for_entity_with_instance(detector_id, Detector)
                     await detector.get_processor().run(detector_id, measurement_id)
+                    await trio.sleep(0.0)
+                await trio.sleep(0.0)
+            await trio.sleep(0.0)
 
     async def collect(self, collector_id: int):
         from waynon.components.scene_utils import create_measurement
@@ -86,7 +89,7 @@ class Collector:
         for i, pose_group_id in enumerate(pose_group_ids):
             group_node = esper.component_for_entity(pose_group_id, Node)
             
-            measurement_group_id = None
+            # measurement_group_id = None
             for child_node in data_node.children:
                 if child_node.name == group_node.name:
                     measurement_group_id = child_node.entity_id
@@ -124,8 +127,10 @@ class Collector:
                     print(f"Saving image for {cam_id}")
                     image_name = f"{camera_node.name}_{pose_id}.png"
                     image_path = image_dir / image_name
-                    
-                    Image.fromarray(image).save(image_path)
+                    image = Image.fromarray(image)
+                    await trio.to_thread.run_sync(
+                        image.save, image_path # This takes a while
+                    )
                     measurement_name = f"{camera_node.name} {pose_id}"
 
                     joint_measurement = JointMeasurement(robot_id=robot_id, joint_values=q)
