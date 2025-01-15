@@ -17,6 +17,11 @@ cd waynon
 pixi r start
 ```
 
+If you get an OpenGL error on linux, you may need to
+```bash
+export PYOPENGL_PLATFORM=x11
+```
+
 ## Demo
 
 Watch a [demo](https://drive.google.com/file/d/19FXmHkiccVga9ZXLLtYzjFnivqkYFcFb/view?usp=sharing) going from an empty scene to a calibrated one.
