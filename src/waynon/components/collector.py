@@ -16,13 +16,21 @@ from .factor_graph import FactorGraph
 from waynon.utils.utils import COLORS
 
 class MeasurementGroup(Component):
-    pass
+    def draw_context(self, nursery, entity_id):
+        imgui.separator()
+        if imgui.menu_item_simple("Clear Data"):
+            delete_children(entity_id)
+        if imgui.menu_item_simple("Sort Data"):
+            sort_children(entity_id)
 
 class DataNode(Component):
     def draw_context(self, nursery, entity_id):
         imgui.separator()
         if imgui.menu_item_simple("Clear Data"):
             delete_children(entity_id)
+        if imgui.menu_item_simple("Sort Data"):
+            for child_id in find_children_with_component(entity_id, MeasurementGroup):
+                sort_children(child_id)
 
 
 class Solvers(Component):

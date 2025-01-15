@@ -33,9 +33,6 @@ class PinholeCamera(Component):
     def get_texture(self):
         return self._texture
 
-    def get_image_f(self):
-        """Get the image as float32 between 0 and 1"""
-        return self._image_f
 
     def get_image_u(self):
         """Get the image as uint8 between 0 and 255"""
@@ -115,14 +112,13 @@ class PinholeCamera(Component):
             self._identifier = identifier
 
         self._image_u = image
-        image_float = image / 255.0
-        image_float = image_float.astype("float32")
-        self._image_f = image_float
-        self._texture.copy_from_host(image_float)
+        # image_float = image / 255.0
+        # image_float = image_float.astype("float32")
+        # self._image_f = image_float
+        self._texture.copy_from_host(self._image_u)
 
     def model_post_init(self, __context):
         self._texture = marsoom.texture.Texture(1280, 720, fmt=gl.GL_BGR)
-        self._image_f = None
         self._image_u = None
         self._identifier = -1
         return super().model_post_init(__context)

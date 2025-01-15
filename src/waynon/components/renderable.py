@@ -283,9 +283,8 @@ class StructuredPointCloud(Component, Drawable):
         return 500
 
     def model_post_init(self, __context):
-        self._batch = pyglet.graphics.Batch()
         self._model = marsoom.StructuredPointCloud(
-            1280, 720, batch=self._batch)
+            1280, 720)
         self._identifier = -1   
     
     def set_texture_id(self, texture_id):
@@ -297,7 +296,7 @@ class StructuredPointCloud(Component, Drawable):
             if self._identifier == identifier:
                 return
             self._identifier = identifier
-        depth = (depth*depth_scale).astype(np.float32)
+        self._model.depth_scale = depth_scale
         self._model.update_depth(depth)
 
     def update_intrinsics(self, fl_x: float, fl_y: float, cx: float, cy: float, width: int, height: int, force:bool = False):
@@ -318,4 +317,4 @@ class StructuredPointCloud(Component, Drawable):
         self._model.matrix = pyglet.math.Mat4(X_WT.T.flatten().tolist())
     
     def draw(self):
-        self._batch.draw()
+        self._model.draw()

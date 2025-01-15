@@ -33,7 +33,6 @@ class RealsenseManager:
         serial = realsense_data.serial
         enable_depth = realsense_data.enable_depth
 
-
         assert serial in self.serials
         if serial not in self.cameras or not self.cameras[serial].is_alive():
             self.cameras[serial] = SingleRealsense(
@@ -43,7 +42,8 @@ class RealsenseManager:
                 enable_depth=enable_depth,
                 verbose=realsense_data.verbose
             )
-        self.cameras[serial].start()
+        if not self.cameras[serial].is_alive():
+            self.cameras[serial].start()
     
     def delete_camera(self, entity_id: int):
         from waynon.components.realsense_camera import RealsenseCamera
@@ -105,6 +105,12 @@ class RealsenseManager:
         if serial in self.cameras:
             return self.cameras[serial].is_ready
         return False
+    
+    def start_all_cameras(self):
+        from waynon.components.realsense_camera import RealsenseCamera
+        for entity_id, _ in esper.get_component(RealsenseCamera):
+            self.start_camera(entity_id)
+        
     
     def stop_all_cameras(self):
         for serial in self.cameras:

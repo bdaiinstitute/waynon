@@ -54,10 +54,6 @@ class SceneViewModel:
                         )  # move payload to dest
                     imgui.end_drag_drop_target()
 
-        if imgui.begin_popup_context_item(f"##{entity_id}"):
-            for component in get_sorted_components(entity_id):
-                component.draw_context(self.nursery, entity_id)
-            imgui.end_popup()
 
         imgui.pop_id()
 
@@ -94,6 +90,10 @@ class SceneViewModel:
                     just_selected=False,
                 )
 
+        if imgui.begin_popup_context_item(f"##{entity_id}"):
+            for component in get_sorted_components(entity_id):
+                component.draw_context(self.nursery, entity_id)
+            imgui.end_popup()
         if opened:
             self.render_node(entity_id)
             for child in node.children:

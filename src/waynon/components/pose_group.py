@@ -91,7 +91,7 @@ class PoseGroup(Component):
             from waynon.components.scene_utils import create_motion
             robot = self.get_robot_manager(entity_id)
             if robot:
-                create_motion(entity_id, robot.q)
+                create_motion(entity_id, robot.read_q())
         
     def on_selected(self, nursery, entity_id, just_selected):
         from waynon.components.scene_utils import create_motion
@@ -103,7 +103,7 @@ class PoseGroup(Component):
         robot_manager = esper.component_for_entity(robot_id, Robot).get_manager()
         if robot_manager and isinstance(robot_manager, FrankaManager):
             if robot_manager.is_button_pressed("circle"):
-                create_motion(entity_id, robot_manager.q)
+                create_motion(entity_id, robot_manager.read_q())
             if robot_manager.is_button_pressed("cross"):
                 if node.children:
                     child_id = node.children[-1].entity_id

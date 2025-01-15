@@ -7,6 +7,7 @@ import imgui_bundle.immapp.icons_fontawesome_6 as font_awesome
 import marsoom
 import pyglet
 import trio
+from trio_util import periodic
 from imgui_bundle import imgui
 from imgui_bundle import portable_file_dialogs as pfd
 from pydantic import BaseModel
@@ -68,7 +69,7 @@ class Window(marsoom.Window):
         esper.add_processor(RobotProcessor())
         esper.add_processor(TransformProcessor())
         esper.add_processor(RenderProcessor())
-        esper.add_processor(REALSENSE_MANAGER)
+        # esper.add_processor(REALSENSE_MANAGER)
 
 
     def _set_up_assets(self):
@@ -92,7 +93,7 @@ class Window(marsoom.Window):
         pyglet.resource.path.append(str(work_path.absolute()))
         pyglet.resource.reindex()
 
-    def draw(self):
+    def render(self):
         self._handle_keys()
         self._draw_menu_bar()
         self.property_viewmodel.draw()
@@ -148,6 +149,10 @@ class Window(marsoom.Window):
                     )
 
                 imgui.end_menu()
+            if imgui.menu_item_simple("Connect All"):
+                REALSENSE_MANAGER.start_all_cameras()
+            if imgui.menu_item_simple("Disconnect All"):
+                REALSENSE_MANAGER.stop_all_cameras()
             imgui.end_main_menu_bar()
         if self._export_dialog is not None and self._export_dialog.ready():
             result = self._export_dialog.result()
@@ -179,21 +184,28 @@ class Window(marsoom.Window):
                     self._save_dialog = None
 
 
-async def render_gui(window: marsoom.Window):
-    while not window.should_exit():
-        esper.process()
-        window.step()
-        await trio.sleep(1 / 60.0)
-
-
 # ENTRY POINT
 async def main_async():
     settings = Settings.try_load()
     REALSENSE_MANAGER.get_connected_serials()
 
+
+    async def camera_loop():
+        async for _ in periodic(1/30):
+            REALSENSE_MANAGER.process()
+
+    
+    async def render_loop(window: marsoom.Window):
+        async for _ in periodic(1/60):
+            if window.should_exit():
+                break
+            esper.process()
+            window.step()
+
     async with trio.open_nursery() as nursery:
         window = Window(nursery, settings=settings)
-        await render_gui(window)
+        nursery.start_soon(camera_loop)
+        await render_loop(window)
         nursery.cancel_scope.cancel()
 
     REALSENSE_MANAGER.stop_all_cameras()

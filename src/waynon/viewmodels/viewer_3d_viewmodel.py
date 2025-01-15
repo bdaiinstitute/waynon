@@ -138,6 +138,6 @@ class Viewer3DViewModel:
                 self.guizmo_operation = guizmo.OPERATION.rotate
 
 
-    def _draw_robots(self):
-        for entity, robot in esper.get_component(Franka):
-            draw_robot(robot.get_manager().q)
+    # def _draw_robots(self):
+    #     for entity, robot in esper.get_component(Franka):
+    #         draw_robot(robot.get_manager().read_q())

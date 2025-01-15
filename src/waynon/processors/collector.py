@@ -115,8 +115,8 @@ class Collector:
                 q = pose.q
                 print(f"Moving to {q}")
                 await robot_manager.move_to(q)
-                await trio.sleep(0.2)
-                q = robot_manager.q.tolist()
+                await trio.sleep(0.3)
+                q = robot_manager.read_q().tolist()
                 for k, (cam_id, cam) in enumerate(cameras):
                     # each one of these is one measurement
                     camera_node = get_node(cam_id)
@@ -138,4 +138,5 @@ class Collector:
                                     measurement_group_id,
                                     joint_measurement,
                                     image_measurement)
+                    await trio.sleep(0.0) # give back control to the event loop
 

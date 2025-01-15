@@ -16,7 +16,10 @@ if TYPE_CHECKING:
 
 class RobotManager:
 
-    def set_q(self, q):
+    def read_q(self) -> np.ndarray:
+        raise NotImplementedError
+    
+    def set_offline_q(self, q: np.ndarray):
         raise NotImplementedError
 
     def fk(self, q: list[float]) -> Dict[str, np.ndarray]:
@@ -51,10 +54,11 @@ class FrankaManager(RobotManager):
     def __init__(self, settings: "Franka"):
         self.settings = settings
         self.desk = Desk()
+        self.panda = None
         self.connect_status = FrankaManager.ConnectionStatus.DISCONNECTED
         self.brake_status = FrankaManager.BrakeStatus.UNKNOWN
         self.operating_mode = FrankaManager.OperatingMode.UNKNOWN
-        self.q = np.array(
+        self.offline_q = np.array(
             [0.0, -0.785, 0.0, -2.356, 0.0, 1.571, 0.785], dtype=np.float32
         )
         self._initialize_buttons()
@@ -66,7 +70,7 @@ class FrankaManager(RobotManager):
         #     self._full_model, [8, 9], np.zeros(9))
         self._model_data = self._full_model.createData()
 
-        self.last_transforms = self.fk(self.q)
+        self.last_transforms = self.fk(self.offline_q)
 
     async def connect_to_ip(
         self,
@@ -78,6 +82,7 @@ class FrankaManager(RobotManager):
     ):
         try:
             self.desk = Desk(ip, platform)
+            self.panda = panda_py.Panda(self.settings.ip)
             self.connect_status = FrankaManager.ConnectionStatus.CONNECTING
             await self.desk.login(username, password)
             res = await self.desk.take_control(force=True)
@@ -95,7 +100,7 @@ class FrankaManager(RobotManager):
         self.connect_status = FrankaManager.ConnectionStatus.CONNECTED
 
         nursery.start_soon(self._read_brake_status)
-        nursery.start_soon(self._read_joint_status)
+        # nursery.start_soon(self._read_joint_status)
         nursery.start_soon(self._read_mode)
         nursery.start_soon(self._read_buttons)
 
@@ -105,9 +110,6 @@ class FrankaManager(RobotManager):
         self.connect_status = FrankaManager.ConnectionStatus.DISCONNECTED
         self.brake_status = FrankaManager.BrakeStatus.UNKNOWN
         self.operating_mode = FrankaManager.OperatingMode.UNKNOWN
-
-    def set_q(self, q):
-        self.q = q
 
     def fk(self, q: np.ndarray, gripper_width=0.0) -> list[np.ndarray]:
         assert len(q) == 7
@@ -160,13 +162,13 @@ class FrankaManager(RobotManager):
                 if all([b == 0 for b in brake_status]):
                     self.brake_status = FrankaManager.BrakeStatus.CLOSED
 
-    async def _read_joint_status(self):
-        async with self.desk.robot_states() as state:
-            async for s in state:
-                if "jointAngles" in s:
-                    self.q = np.asanyarray(s["jointAngles"])
-                else:
-                    print(f"Missing jointAngles in state: {s}")
+    # async def _read_joint_status(self):
+    #     async with self.desk.robot_states() as state:
+    #         async for s in state:
+    #             if "jointAngles" in s:
+    #                 self.q = np.asanyarray(s["jointAngles"])
+    #             else:
+    #                 print(f"Missing jointAngles in state: {s}")
 
     async def _read_mode(self):
         async with self.desk.general_system_status() as state:
@@ -190,13 +192,21 @@ class FrankaManager(RobotManager):
                         self.buttons_down[button]["down"] = e[button]
 
     def tick(self):
-        self.last_transforms = self.fk(self.q)
+        self.last_transforms = self.fk(self.read_q())
         for button in self.buttons_down:
             if self.buttons_down[button]["down"]:
                 self.buttons_down[button]["t"] += 1
                 t = self.buttons_down[button]["t"]
             else:
                 self.buttons_down[button]["t"] = 0
+
+    def set_offline_q(self, q: np.ndarray):
+        self.offline_q = q 
+
+    def read_q(self):
+        if self.connect_status == FrankaManager.ConnectionStatus.DISCONNECTED:
+            return self.offline_q
+        return self.panda.q
 
     def is_button_pressed(
         self, button: Literal["circle", "cross", "check", "up", "down", "left", "right"]
@@ -211,14 +221,12 @@ class FrankaManager(RobotManager):
 
     async def home(self):
         assert self.connect_status == FrankaManager.ConnectionStatus.CONNECTED
-        panda = panda_py.Panda(self.settings.ip)
-        await panda.move_to_start()
+        await self.panda.move_to_start()
         # return await trio.to_thread.run_sync(panda.move_to_start)
 
     async def move_to(self, q: np.ndarray):
         assert self.connect_status == FrankaManager.ConnectionStatus.CONNECTED
-        panda = panda_py.Panda(self.settings.ip)
-        await panda.movej(q)
+        await self.panda.movej(q)
 
     def _initialize_buttons(self):
         self.buttons_down = {

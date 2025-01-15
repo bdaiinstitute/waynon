@@ -36,4 +36,4 @@ class Measurement(Component):
                 )
                 robot = esper.try_component(joint_measurement.robot_id, Robot)
                 if robot:
-                    robot.get_manager().set_q(joint_measurement.joint_values)
+                    robot.get_manager().set_offline_q(joint_measurement.joint_values)

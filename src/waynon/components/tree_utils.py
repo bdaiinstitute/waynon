@@ -100,6 +100,12 @@ def delete_children(entity_id, predicate: Callable[[int, Node], bool] | None = N
     for child_node in node.children:
         delete_entity(child_node.entity_id, predicate)
 
+def sort_children(entity_id, predicate: Callable[[int, Node], bool] | None = None):
+    node = get_node(entity_id)
+    children = list(node.children)
+    children.sort(key=lambda child: child.name)
+    node.children = tuple(children)
+
 
 def parent_entity_to(entity_id: int, parent_id: int):
     node = get_node(entity_id)
