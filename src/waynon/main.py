@@ -22,6 +22,7 @@ from waynon.viewmodels.property_viewer import PropertyViewModel
 from waynon.viewmodels.scene_viewmodel import SceneViewModel
 from waynon.viewmodels.viewer_2d_viewmodel import Viewer2DViewModel
 from waynon.viewmodels.viewer_3d_viewmodel import Viewer3DViewModel
+from waynon.utils.utils import LongTask
 
 # set level
 # logging.basicConfig(level=logging.INFO)
@@ -48,10 +49,10 @@ class Settings(BaseModel):
 class Window(marsoom.Window):
     def __init__(self, nursery: trio.Nursery, settings: Settings):
         super().__init__(caption="Waynon - Calibration Tool", docking=True)
-        self._set_up_assets()
 
         self.nursery = nursery
         self.settings = settings
+        self._set_up_assets()
 
         self.property_viewmodel = PropertyViewModel(self.nursery)
         self.scene_viewmodel = SceneViewModel(self.nursery)
@@ -92,6 +93,18 @@ class Window(marsoom.Window):
         self.imgui_renderer.refresh_font_texture()
         pyglet.resource.path.append(str(work_path.absolute()))
         pyglet.resource.reindex()
+        
+        self.start_cameras = LongTask(
+            self.nursery,
+            "Start Cameras",
+            REALSENSE_MANAGER.start_all_cameras,
+        )
+
+        self.stop_cameras = LongTask(
+            self.nursery,
+            "Stop Cameras",
+            REALSENSE_MANAGER.stop_all_cameras,
+        )
 
     def render(self):
         self._handle_keys()
@@ -149,10 +162,12 @@ class Window(marsoom.Window):
                     )
 
                 imgui.end_menu()
+            imgui.begin_disabled(REALSENSE_MANAGER.busy)
             if imgui.menu_item_simple("Connect All"):
-                REALSENSE_MANAGER.start_all_cameras()
+                self.nursery.start_soon(REALSENSE_MANAGER.start_all_cameras)
             if imgui.menu_item_simple("Disconnect All"):
-                REALSENSE_MANAGER.stop_all_cameras()
+                self.nursery.start_soon(REALSENSE_MANAGER.stop_all_cameras)
+            imgui.end_disabled()
             imgui.end_main_menu_bar()
         if self._export_dialog is not None and self._export_dialog.ready():
             result = self._export_dialog.result()
@@ -208,7 +223,7 @@ async def main_async():
         await render_loop(window)
         nursery.cancel_scope.cancel()
 
-    REALSENSE_MANAGER.stop_all_cameras()
+    REALSENSE_MANAGER.stop_all_cameras_sync()
 
     settings.save()
 

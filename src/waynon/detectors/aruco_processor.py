@@ -2,6 +2,7 @@ from typing import Tuple
 import cv2.aruco as aruco
 import numpy as np
 import esper
+import trio
 
 from waynon.components.tree_utils import *
 
@@ -33,7 +34,8 @@ class ArucoProcessor(MeasurementProcessor):
         image_measurement = esper.component_for_entity(iid, ImageMeasurement)
 
         image = image_measurement.get_image_u()
-        res = detect_all_markers_in_image(image, detector.marker_dict)
+        res = await trio.to_thread.run_sync(detect_all_markers_in_image, image, detector.marker_dict)
+        # res = detect_all_markers_in_image(image, detector.marker_dict)
         markers_in_system = {}
         for marker_entity_id, marker in esper.get_component(ArucoMarker):
             markers_in_system[marker.id] = marker_entity_id

@@ -80,6 +80,28 @@ class Cancellable:
             if imgui.button(f"{self.name}", size):
                 self.nursery.start_soon(self.run)
 
+class LongTask:
+    def __init__(self, nursery: trio.Nursery, name: str, coroutine, *args):
+        self.name = name
+        self.nursery = nursery  
+        self.coroutine = coroutine
+        self.args = args
+        self.running = False
+    
+    async def run(self):
+        self.running = True
+        await self.coroutine(*self.args)
+        self.running = False
+    
+    def draw(self, size = None):
+        if self.running:
+            imgui.begin_disabled()
+            if imgui.button(f"Busy", size):
+                pass
+            imgui.end_disabled()
+        else:
+            if imgui.button(f"{self.name}", size):
+                self.nursery.start_soon(self.run)
 
         
 

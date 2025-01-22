@@ -1,4 +1,6 @@
 import esper
+import trio
+
 
 import marsoom.texture
 import marsoom
@@ -22,7 +24,7 @@ class RealsenseCamera(Component):
     
 
     def running(self):
-        return REALSENSE_MANAGER.camera_started(self.serial)
+        return REALSENSE_MANAGER.camera_started(self.serial) and REALSENSE_MANAGER.camera_ready(self.serial)
     
     def intrinsics(self):
         camera = REALSENSE_MANAGER.get_camera(self.serial)
@@ -45,17 +47,20 @@ class RealsenseCamera(Component):
     
     def draw_context(self, nursery, entity_id):
         c = esper.component_for_entity(entity_id, RealsenseCamera)
+        disabled = REALSENSE_MANAGER.busy
+        imgui.begin_disabled(disabled)
         if c.running():
             if imgui.menu_item_simple(f"{icons.ICON_FA_STOP} Stop"):
-                REALSENSE_MANAGER.stop_camera(entity_id)
+                nursery.start_soon(REALSENSE_MANAGER.stop_camera, entity_id)
         else:
             enabled =  c.serial in REALSENSE_MANAGER.cameras
             imgui.begin_disabled(not enabled)
             if imgui.menu_item_simple(f"{icons.ICON_FA_PLAY} Start"):
-                REALSENSE_MANAGER.start_camera(entity_id)
+                nursery.start_soon(REALSENSE_MANAGER.start_camera, entity_id)
             imgui.end_disabled()
+        imgui.end_disabled()
     
-    def draw_property(self, nursery, e:int):
+    def draw_property(self, nursery: trio.Nursery, e:int):
         imgui.separator_text("Realsense")
         c = esper.component_for_entity(e, RealsenseCamera)
         manager = c.get_manager()
@@ -83,16 +88,19 @@ class RealsenseCamera(Component):
             camera = manager.get_camera(c.serial)
             if camera:
                 alive = manager.camera_started(c.serial)
+                disabled = manager.busy
+                imgui.begin_disabled(disabled)
                 if not alive:
                     imgui.push_style_color(imgui.Col_.button, COLORS["GREEN"])
                     if imgui.button("Start", (imgui.get_content_region_avail().x, 40)):
-                        manager.start_camera(e)
+                        nursery.start_soon(manager.start_camera, e)
                     imgui.pop_style_color()
                 else:
                     imgui.push_style_color(imgui.Col_.button, COLORS["RED"])
                     if imgui.button("Stop", (imgui.get_content_region_avail().x, 40)):
-                        manager.stop_camera(e)
+                        nursery.start_soon(manager.stop_camera, e)
                     imgui.pop_style_color()
+                imgui.end_disabled()
                 if imgui.button("Detach", (imgui.get_content_region_avail().x, 20)):
                     manager.delete_camera(e)
                     self.serial = ""

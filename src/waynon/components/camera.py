@@ -24,6 +24,7 @@ class PinholeCamera(Component):
     width: int = 1280
     height: int = 720
 
+
     def K(self):
         return np.array(
             [[self.fl_x, 0.0, self.cx], [0.0, self.fl_y, self.cy], [0.0, 0.0, 1.0]],
@@ -38,7 +39,7 @@ class PinholeCamera(Component):
         """Get the image as uint8 between 0 and 255"""
         return self._image_u
 
-    def guess_position(self, camera_entity_id: int, marker_entity_id: int):
+    def guess_position(self, camera_entity_id: int, marker_entity_id: int, guess_camera: bool = True):
         import cv2
         from scipy.spatial.transform import Rotation as R
 
@@ -90,16 +91,21 @@ class PinholeCamera(Component):
         X_CM = np.eye(4)
         X_CM[:3, :3] = r.as_matrix()
         X_CM[:3, 3] = np.array(tvec).flatten()
-        X_WM = marker_transform.get_X_WT()
-        X_WC = X_WM @ np.linalg.inv(X_CM)
 
-        rot_x = R.from_rotvec([np.pi, 0, 0]).as_matrix()
-        X_x = np.eye(4)
-        X_x[:3, :3] = rot_x
-
-        X_WC = X_WC @ X_x
-
-        camera_transform.set_X_WT(X_WC)
+        if guess_camera:
+            X_WM = marker_transform.get_X_WT()
+            X_WC = X_WM @ np.linalg.inv(X_CM)
+            rot_x = R.from_rotvec([np.pi, 0, 0]).as_matrix()
+            X_x = np.eye(4)
+            X_x[:3, :3] = rot_x
+            X_WC = X_WC @ X_x
+            camera_transform.set_X_WT(X_WC)
+        else:
+            print("Guessing marker position")
+            X_WC = camera_transform.get_X_WT()
+            X_WC = X_WC @ np.array([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0], [0, 0, 0, 1]]) # opencv standard
+            X_WM = X_WC @ X_CM
+            marker_transform.set_X_WT(X_WM)
 
     def update_image(self, image: np.ndarray, identifier: int = None):
         assert image.dtype == np.uint8, f"Image must be uint8, got {image.dtype}"
@@ -119,6 +125,7 @@ class PinholeCamera(Component):
 
     def model_post_init(self, __context):
         self._texture = marsoom.texture.Texture(1280, 720, fmt=gl.GL_BGR)
+        self._guessing_camera = False
         self._image_u = None
         self._identifier = -1
         return super().model_post_init(__context)
@@ -133,14 +140,19 @@ class PinholeCamera(Component):
 
         markers = esper.get_component(ArucoMarker)
         if markers:
-            imgui.text_wrapped(
-                "Guess the position of the camera using one of the below markers"
-            )
+            _, self._guessing_camera = imgui.checkbox("Guessing Camera", self._guessing_camera)
+            if self._guessing_camera:
+                imgui.text_wrapped(
+                    "Guess the position of the camera using one of the below markers"
+                )
+            else:
+                imgui.text_wrapped("Guess the position of the marker below using one of the camera position")
+
             for marker_entity_id, marker in markers:
                 if imgui.image_button(
                     f"guess_{marker_entity_id}", marker.get_texture().id, (50, 50)
                 ):
-                    self.guess_position(e, marker_entity_id)
+                    self.guess_position(e, marker_entity_id, self._guessing_camera)
                 imgui.same_line()
             imgui.new_line()
 
