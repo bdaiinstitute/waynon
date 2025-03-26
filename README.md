@@ -49,4 +49,7 @@ Set robot poses, visualize them, and the move to to them from the interface.
 
 Solve jointly using an automatically built factor graph
 
-![Correct Aruco](assets/images/waynon_factorgraph.gif)
+![Correct Aruco](assets/images/waynon_factorgraph.gif)o
+
+## Disclaimer
+This software is provided as a research prototype and is not production-quality software. Please note that the code may contain missing features, bugs and errors.  RAI Institute does not offer maintenance or support for this software.
