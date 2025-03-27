@@ -1,3 +1,5 @@
+# Copyright (c) 2025 Boston Dynamics AI Institute LLC. All rights reserved.
+
 import json
 from pathlib import Path
 from typing import Callable, Type

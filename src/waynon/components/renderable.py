@@ -1,3 +1,5 @@
+# Copyright (c) 2025 Boston Dynamics AI Institute LLC. All rights reserved.
+
 from PIL import Image
 import marsoom.camera_wireframe
 import marsoom.image_quad

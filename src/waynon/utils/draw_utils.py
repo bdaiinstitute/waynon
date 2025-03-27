@@ -1,4 +1,6 @@
 import pyglet
+# Copyright (c) 2025 Boston Dynamics AI Institute LLC. All rights reserved.
+
 import numpy as np
 import pinocchio as pin
 

@@ -1,3 +1,4 @@
+# Copyright (c) 2025 Boston Dynamics AI Institute LLC. All rights reserved.
 
 class MeasurementProcessor:
     def __init__(self):

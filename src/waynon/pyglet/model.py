@@ -1,3 +1,5 @@
+# Copyright (c) 2025 Boston Dynamics AI Institute LLC. All rights reserved.
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING

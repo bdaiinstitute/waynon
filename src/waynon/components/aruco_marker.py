@@ -1,3 +1,5 @@
+# Copyright (c) 2025 Boston Dynamics AI Institute LLC. All rights reserved.
+
 import cv2.aruco as aruco
 import numpy as np
 from imgui_bundle import imgui

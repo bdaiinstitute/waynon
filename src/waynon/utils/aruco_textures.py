@@ -1,3 +1,5 @@
+# Copyright (c) 2025 Boston Dynamics AI Institute LLC. All rights reserved.
+
 from typing import Dict
 import cv2
 import cv2.aruco as aruco
