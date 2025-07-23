@@ -211,7 +211,7 @@ def create_empty_scene():
     create_collector(root_id)
     global DATA_PATH
     DATA_PATH = Path("data/default/data")
-    DATA_PATH.mkdir(exist_ok=True)
+    DATA_PATH.mkdir(parents=True, exist_ok=True)
 
 
 def get_root_node():

@@ -19,7 +19,7 @@ dependencies = [
     "anytree",
     "pillow",
     "symforce",
-
+    "imgui_bundle==1.6.3",
     "trio-websocket@git+https://github.com/jc211/trio-websocket",
     "marsoom @ git+https://github.com/jc211/marsoom#b94f9d87303a6a49daafa50b434b6bf855f038e8",
     "panda-python@git+https://github.com/jc211/panda-py#b1f923c9fbce3c82aaffb13d2e3b1efd9b6403be",
@@ -40,6 +40,7 @@ platforms = ["linux-64"]
 
 [tool.pixi.pypi-dependencies]
 waynon = { path = ".", editable = true }
+cmake = ">=4.0.3"
 
 [tool.pixi.tasks]
 start = { cmd = "python src/waynon/main.py" }
