@@ -28,6 +28,7 @@ class RealsenseManager:
 
     def get_connected_serials(self):
         self.serials = SingleRealsense.get_connected_devices_serial()
+        print(f"Connected Realsense serials: {self.serials}")
 
     async def start_camera(self, entity_id: int):
         self.busy = True
@@ -36,11 +37,22 @@ class RealsenseManager:
         assert esper.entity_exists(entity_id)
         assert esper.has_component(entity_id, RealsenseCamera)
         realsense_data = esper.component_for_entity(entity_id, RealsenseCamera)
+        print(f"Starting camera for entity {entity_id} and here is data: {realsense_data}")
         serial = realsense_data.serial
         enable_depth = realsense_data.enable_depth
 
-        assert serial in self.serials
+        if serial is None or len(serial)==0:
+            logger.warning(f"Realsense Serial is None or empty.")
+            self.busy = False
+            return
+        
+        if serial not in self.serials:
+            logger.warning(f"Realsense Serial ->{serial}<- not found in connected devices.")
+            self.busy = False
+            return
+        
         if serial not in self.cameras or not self.cameras[serial].is_alive():
+            logger.info(f"Starting Realsense camera with serial {serial}")
             self.cameras[serial] = SingleRealsense(
                 shm_manager=self.shm_manager,
                 serial_number=serial,
@@ -49,7 +61,9 @@ class RealsenseManager:
                 verbose=realsense_data.verbose,
             )
         if not self.cameras[serial].is_alive():
+            logger.info(f"Starting Realsense camera with serial {serial}. about to run sync on it...")
             await trio.to_thread.run_sync(self.cameras[serial].start)
+            logger.info(f"Realsense camera with serial {serial} has been started.")
         self.busy = False
 
     async def delete_camera(self, entity_id: int):

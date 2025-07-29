@@ -1,20 +1,22 @@
 # Copyright (c) 2025 Boston Dynamics AI Institute LLC. All rights reserved.
 
 import enum
+import logging
 from typing import TYPE_CHECKING, Dict, Literal
 
-import esper
 import numpy as np
 import panda_py
 import pinocchio as pin
 import trio
 
 from panda_desk import Desk
-from waynon.utils.utils import ASSET_PATH, COLORS
+from waynon.utils.utils import ASSET_PATH
+#from waynon.components.robot import Franka
 
 if TYPE_CHECKING:
-    from waynon.components.robot import Franka, Robot
+    from waynon.components.robot import Franka
 
+logger = logging.getLogger(__name__)
 
 class RobotManager:
 
@@ -83,19 +85,26 @@ class FrankaManager(RobotManager):
         platform: str = "fr3",
     ):
         try:
+            logger.info(f"Connecting to robot at {ip} with username {username}")
+            
             self.desk = Desk(ip, platform)
             self.panda = panda_py.Panda(self.settings.ip)
             self.connect_status = FrankaManager.ConnectionStatus.CONNECTING
             await self.desk.login(username, password)
+            logger.info("Logged in to robot desk")
+
             res = await self.desk.take_control(force=True)
+            logger.info("Took control of robot desk")
             await self.desk.activate_fci()
+            logger.info("Activated FCI on robot desk")
 
         except Exception as e:
-            print(f"Failed to connect to robot: {e}")
+            logger(f"Failed to connect to robot: {e}")
             self.connect_status = FrankaManager.ConnectionStatus.DISCONNECTED
             return False
 
         if not res:
+            logger.error("Failed to take control of robot desk. no res, man")
             self.connect_status = FrankaManager.ConnectionStatus.DISCONNECTED
             return False
 
@@ -262,28 +271,3 @@ class FrankaManager(RobotManager):
             },
         }
 
-
-class RobotProcessor(esper.Processor):
-    def process(self):
-        from waynon.components.node import Node
-        from waynon.components.renderable import Mesh
-        from waynon.components.robot import Franka, FrankaLink, Robot
-        from waynon.components.transform import Transform
-
-        for entity, (robot, franka) in esper.get_components(Robot, Franka):
-            manager = franka.get_manager()
-            robot.set_manager(manager)
-            manager.tick()
-
-        for entity, (node, link, transform, mesh) in esper.get_components(
-            Node, FrankaLink, Transform, Mesh
-        ):
-            robot_manager = esper.component_for_entity(
-                link.robot_id, Robot
-            ).get_manager()
-            X_BL = robot_manager.last_transforms[link.link_name]  # All relative to base
-            transform.set_X_PT(X_BL)
-            if robot_manager.ready_to_move():
-                mesh.set_color(COLORS["GREEN"])
-            else:
-                mesh.set_color(COLORS["RED"])

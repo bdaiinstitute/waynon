@@ -1,12 +1,12 @@
 # Copyright (c) 2025 Boston Dynamics AI Institute LLC. All rights reserved.
 
 from typing import Literal
+import logging
 import trio
 import numpy as np
 import pinocchio as pin
 
 from imgui_bundle import imgui    
-import panda_py
 
 
 from waynon.utils.utils import ASSET_PATH, static, one_at_a_time
@@ -15,6 +15,7 @@ from waynon.components.component import Component
 from waynon.processors.robot import FrankaManager, RobotManager
 from waynon.utils.utils import COLORS
 
+logger = logging.getLogger(__name__)
 
 class Robot(Component):
 
@@ -28,8 +29,8 @@ class Robot(Component):
         self._manager = None
 
 class Franka(Component):
-    name: str = "noname"
-    ip: str = "10.103.1.111"
+    name: str = "DUCK"
+    ip: str = "127.0.0.1"
     username: str = "admin"
     password: str = "Password!"
 
@@ -82,6 +83,8 @@ def draw_property(nursery: trio.Nursery, robot: FrankaManager):
     settings: Franka = robot.settings   
 
     imgui.separator_text("Franka Emika")
+
+    logger.info("Drawing Franka Emika entering draw property")
 
     async def connect_to_ip():
         static.cancel_scope.cancel()

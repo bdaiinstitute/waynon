@@ -72,7 +72,7 @@ class Window(marsoom.Window):
         esper.add_processor(RobotProcessor())
         esper.add_processor(TransformProcessor())
         esper.add_processor(RenderProcessor())
-        # esper.add_processor(REALSENSE_MANAGER)
+        esper.add_processor(REALSENSE_MANAGER)
 
 
     def _set_up_assets(self):
@@ -204,6 +204,7 @@ class Window(marsoom.Window):
 # ENTRY POINT
 async def main_async():
     settings = Settings.try_load()
+    print(f"Using settings: {settings}")
     REALSENSE_MANAGER.get_connected_serials()
 
 
