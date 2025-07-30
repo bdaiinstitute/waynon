@@ -18,7 +18,7 @@ from waynon.components.camera import PinholeCamera
 from waynon.components.scene_utils import create_empty_scene, load_scene, save_scene, export_calibration
 from waynon.processors.realsense_manager import REALSENSE_MANAGER
 from waynon.processors.render import RenderProcessor
-from waynon.processors.robot import RobotProcessor
+from waynon.processors.robot_processor import RobotProcessor
 from waynon.processors.transforms import TransformProcessor
 from waynon.viewmodels.property_viewer import PropertyViewModel
 from waynon.viewmodels.scene_viewmodel import SceneViewModel
